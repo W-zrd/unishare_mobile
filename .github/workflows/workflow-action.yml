@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'Wzrd/unit-test'
+      - 'main'
 
 permissions:
   contents: read
