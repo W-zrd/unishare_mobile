@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:unishare/app/modules/karir/karir_page.dart';
-import 'package:unishare/app/modules/karir/lowongan_kerja.dart';
-import 'package:unishare/app/modules/karir/magang.dart';
+import 'package:unishare/app/modules/karir/views/karir_page.dart';
+import 'package:unishare/app/modules/karir/views/lowongan_kerja.dart';
+import 'package:unishare/app/modules/karir/views/magang.dart';
 import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';

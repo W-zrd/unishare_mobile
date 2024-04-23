@@ -19,12 +19,9 @@ void main() {
         (WidgetTester tester) async {
       FlutterError.onError = ignoreOverflowErrors;
 
-      /* UNCOMMENT THIS
-      await tester.pumpWidget(const MaterialApp(home: ));
-      note: property home diset dgn nama Class dari screen yg ingin diuji
-      */
+      // UNCOMMENT THIS
+      // await tester.pumpWidget(const MaterialApp(home: ));
 
-      // KODE UNIT TEST
     });
 
   });

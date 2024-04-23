@@ -33,13 +33,13 @@ class MockUser extends Mock implements User {}
 
 void main() {
 
+
   group('LoginPage', () {
     late MockLoginService mockLoginService;
     setupFirebaseAuthMocks();
 
     setUpAll(() async {
       await Firebase.initializeApp();
-      mockLoginService = MockLoginService();
     });
 
     testWidgets('Renders Login Page correctly', (WidgetTester tester) async {

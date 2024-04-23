@@ -10,6 +10,8 @@ class DetailKarir extends StatefulWidget {
   _DetailKarirState createState() => _DetailKarirState();
 }
 
+
+
 class _DetailKarirState extends State<DetailKarir> {
   @override
   Widget build(BuildContext context) {

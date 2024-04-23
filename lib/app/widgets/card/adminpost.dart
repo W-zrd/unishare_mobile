@@ -1,31 +1,35 @@
-import 'package:flutter/material.dart' show AssetImage, BorderRadius, BoxDecoration, BoxFit, BoxShadow, BuildContext, Card, Color, Colors, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, Expanded, FontWeight, GestureDetector, MaterialPageRoute, Navigator, NetworkImage, Offset, Padding, Row, SizedBox, StatelessWidget, Text, TextStyle, Widget;
-import 'package:unishare/app/modules/karir/views/detail_karir.dart';
+import 'package:flutter/material.dart';
+import 'package:unishare/app/modules/admin/karir/updatekarirpost.dart';
 
-class PostCard extends StatelessWidget {
-  final String? type;
-  final String? title;
-  final String? period;
+class AdminPostCard extends StatelessWidget {
+  final String type;
+  final String title;
+  final String period;
   final String thumbnailAsset;
-  final String? location;
-  const PostCard({super.key, required this.type, required this.title, required this.period, required this.location, required this.thumbnailAsset});
+  final String deskripsi;
+  final void Function()? delete;
+  final void Function()? update;
+
+  const AdminPostCard({
+    Key? key,
+    required this.type,
+    required this.title,
+    required this.period,
+    required this.deskripsi,
+    required this.thumbnailAsset,
+    this.delete,
+    this.update,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const DetailKarir(), // Replace with your actual detail page
-          ),
-        );
-      },
       child: Card(
         margin: const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 15),
         elevation: 4,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white, 
+            color: Colors.white,
             borderRadius: BorderRadius.circular(8.0),
             boxShadow: [
               BoxShadow(
@@ -34,7 +38,7 @@ class PostCard extends StatelessWidget {
                 blurRadius: 5,
                 offset: const Offset(0, 3),
               ),
-            ], 
+            ],
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -47,9 +51,7 @@ class PostCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
-                      image: thumbnailAsset.isNotEmpty
-                          ? AssetImage(thumbnailAsset)
-                          : AssetImage('assets/img/dazai.jpg'),
+                      image: AssetImage(thumbnailAsset),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -60,7 +62,7 @@ class PostCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        type!,
+                        type,
                         style: const TextStyle(
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.normal,
@@ -69,7 +71,7 @@ class PostCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        title!,
+                        title,
                         style: const TextStyle(
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.bold,
@@ -78,7 +80,7 @@ class PostCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        period!,
+                        period,
                         style: const TextStyle(
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.normal,
@@ -87,7 +89,7 @@ class PostCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        location!,
+                        deskripsi,
                         style: const TextStyle(
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.w200,
@@ -96,6 +98,41 @@ class PostCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: update,
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Delete Post'),
+                          content: Text(
+                              'Are you sure you want to delete this post?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Tutup dialog
+                              },
+                              child: Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Tambahkan logika untuk menghapus post di sini
+                                delete!();
+                                Navigator.of(context).pop(); // Tutup dialog
+                              },
+                              child: Text('Delete'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),

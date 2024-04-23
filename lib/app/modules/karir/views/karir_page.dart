@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../homescreen/home_screen.dart';
+import '../../homescreen/home_screen.dart';
 import 'lowongan_kerja.dart';
 import 'magang.dart';
 
