@@ -86,7 +86,8 @@ class _MenubarState extends State<Menubar> {
               children: [
                 IconButton(
                     onPressed: () {},
-                    icon: SvgPicture.asset('assets/icons/profile-outlined.svg')),
+                    icon:
+                        SvgPicture.asset('assets/icons/profile-outlined.svg')),
                 const Text(
                   "Profil",
                   style: TextStyle(

@@ -3,8 +3,8 @@ name: Continuous Integration & Test Report
 on:
   push:
     branches:
-      - 'Wzrd/unit-test'
-      - 'main'
+      - "Wzrd/unit-test"
+      - "development"
 
 permissions:
   contents: read
@@ -16,16 +16,26 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          channel: "dev" # or: 'beta', 'dev', 'master' (or 'main')
+          channel: stable
+          flutter-version: 3.19.0
+      - run: flutter --version
 
       - name: Install and run tests
         run: |
           flutter pub get
           flutter pub upgrade
-          flutter test --coverage
+          flutter test --coverage --machine > coverage.json
+
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.json
+          slug: W-zrd/unishare_mobile
+
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure() # run this step even if previous step failed
@@ -33,12 +43,3 @@ jobs:
           name: Flutter Unit Test
           path: reports/test-*.json
           reporter: flutter-json
-
-      - name: Generate Test Coverage report
-        run: flutter test --coverage --machine > coverage.json
-
-      - uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage.json
-          slug: W-zrd/unishare_mobile

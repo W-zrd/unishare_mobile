@@ -41,7 +41,7 @@ class DaDrawer extends StatelessWidget {
                 padding: const EdgeInsets.all(2.0),
                 child: ListTile(
                   title:
-                      Text('Buat Karir', style: TextStyle(color: Colors.white)),
+                      Text('Karir', style: TextStyle(color: Colors.white)),
                   leading: Icon(Icons.settings),
                   onTap: () {
                     Navigator.pop(context);
@@ -59,7 +59,7 @@ class DaDrawer extends StatelessWidget {
                 padding: const EdgeInsets.all(2.0),
                 child: ListTile(
                   title:
-                      Text('Buat Acara', style: TextStyle(color: Colors.white)),
+                      Text('Acara', style: TextStyle(color: Colors.white)),
                   leading: Icon(Icons.settings),
                   onTap: () {
                     Navigator.pop(context);
@@ -76,7 +76,7 @@ class DaDrawer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: ListTile(
-                  title: const Text('Buat Beasiswa',
+                  title: const Text('Beasiswa',
                       style: TextStyle(color: Colors.white)),
                   leading: const Icon(Icons.settings),
                   onTap: () {
