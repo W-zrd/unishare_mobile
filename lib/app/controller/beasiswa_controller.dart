@@ -42,7 +42,7 @@ class BeasiswaService {
         .update(beasiswaPost.toMap());
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Scholarship post updated successfully!')));
-    Navigator.pop(context); // Assuming this is in a new screen
+    Navigator.pop(context);
     return beasiswaPost;
   }
 

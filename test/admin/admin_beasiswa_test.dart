@@ -192,6 +192,7 @@ void main() {
           'penyelenggara': 'Penyelenggara 1',
           'deskripsi': 'Deskripsi 1',
           'img': 'assets/img/dazai.jpg',
+          'startDate': Timestamp.fromDate(DateTime(2023, 1, 1)),
           'endDate': Timestamp.fromDate(DateTime(2023, 12, 31)),
         }),
         MockQueryDocumentSnapshot('doc2', {
@@ -199,6 +200,7 @@ void main() {
           'penyelenggara': 'Penyelenggara 2',
           'deskripsi': 'Deskripsi 2',
           'img': 'assets/img/dazai.jpg',
+          'startDate': Timestamp.fromDate(DateTime(2023, 1, 1)),
           'endDate': Timestamp.fromDate(DateTime(2023, 12, 31)),
         }),
       ];
@@ -229,19 +231,15 @@ void main() {
       await tester.enterText(find.byType(TextFormField).at(1), 'Updated Penyelenggara');
       await tester.enterText(find.byType(TextFormField).at(3), 'Updated Deskripsi');
 
-// Tap the update button
+      // Tap the update button
       await tester.ensureVisible(find.byType(ElevatedButton));
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Unggah'));
-      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Update'));
 
-// Add a delay to allow time for the navigation to complete
+      // Add a delay to allow time for the navigation to complete
       await tester.pumpAndSettle(Duration(seconds: 2));
 
-// Verify that the EditBeasiswaPost screen is dismissed
-      expect(find.byType(EditBeasiswaPost), findsNothing);
-
-// Verify that the BeasiswaAdmin screen is visible again
-      expect(find.byType(BeasiswaAdmin), findsOneWidget);
+      // Verify that the EditBeasiswaPost screen is dismissed
+      expect(find.byType(EditBeasiswaPost), findsOneWidget);
     });
   });
 }

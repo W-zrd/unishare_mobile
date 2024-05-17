@@ -131,82 +131,24 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             const SizedBox(height: 20),
 
-            //banner acara
-            const Text(
-              'Banner Acara',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            //file input
-            const SizedBox(height: 20),
-
-            //enddate
-            const Text(
-              'Tanggal Selesai',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton.icon(
-                    key: Key("date-picker"),
-                    onPressed: () async {
-                      final DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-                      if (pickedDate != null) {
-                        setState(() {
-                          _endDate = pickedDate;
-                        });
-                      }
-                    },
-                    icon: Icon(Icons.calendar_today),
-                    label: Text(
-                      _endDate != null
-                          ? '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'
-                          : 'Pilih Tanggal',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
             ElevatedButton(
               onPressed: () {
                 Future.delayed(Duration.zero, () {
-                  BeasiswaPost beasiswaPost = BeasiswaPost(
+                  BeasiswaPost updatedBeasiswaPost = BeasiswaPost(
                     judul: _judulController.text,
                     penyelenggara: _penyelenggaraController.text,
                     urlBeasiswa: _urlController.text,
                     img: "/img/Wzrd.jpg",
                     jenis: jenisValue,
-                    startDate: Timestamp.now(),
-                    endDate: _endDate != null ? Timestamp.fromDate(_endDate!) : Timestamp.now(),
+                    startDate: widget.beasiswaPost['startDate'] ?? Timestamp.now(),
+                    endDate: widget.beasiswaPost['endDate'] ?? Timestamp.now(),
                     deskripsi: _deskripsiController.text,
                   );
-                  print('Updating beasiswa post');
-                  BeasiswaService.updateBeasiswa(context, beasiswaPost, widget.beasiswaPost.id).then((_) {
-                    print('Beasiswa post updated successfully');
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => BeasiswaAdmin()),
-                    );
-                  });
+                  BeasiswaService.updateBeasiswa(
+                      context, updatedBeasiswaPost, widget.beasiswaPost.id);
                 });
               },
-              child: const Text('Unggah'),
+              child: const Text('Update'),
             ),
             const SizedBox(height: 20),
           ],
