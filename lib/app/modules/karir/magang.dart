@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 
-class LowonganKerjaPage extends StatelessWidget {
-  const LowonganKerjaPage({super.key});
+class MagangPage extends StatelessWidget {
+  const MagangPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,17 +10,17 @@ class LowonganKerjaPage extends StatelessWidget {
       body: ListView(
         children: const [
           PostCard(
-            type: 'Computer Forensic Analyst',
-            title: 'Virtual Talent Inc.',
-            period: 'Registrasi: 12 Agust - 28 Sept 2023',
-            location: 'Lokasi: Remote from Home',
+            type: 'Network Security Engineer',
+            title: 'DKatalis Indonesia',
+            period: 'Registrasi: 21 Feb - 30 Apr 2023',
+            location: 'Lokasi: DKI Yogyakarta',
             thumbnailAsset: 'assets/img/unishare_splash.png',
           ),
           PostCard(
-            type: 'Full Stack Developer',
-            title: 'PT. Unity Dev Indonesia',
+            type: 'Software Engineer',
+            title: 'Intrego.ai',
             period: 'Registrasi: 12 Des - 30 Jan 2024',
-            location: 'Lembang, Bandung',
+            location: 'Lokasi: Lembang, Bandung',
             thumbnailAsset: 'assets/img/unishare_splash.png',
           ),
         ],

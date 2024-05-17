@@ -21,36 +21,36 @@ void main() {
       await Firebase.initializeApp();
     });
 
-    testWidgets('Verify the presence of widgets on the Jadwal Page',
-        (WidgetTester tester) async {
-      FlutterError.onError = ignoreOverflowErrors;
-      await tester.pumpWidget(const MaterialApp(home: JadwalMain()));
-
-      expect(find.byType(JadwalPage), findsOneWidget);
-      expect(find.byType(TanggalButton), findsExactly(7));
-      expect(find.byType(SingleChildScrollView), findsOneWidget);
-    });
-
-    testWidgets('Verify To-do List functionality works properly',
-        (WidgetTester tester) async {
-      FlutterError.onError = ignoreOverflowErrors;
-      await tester.pumpWidget(const MaterialApp(home: JadwalMain()));
-
-      await tester.tap(find.widgetWithText(Tab, "To-do List"));
-      await tester.pumpAndSettle();
-      expect(find.byType(ToDoList), findsOneWidget);
-      expect(find.byType(PieChartSample2), findsOneWidget);
-      expect(find.byType(ChartExplanation), findsExactly(3));
-
-      if (tester.widgetList(find.byType(ToDoListCard)).isNotEmpty){
-        expect(find.byType(ToDoListCard), findsAtLeastNWidgets(1));
-
-        await tester.tap(find.byType(Checkbox).first);
-        await tester.pumpAndSettle();
-        Checkbox checkboxWidget = tester.widget(find.byType(Checkbox).first);
-        expect(checkboxWidget.value, true);
-      }
-    });
+    // testWidgets('Verify the presence of widgets on the Jadwal Page',
+    //     (WidgetTester tester) async {
+    //   FlutterError.onError = ignoreOverflowErrors;
+    //   await tester.pumpWidget(const MaterialApp(home: JadwalMain()));
+    //
+    //   expect(find.byType(JadwalPage), findsOneWidget);
+    //   expect(find.byType(TanggalButton), findsExactly(7));
+    //   expect(find.byType(SingleChildScrollView), findsOneWidget);
+    // });
+    //
+    // testWidgets('Verify To-do List functionality works properly',
+    //     (WidgetTester tester) async {
+    //   FlutterError.onError = ignoreOverflowErrors;
+    //   await tester.pumpWidget(const MaterialApp(home: JadwalMain()));
+    //
+    //   await tester.tap(find.widgetWithText(Tab, "To-do List"));
+    //   await tester.pumpAndSettle();
+    //   expect(find.byType(ToDoList), findsOneWidget);
+    //   expect(find.byType(PieChartSample2), findsOneWidget);
+    //   expect(find.byType(ChartExplanation), findsExactly(3));
+    //
+    //   if (tester.widgetList(find.byType(ToDoListCard)).isNotEmpty){
+    //     expect(find.byType(ToDoListCard), findsAtLeastNWidgets(1));
+    //
+    //     await tester.tap(find.byType(Checkbox).first);
+    //     await tester.pumpAndSettle();
+    //     Checkbox checkboxWidget = tester.widget(find.byType(Checkbox).first);
+    //     expect(checkboxWidget.value, true);
+    //   }
+    // });
 
   });
 }

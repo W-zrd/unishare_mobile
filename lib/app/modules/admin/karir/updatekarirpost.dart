@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:unishare/app/modules/admin/karir/karircontroller.dart';
-import 'package:unishare/app/modules/admin/karir/karirmodel.dart';
+import 'package:unishare/app/controller/karir_controller.dart';
+import 'package:unishare/app/models/karirmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -208,6 +208,7 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
                       deskripsi: _deskripsiController.text,
                       startDate: widget.karirPost['startDate'],
                       endDate: widget.karirPost['endDate'],
+                      AnnouncementDate: Timestamp.now(),
                     );
                     KarirService.updateKarir(
                         context, updatedKarirPost, widget.karirPost.id);

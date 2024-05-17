@@ -92,27 +92,4 @@ class BeasiswaScreen extends StatelessWidget {
     );
   }
 
-  AppBar appBar() {
-    return AppBar(
-      backgroundColor: const Color(0xFFF6F7FF),
-      leading: GestureDetector(
-        onTap: () {},
-        child: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.only(
-            left: 20,
-          ),
-          child: SvgPicture.asset(
-            'assets/icons/backbutton.svg',
-            height: 23,
-            width: 23,
-          ),
-          margin: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
-    );
-  }
 }

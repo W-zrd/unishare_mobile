@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:unishare/app/modules/admin/karir/karirmodel.dart';
+import 'package:unishare/app/models/karirmodel.dart';
 
 class KarirService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -24,6 +24,11 @@ class KarirService {
   //read
   Stream<QuerySnapshot> getKarirs() {
     return _firestore.collection('karir').snapshots();
+  }
+
+  //read by id
+  Future<DocumentSnapshot> getKarirByID(String id) {
+    return _firestore.collection('karir').doc(id).get();
   }
 
   //update

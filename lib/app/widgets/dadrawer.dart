@@ -1,4 +1,4 @@
-import 'package:unishare/app/modules/admin/acara/views/make_acara_post_screen.dart';
+import 'package:unishare/app/modules/admin/acara/make_acara_post_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/modules/admin/beasiswa/beasiswa_post_admin.dart';
 import 'package:unishare/app/modules/admin/karir/karirpostadmin.dart';
@@ -40,8 +40,7 @@ class DaDrawer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: ListTile(
-                  title:
-                      Text('Karir', style: TextStyle(color: Colors.white)),
+                  title: Text('Karir', style: TextStyle(color: Colors.white)),
                   leading: Icon(Icons.settings),
                   onTap: () {
                     Navigator.pop(context);
@@ -58,8 +57,7 @@ class DaDrawer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: ListTile(
-                  title:
-                      Text('Acara', style: TextStyle(color: Colors.white)),
+                  title: Text('Acara', style: TextStyle(color: Colors.white)),
                   leading: Icon(Icons.settings),
                   onTap: () {
                     Navigator.pop(context);

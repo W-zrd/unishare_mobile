@@ -1,27 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
+import 'package:unishare/app/modules/profil/controller/user_service.dart';
 
-class ProfilPage extends StatelessWidget {
-  final TextEditingController namaController;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController alamatController;
+class ProfilPage extends StatefulWidget {
+  @override
+  _ProfilPageState createState() => _ProfilPageState();
+}
 
-  const ProfilPage({
-    Key? key,
-    required this.namaController,
-    required this.emailController,
-    required this.passwordController,
-    required this.alamatController,
-  }) : super(key: key);
+class _ProfilPageState extends State<ProfilPage> {
+  final ProfileService profileService = ProfileService();
+  Map<String, dynamic>? userData;
+  TextEditingController namaController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
 
-  factory ProfilPage.withDefaults() {
-    return ProfilPage(
-      namaController: TextEditingController(text: 'John Doe'),
-      emailController: TextEditingController(text: 'john.doe@example.com'),
-      passwordController: TextEditingController(),
-      alamatController: TextEditingController(text: '123 Main Street'),
-    );
+  @override
+  void initState() {
+    super.initState();
+    _getUserData();
+  }
+
+  void _getUserData() async {
+    Map<String, dynamic>? data = await profileService.getUserData();
+    if (data != null) {
+      setState(() {
+        userData = data;
+        namaController.text = userData?['nama'] ?? '';
+        emailController.text = userData?['email'] ?? '';
+        passwordController.text = userData?['password'] ?? '';
+        alamatController.text = userData?['alamat'] ?? '';
+      });
+    }
+  }
+
+  void _updateUserData() async {
+    Map<String, dynamic> userData = {
+      'nama': namaController.text,
+      'email': emailController.text,
+      'password': passwordController.text,
+      'alamat': alamatController.text,
+    };
+    await profileService.updateUserData(userData);
   }
 
   @override
@@ -82,6 +102,15 @@ class ProfilPage extends StatelessWidget {
             TextFormField(
               controller: alamatController,
               decoration: InputDecoration(labelText: 'Alamat'),
+            ),
+            const SizedBox(height: 20), // Spacer between text fields and button
+            ElevatedButton(
+              onPressed: _updateUserData,
+              child: Text('Update'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+              ),
             ),
           ],
         ),

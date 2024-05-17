@@ -35,7 +35,7 @@ class AdminHomePage extends StatelessWidget {
               future: LatestPostService.getLatestPosts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(); // Menampilkan indikator loading
+                  return Text('Loading...'); // Menampilkan indikator loading
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
@@ -51,8 +51,7 @@ class AdminHomePage extends StatelessWidget {
 
                       final startDateString =
                           DateFormat('dd-MM').format(startDate);
-                      final endDateString =
-                          DateFormat('dd-MM').format(endDate);
+                      final endDateString = DateFormat('dd-MM').format(endDate);
                       final period = startDateString + " - " + endDateString;
                       return PostCard(
                         type: post.kategori,

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/modules/milestone/views/milestone_page.dart';
 import 'package:unishare/app/widgets/milestone_card.dart';
 import 'package:unishare/app/widgets/pencapaian_card.dart';
@@ -29,6 +30,10 @@ void main() {
 
           expect(find.byType(MilestoneCard), findsAny);
           expect(find.byType(PencapaianCard), findsExactly(2));
+
+          await tester.tap(find.byKey(Key('back-button')));
+          await tester.pumpAndSettle();
+          expect(find.byType(HomeScreen), findsOneWidget);
         });
   });
 }

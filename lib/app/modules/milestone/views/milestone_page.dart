@@ -12,6 +12,7 @@ class MilestonePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          key: Key('back-button'),
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pushReplacement(
@@ -58,7 +59,8 @@ class MilestonePage extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(left: 25.0, bottom: 5, right: 25.0, top: 20),
+            padding:
+                EdgeInsets.only(left: 25.0, bottom: 5, right: 25.0, top: 20),
             child: Text(
               'List Milestone',
               style: TextStyle(
@@ -68,8 +70,14 @@ class MilestonePage extends StatelessWidget {
               ),
             ),
           ),
-          MilestoneCard(isCheckedIn: true, isCheckedOut: true,),
-          MilestoneCard(isCheckedIn: true, isCheckedOut: false,),
+          MilestoneCard(
+            isCheckedIn: true,
+            isCheckedOut: true,
+          ),
+          MilestoneCard(
+            isCheckedIn: true,
+            isCheckedOut: false,
+          ),
         ],
       ),
     );

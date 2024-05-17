@@ -1,173 +1,115 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:unishare/app/modules/chat/chatroom.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+import 'package:unishare/app/controller/chat_controller.dart';
 
-class Messages extends StatelessWidget {
+class ChatPage extends StatefulWidget {
+  final String receiverUserName;
+  final String receiverId;
+  const ChatPage(
+      {Key? key, required this.receiverUserName, required this.receiverId})
+      : super(key: key);
+  @override
+  _ChatPageState createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final TextEditingController _messageController = TextEditingController();
+  final ChatService chatController = ChatService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void sendMessage() async {
+    if (_messageController.text.isNotEmpty) {
+      try {
+        chatController.sendMessage(widget.receiverId, _messageController.text);
+        _messageController.clear();
+      } catch (e) {
+        print('Error sending message: $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          'Chat',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
+        title: Text(widget.receiverUserName),
       ),
-      body: ListView.builder(
-        itemCount: messages.length,
-        itemBuilder: (context, index) {
-          final message = messages[index];
-          return ChatWidget(
-            muted: message.muted,
-            contactName: message.contactName,
-            lastMessage: message.lastMessage,
-            time: message.time,
-            unreadCount: message.unreadCount,
-          );
-        },
+      body: Column(
+        children: [
+          Expanded(
+            child: _buildMessagelist(),
+          ),
+          _buildMessageInput(),
+        ],
       ),
     );
   }
-}
 
-class ChatMessage {
-  final String contactName;
-  final String lastMessage;
-  final String time;
-  final int unreadCount;
-  final bool muted;
+  //build message list
+  Widget _buildMessagelist() {
+    return StreamBuilder(
+        stream: chatController.getMessages(
+            widget.receiverId, _auth.currentUser!.uid),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-  ChatMessage({
-    required this.muted,
-    required this.contactName,
-    required this.lastMessage,
-    required this.time,
-    required this.unreadCount,
-  });
-}
+          return ListView(
+            children: snapshot.data!.docs
+                .map((document) => _buildMessageItem(document))
+                .toList(),
+          );
+        });
+  }
 
-final List<ChatMessage> messages = [
-  ChatMessage(
-    muted: false,
-    contactName: "Gaahh?!",
-    lastMessage: "Omagaaahh",
-    time: "9:30 AM",
-    unreadCount: 2,
-  ),
-  ChatMessage(
-    muted: false,
-    contactName: "Amerika Yaaa",
-    lastMessage: "Haro haro haro",
-    time: "Yesterday",
-    unreadCount: 0,
-  ),
-  ChatMessage(
-    muted: true,
-    contactName: "Akashi Seijuroo",
-    lastMessage: "Boku no mere o zettai da",
-    time: "Sunday",
-    unreadCount: 5,
-  ),
-];
+  //build message item
+  Widget _buildMessageItem(DocumentSnapshot document) {
+    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-class ChatWidget extends StatelessWidget {
-  final String contactName;
-  final String lastMessage;
-  final String time;
-  final int unreadCount;
-  final bool muted;
+    //allign the message to the right if the sender is the current user, otherwise to the left
+    var alignment = (data['senderId'] == _auth.currentUser!.uid)
+        ? Alignment.centerRight
+        : Alignment.centerLeft;
 
-  const ChatWidget({
-    Key? key,
-    required this.muted,
-    required this.contactName,
-    required this.lastMessage,
-    required this.time,
-    required this.unreadCount,
-  }) : super(key: key);
+    return Container(
+        alignment: alignment,
+        child: Column(
+          children: [
+            Text(data['senderName']),
+            Text(data['message']),
+          ],
+        ));
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        child: Text(contactName[0]),
-      ),
-      subtitle: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // New addition
+  //build message input
+  Widget _buildMessageInput() {
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: Row(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                contactName,
-                style: TextStyle(fontWeight: FontWeight.bold),
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: InputDecoration(
+                hintText: 'Type a message',
               ),
-              Row(
-                children: [
-                  if (contactName == "Amerika Yaaa")
-                    Icon(
-                      Icons.check_circle,
-                      size: 17,
-                    )
-                  else
-                    Icon(
-                      Icons.check_circle_outline,
-                      size: 17,
-                    ),
-                  Text(lastMessage),
-                ],
-              ),
-            ],
+              obscureText: false,
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                time,
-                style: TextStyle(fontSize: 12), // Adjust time font size
-              ),
-              Row(
-                children: [
-                  if (muted)
-                    Icon(
-                      Icons.volume_off,
-                      size: 17,
-                    ),
-                  if (unreadCount > 0)
-                    CircleAvatar(
-                      backgroundColor: Colors.orange.shade700,
-                      radius: 10,
-                      child: Text(
-                        unreadCount.toString(),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12), // Adjust unread count font size
-                      ),
-                    )
-                  else
-                    SizedBox(
-                      height: 25,
-                    ),
-                ],
-              ),
-            ],
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: sendMessage,
           ),
         ],
       ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatScreen(),
-          ),
-        );
-      },
     );
   }
 }

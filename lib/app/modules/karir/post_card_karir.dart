@@ -30,32 +30,58 @@ import 'package:flutter/material.dart'
         Widget;
 import 'package:unishare/app/modules/karir/detail_karir.dart';
 
-class PostCard extends StatelessWidget {
+import 'package:flutter/material.dart'
+    show
+        AssetImage,
+        BorderRadius,
+        BoxDecoration,
+        BoxFit,
+        BoxShadow,
+        BuildContext,
+        Card,
+        Color,
+        Colors,
+        Column,
+        Container,
+        CrossAxisAlignment,
+        DecorationImage,
+        EdgeInsets,
+        Expanded,
+        FontWeight,
+        GestureDetector,
+        MaterialPageRoute,
+        Navigator,
+        NetworkImage,
+        Offset,
+        Padding,
+        Row,
+        SizedBox,
+        StatelessWidget,
+        Text,
+        TextStyle,
+        Widget;
+import 'package:unishare/app/modules/karir/detail_karir.dart';
+
+class PostCardKarir extends StatelessWidget {
   final String? type;
   final String? title;
   final String? period;
   final String thumbnailAsset;
   final String? location;
-  const PostCard(
+  final void Function()? onTap;
+  const PostCardKarir(
       {super.key,
       required this.type,
       required this.title,
       required this.period,
       required this.location,
-      required this.thumbnailAsset});
+      required this.thumbnailAsset,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                const DetailKarir(), // Replace with your actual detail page
-          ),
-        );
-      },
+      onTap: onTap,
       child: Card(
         margin: const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 15),
         elevation: 4,

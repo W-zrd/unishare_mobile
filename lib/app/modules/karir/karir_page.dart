@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../homescreen/home_screen.dart';
+import '../homescreen/home_screen.dart';
 import 'lowongan_kerja.dart';
 import 'magang.dart';
 
@@ -9,11 +9,12 @@ class KarirPage extends StatefulWidget {
   @override
   _KarirPageState createState() => _KarirPageState();
 }
+
 class _KarirPageState extends State<KarirPage> {
   final int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const LowonganKerjaPage(),
+    LowonganKerjaPage(),
     const MagangPage(),
   ];
 
@@ -36,9 +37,9 @@ class _KarirPageState extends State<KarirPage> {
           title: const Text(
             'Karir',
             style: TextStyle(
-             fontFamily: 'Rubik',
+              fontFamily: 'Rubik',
               fontSize: 18,
-              fontWeight: FontWeight.bold, 
+              fontWeight: FontWeight.bold,
             ),
           ),
           centerTitle: true,
@@ -52,7 +53,7 @@ class _KarirPageState extends State<KarirPage> {
                   style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 14,
-                    fontWeight: FontWeight.bold, 
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -61,8 +62,8 @@ class _KarirPageState extends State<KarirPage> {
                   'Magang',
                   style: TextStyle(
                     fontFamily: 'Rubik',
-                    fontSize: 14, 
-                    fontWeight: FontWeight.bold, 
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

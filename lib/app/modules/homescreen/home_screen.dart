@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:unishare/app/modules/acara/view/acara_page.dart';
 import 'package:unishare/app/modules/dashboard/views/dashboard_screen.dart';
-import 'package:unishare/app/modules/karir/views/karir_page.dart';
-import 'package:unishare/app/modules/profil/profil_page.dart';
+import 'package:unishare/app/modules/karir/karir_page.dart';
+import 'package:unishare/app/modules/profil/views/profil_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const Dashboard(),
     const KarirPage(),
     const AcaraPage(),
-    ProfilPage.withDefaults(),
+    ProfilPage(),
   ];
 
   Future<bool> _onWillPop() async {

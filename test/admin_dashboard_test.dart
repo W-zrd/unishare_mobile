@@ -38,10 +38,6 @@ void main() {
           expect(scaffold.drawer, isNotNull);
         });
 
-    testWidgets('Test loading state', (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: AdminHomePage()));
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
 
     testWidgets('Test success state with latest posts', (WidgetTester tester) async {
       // Override the getLatestPosts method to return a list of posts

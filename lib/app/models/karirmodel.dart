@@ -11,6 +11,7 @@ class KarirPost {
   final String penyelenggara;
   final Timestamp startDate;
   final Timestamp endDate;
+  final Timestamp AnnouncementDate;
 
   KarirPost({
     required this.posisi,
@@ -23,6 +24,7 @@ class KarirPost {
     required this.deskripsi,
     required this.startDate,
     required this.endDate,
+    required this.AnnouncementDate,
   });
 
   Map<String, dynamic> toMap() => {
@@ -34,6 +36,7 @@ class KarirPost {
         'kategori': kategori,
         'deskripsi': deskripsi,
         'startDate': startDate,
+        'AnnouncementDate': AnnouncementDate,
         'endDate': endDate,
         'penyelenggara': penyelenggara,
       };

@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:unishare/app/models/karirmodel.dart';
+import 'package:unishare/app/modules/karir/form_daftar_karir.dart';
 import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/detail_top_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';
 
-class DetailKarir extends StatefulWidget {
-  const DetailKarir({Key? key}) : super(key: key);
+class DetailKarirRil extends StatefulWidget {
+  final String karirID;
+  final KarirPost karir;
+  const DetailKarirRil({Key? key, required this.karirID, required this.karir})
+      : super(key: key);
 
   @override
   _DetailKarirState createState() => _DetailKarirState();
 }
 
-
-
-class _DetailKarirState extends State<DetailKarir> {
+class _DetailKarirState extends State<DetailKarirRil> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -30,7 +33,7 @@ class _DetailKarirState extends State<DetailKarir> {
             style: TextStyle(
               fontFamily: 'Rubik',
               fontSize: 18,
-              fontWeight: FontWeight.bold, 
+              fontWeight: FontWeight.bold,
             ),
           ),
           centerTitle: true,
@@ -40,18 +43,19 @@ class _DetailKarirState extends State<DetailKarir> {
             Container(
               width: 296,
               height: 180,
-              margin: const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 5),
+              margin:
+                  const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: const DecorationImage(
                   image: AssetImage('assets/img/onboarding.png'),
                   fit: BoxFit.cover,
                 ),
-              ), 
+              ),
             ),
-            const CardDetailTop(
-              type: 'Computer Forensic Analyst',
-              title: 'Virtual Talent Inc.',
+            CardDetailTop(
+              type: widget.karir.posisi,
+              title: widget.karir.penyelenggara,
               period: 'Registrasi: 12 Agust - 28 Sept 2023',
               thumbnailAsset: 'assets/img/unishare_splash.png',
               salary: '50.000.000',
@@ -65,8 +69,8 @@ class _DetailKarirState extends State<DetailKarir> {
                     Container(
                       margin: const EdgeInsets.only(right: 30, left: 30),
                       decoration: BoxDecoration(
-                        color: Colors.white, 
-                        borderRadius: BorderRadius.circular(8), 
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
@@ -107,27 +111,73 @@ class _DetailKarirState extends State<DetailKarir> {
                     ),
                     const SizedBox(height: 10),
                     Expanded(
+                      flex: 1,
                       child: TabBarView(
                         children: [
                           ListView(
-                            children: const [
-                              DescriptionCard(description: 'Virtual Talent Indonesia Inc. telah secara aktif terlibat dalam percetakan. Kami membutuhkan staf keuangan untuk mendukung operasi penjualan kami yang berkembang pesat. Kandidat yang terpilih dapat menjalani on-the-job training dengan Manajer Keuangan.'),
+                            children: [
+                              DescriptionCard(
+                                  description: widget.karir.deskripsi),
                             ],
                           ),
                           ListView(
                             children: const [
-                              RegulationCard(regulation: '- Diploma ke atas dalam bidang akuntansi dan bidang terkait. \n- 2 tahun pengalaman kerja yang relevan lebih disukai, lulusan  baru yang didorong akan dipertimbangkan.'),
+                              RegulationCard(
+                                  regulation:
+                                      '- Diploma ke atas dalam bidang akuntansi dan bidang terkait. \n- 2 tahun pengalaman kerja yang relevan lebih disukai, lulusan  baru yang didorong akan dipertimbangkan.'),
                             ],
                           ),
                         ],
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      style: const ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(
+                              Color.fromRGBO(247, 86, 0, 1)),
+                          padding: MaterialStatePropertyAll(EdgeInsets.only(
+                              left: 150, top: 20, right: 150, bottom: 20))),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DaftarKarir(karirID: widget.karirID),
+                          ),
+                        );
+                      },
+                      child: const Text('Daftar',
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),
             ),
           ],
         ),
+        // floatingActionButton: Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     ElevatedButton(
+        //       style: const ButtonStyle(
+        //           backgroundColor:
+        //               MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
+        //           padding: MaterialStatePropertyAll(EdgeInsets.only(
+        //               left: 150, top: 20, right: 150, bottom: 20))),
+        //       onPressed: () {
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(
+        //             builder: (context) => DaftarKarir(),
+        //           ),
+        //         );
+        //       },
+        //       child:
+        //           const Text('Daftar', style: TextStyle(color: Colors.white)),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

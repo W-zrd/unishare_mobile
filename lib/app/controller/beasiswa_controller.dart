@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:unishare/app/modules/admin/beasiswa/beasiswa_model.dart';
-import 'package:unishare/app/modules/admin/beasiswa/make_beasiswa_post.dart';
-import 'package:unishare/app/modules/beasiswa/views/beasiswa_screen.dart';
+import 'package:unishare/app/models/beasiswa_model.dart';
 
 class BeasiswaService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -25,7 +23,13 @@ class BeasiswaService {
 
   //read
   Stream<QuerySnapshot> getBeasiswas() {
-    return _firestore.collection('beasiswa').snapshots();
+    try {
+      return _firestore.collection('beasiswa').snapshots();
+    } catch (e) {
+      // Handle any errors that occur while fetching the data
+      print('Error fetching beasiswa data: $e');
+      return const Stream.empty(); // Return an empty stream to avoid null
+    }
   }
 
   //update
@@ -37,7 +41,7 @@ class BeasiswaService {
         .update(beasiswaPost.toMap());
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Scholarship post updated successfully!')));
-    Navigator.pop(context); // Assuming this is in a new screen
+    Navigator.pop(context);
     return beasiswaPost;
   }
 

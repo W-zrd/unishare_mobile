@@ -16,29 +16,30 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          channel: stable
-          flutter-version: 3.19.0
-      - run: flutter --version
+          channel: "beta"
 
-      - name: Install and run tests
-        run: |
-          flutter pub get
-          flutter pub upgrade
-          flutter test --coverage --machine > coverage.json
+      - name: Install dependencies
+        run: flutter pub get
 
+      - name: Upgrade dependencies
+        run: flutter pub upgrade
+
+      - name: Run & Generate Test Coverage report
+        run: flutter test --coverage --machine > coverage.json
       - uses: codecov/codecov-action@v4
         if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage.json
           slug: W-zrd/unishare_mobile
+        continue-on-error: true
 
       - name: Test Report
         uses: dorny/test-reporter@v1
-        if: success() || failure() # run this step even if previous step failed
+        if: always()
         with:
           name: Flutter Unit Test
           path: reports/test-*.json

@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:unishare/app/modules/admin/acara/views/make_acara_post_screen.dart';
+import 'package:unishare/app/modules/admin/acara/make_acara_post_screen.dart';
 import 'package:unishare/app/widgets/file_picker.dart';
 
 import 'mock.dart';
@@ -42,6 +42,5 @@ void main() {
     //       expect(find.text('Lokasi tidak boleh kosong'), findsOneWidget);
     //       expect(find.text('Link Acara tidak boleh kosong'), findsOneWidget);
     //     });
-
   });
 }

@@ -81,7 +81,9 @@ class _AllAcaraPageState extends State<AllAcaraPage> {
             },
             itemBuilder: (context, index) {
               final startIndex = index * _cardsPerPage;
-              final endIndex = (startIndex + _cardsPerPage < _cards.length) ? startIndex + _cardsPerPage : _cards.length;
+              final endIndex = (startIndex + _cardsPerPage < _cards.length)
+                  ? startIndex + _cardsPerPage
+                  : _cards.length;
               return ListView(
                 children: _cards.sublist(startIndex, endIndex),
               );
@@ -92,7 +94,7 @@ class _AllAcaraPageState extends State<AllAcaraPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             (_cards.length / _cardsPerPage).ceil(),
-                (index) => GestureDetector(
+            (index) => GestureDetector(
               onTap: () {
                 _pageController.animateToPage(
                   index,

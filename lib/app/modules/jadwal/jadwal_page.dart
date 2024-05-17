@@ -8,11 +8,12 @@ class JadwalMain extends StatefulWidget {
   @override
   _JadwalMainState createState() => _JadwalMainState();
 }
+
 class _JadwalMainState extends State<JadwalMain> {
   final int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const JadwalPage(),
+    JadwalPage(),
     const ToDoList(),
   ];
 
@@ -26,9 +27,9 @@ class _JadwalMainState extends State<JadwalMain> {
           title: const Text(
             'Jadwal',
             style: TextStyle(
-             fontFamily: 'Rubik',
+              fontFamily: 'Rubik',
               fontSize: 18,
-              fontWeight: FontWeight.bold, 
+              fontWeight: FontWeight.bold,
             ),
           ),
           centerTitle: true,
@@ -42,7 +43,7 @@ class _JadwalMainState extends State<JadwalMain> {
                   style: TextStyle(
                     fontFamily: 'Rubik',
                     fontSize: 14,
-                    fontWeight: FontWeight.bold, 
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -51,8 +52,8 @@ class _JadwalMainState extends State<JadwalMain> {
                   'To-do List',
                   style: TextStyle(
                     fontFamily: 'Rubik',
-                    fontSize: 14, 
-                    fontWeight: FontWeight.bold, 
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

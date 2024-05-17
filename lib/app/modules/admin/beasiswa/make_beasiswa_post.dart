@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:unishare/app/modules/admin/beasiswa/beasiswa_controller.dart';
-import 'package:unishare/app/modules/admin/beasiswa/beasiswa_model.dart';
+import 'package:unishare/app/controller/beasiswa_controller.dart';
+import 'package:unishare/app/models/beasiswa_model.dart';
 import 'package:unishare/app/modules/admin/beasiswa/make_beasiswa_post.dart';
 
 class MakeBeasiswaPost extends StatefulWidget {

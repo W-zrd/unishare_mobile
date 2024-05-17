@@ -1,4 +1,4 @@
-import 'package:unishare/app/modules/admin/acara/controller/acara_controller.dart';
+import 'package:unishare/app/controller/acara_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:unishare/app/models/acara_kemahasiswaan.dart';
