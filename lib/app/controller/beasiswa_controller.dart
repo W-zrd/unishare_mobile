@@ -35,6 +35,7 @@ class BeasiswaService {
   //update
   static Future<BeasiswaPost> updateBeasiswa(
       BuildContext context, beasiswaPost, String id) async {
+    print('Updating beasiswa with ID: $id');
     await FirebaseFirestore.instance
         .collection('beasiswa')
         .doc(id)

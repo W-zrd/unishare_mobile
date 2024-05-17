@@ -12,6 +12,7 @@ import 'package:unishare/app/modules/leaderboard/views/leaderboard_page.dart';
 import 'package:unishare/app/modules/milestone/views/milestone_page.dart';
 
 import 'package:unishare/app/modules/notification/views/notification_screen.dart';
+import 'package:unishare/app/modules/splashscreen/views/splash_screen.dart';
 import 'package:unishare/app/widgets/card/homepage_card.dart';
 import 'mock.dart';
 
@@ -94,11 +95,6 @@ void main() {
             'pageType': LeaderboardPage,
             'pageTitle': "Leaderboard",
           },
-          // {
-          //   'buttonKey': const Key("jadwal-icon-button"),
-          //   'pageType': JadwalMain,
-          //   'pageTitle': "To-do List",
-          // },
           {
             'buttonKey': const Key("notifikasi-icon-button"),
             'pageType': NotificationPage,
@@ -136,5 +132,6 @@ void main() {
         }
       },
     );
+
   });
 }

@@ -12,8 +12,8 @@ import 'package:unishare/app/modules/onboarding/views/onboarding_screen.dart';
 import 'package:unishare/app/widgets/button/google_button.dart';
 import 'package:unishare/app/widgets/button/primary_button.dart';
 
-import 'mock.dart';
-import 'test_helper.dart';
+import '../mock.dart';
+import '../test_helper.dart';
 
 class MockLoginService extends Mock implements AuthService {
   @override

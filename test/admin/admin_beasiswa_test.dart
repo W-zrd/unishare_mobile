@@ -6,8 +6,9 @@ import 'package:mockito/mockito.dart';
 import 'package:unishare/app/controller/beasiswa_controller.dart';
 import 'package:unishare/app/modules/admin/beasiswa/beasiswa_post_admin.dart';
 import 'package:unishare/app/modules/admin/beasiswa/make_beasiswa_post.dart';
+import 'package:unishare/app/modules/admin/beasiswa/update_beasiswa_post.dart';
 
-import 'mock.dart';
+import '../mock.dart';
 
 class MockBeasiswaService extends Mock implements BeasiswaService {
   @override
@@ -74,6 +75,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(MakeBeasiswaPost), findsOneWidget);
+      expect(find.byType(AppBar), findsOneWidget);
     });
 
     testWidgets('Verify the rendering of beasiswa items', (WidgetTester tester) async {
@@ -149,6 +151,97 @@ void main() {
 
       // Verify that 'Beasiswa 1' is deleted
       expect(find.text('Beasiswa 1'), findsNothing);
+    });
+
+    testWidgets('Verify form submission with valid data', (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: MakeBeasiswaPost()));
+
+      expect(find.byType(TextFormField), findsNWidgets(4));
+      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.text('Unggah'), findsOneWidget);
+
+      await tester.pumpWidget(MaterialApp(home: MakeBeasiswaPost()));
+
+      await tester.enterText(find.byType(TextFormField).at(0), 'Judul Beasiswa');
+      await tester.enterText(find.byType(TextFormField).at(1), 'Penyelenggara');
+      await tester.enterText(find.byType(TextFormField).at(2), 'https://example.com');
+      await tester.enterText(find.byType(TextFormField).at(3), 'Deskripsi Beasiswa');
+
+      // Tap the date picker button
+      await tester.ensureVisible(find.byKey(Key('date-picker')));
+      await tester.tap(find.byKey(Key('date-picker')));
+      await tester.pumpAndSettle();
+
+      // Select a date from the date picker
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+
+
+      // Verify that the MakeBeasiswaPost widget is removed after successful submission
+      expect(find.byType(BeasiswaAdmin), findsNothing);
+    });
+
+    testWidgets('Verify the update behavior of beasiswa items', (WidgetTester tester) async {
+      final mockDocumentSnapshots = [
+        MockQueryDocumentSnapshot('doc1', {
+          'judul': 'Beasiswa 1',
+          'penyelenggara': 'Penyelenggara 1',
+          'deskripsi': 'Deskripsi 1',
+          'img': 'assets/img/dazai.jpg',
+          'endDate': Timestamp.fromDate(DateTime(2023, 12, 31)),
+        }),
+        MockQueryDocumentSnapshot('doc2', {
+          'judul': 'Beasiswa 2',
+          'penyelenggara': 'Penyelenggara 2',
+          'deskripsi': 'Deskripsi 2',
+          'img': 'assets/img/dazai.jpg',
+          'endDate': Timestamp.fromDate(DateTime(2023, 12, 31)),
+        }),
+      ];
+
+      mockSnapshot.setDocs(mockDocumentSnapshots);
+
+      when(mockBeasiswaService.getBeasiswas()).thenAnswer((_) => Stream.value(mockSnapshot));
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BeasiswaAdmin(beasiswaService: mockBeasiswaService),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Verify that the BeasiswaAdmin screen is visible
+      expect(find.byType(BeasiswaAdmin), findsOneWidget);
+
+      await tester.tap(find.byKey(Key("edit-beasiswa")).first);
+      await tester.pumpAndSettle();
+
+      // Verify that the EditBeasiswaPost screen is visible
+      expect(find.byType(EditBeasiswaPost), findsOneWidget);
+
+      // Enter updated values in the form fields
+      await tester.enterText(find.byType(TextFormField).at(0), 'Updated Beasiswa');
+      await tester.enterText(find.byType(TextFormField).at(1), 'Updated Penyelenggara');
+      await tester.enterText(find.byType(TextFormField).at(3), 'Updated Deskripsi');
+
+// Tap the update button
+      await tester.ensureVisible(find.byType(ElevatedButton));
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Unggah'));
+      await tester.pumpAndSettle();
+
+// Add a delay to allow time for the navigation to complete
+      await tester.pumpAndSettle(Duration(seconds: 2));
+
+// Verify that the EditBeasiswaPost screen is dismissed
+      expect(find.byType(EditBeasiswaPost), findsNothing);
+
+// Verify that the BeasiswaAdmin screen is visible again
+      expect(find.byType(BeasiswaAdmin), findsOneWidget);
     });
   });
 }

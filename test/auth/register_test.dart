@@ -7,10 +7,10 @@ import 'package:unishare/app/modules/auth/register/views/register_screen.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/modules/onboarding/views/onboarding_screen.dart';
 import 'package:unishare/app/widgets/button/primary_button.dart';
-import 'mock.dart';
+import '../mock.dart';
 import 'package:mockito/mockito.dart';
 
-import 'test_helper.dart';
+import '../test_helper.dart';
 
 class MockRegisterService extends Mock implements AuthService {
   @override

@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare/app/modules/admin/karir/karirpostadmin.dart';
 import 'package:unishare/app/modules/admin/karir/makekarirpost.dart';
 
-import 'mock.dart';
-import 'test_helper.dart';
+import '../mock.dart';
+import '../test_helper.dart';
 
 void main() {
   group('Admin karir test group', () {

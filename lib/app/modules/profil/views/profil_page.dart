@@ -3,12 +3,16 @@ import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/modules/profil/controller/user_service.dart';
 
 class ProfilPage extends StatefulWidget {
+  final ProfileService? profileService;
+
+  ProfilPage({this.profileService});
   @override
   _ProfilPageState createState() => _ProfilPageState();
 }
 
 class _ProfilPageState extends State<ProfilPage> {
-  final ProfileService profileService = ProfileService();
+  late final ProfileService profileService;
+
   Map<String, dynamic>? userData;
   TextEditingController namaController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -18,30 +22,37 @@ class _ProfilPageState extends State<ProfilPage> {
   @override
   void initState() {
     super.initState();
+    profileService = widget.profileService ?? ProfileService();
     _getUserData();
   }
 
   void _getUserData() async {
     Map<String, dynamic>? data = await profileService.getUserData();
-    if (data != null) {
-      setState(() {
-        userData = data;
-        namaController.text = userData?['nama'] ?? '';
-        emailController.text = userData?['email'] ?? '';
-        passwordController.text = userData?['password'] ?? '';
-        alamatController.text = userData?['alamat'] ?? '';
-      });
-    }
+    setState(() {
+      userData = data;
+      namaController.text = userData?['nama'] ?? '';
+      emailController.text = userData?['email'] ?? '';
+      passwordController.text = userData?['password'] ?? '';
+      alamatController.text = userData?['alamat'] ?? '';
+    });
   }
 
-  void _updateUserData() async {
-    Map<String, dynamic> userData = {
-      'nama': namaController.text,
-      'email': emailController.text,
-      'password': passwordController.text,
-      'alamat': alamatController.text,
-    };
-    await profileService.updateUserData(userData);
+  Future<void> _updateUserData() async {
+    try {
+      Map<String, dynamic> userData = {
+        'nama': namaController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+        'alamat': alamatController.text,
+      };
+      await profileService.updateUserData(userData);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating user data: $e'),
+        ),
+      );
+    }
   }
 
   @override
@@ -75,7 +86,7 @@ class _ProfilPageState extends State<ProfilPage> {
             CircleAvatar(
               radius: 80,
               backgroundImage: AssetImage(
-                  'assets/profile_picture.png'), // Provide your profile picture asset path
+                  'assets/img/dazai.jpg'), // Provide your profile picture asset path
               child: Icon(
                 Icons.account_circle,
                 size: 150,

@@ -9,8 +9,8 @@ import 'package:unishare/app/modules/admin/dashboard/views/dashboard_admin.dart'
 import 'package:unishare/app/widgets/card/post_card.dart';
 import 'package:unishare/app/widgets/dadrawer.dart';
 
-import 'mock.dart';
-import 'test_helper.dart';
+import '../mock.dart';
+import '../test_helper.dart';
 
 void main() {
   group('Dashboard Admin Test Group', () {

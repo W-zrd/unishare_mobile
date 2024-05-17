@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/beasiswa_controller.dart';
 import 'package:unishare/app/models/beasiswa_model.dart';
+
+import 'beasiswa_post_admin.dart';
 
 class EditBeasiswaPost extends StatefulWidget {
   final DocumentSnapshot beasiswaPost;
@@ -24,23 +25,14 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
   @override
   void initState() {
     super.initState();
-    _judulController.text = widget.beasiswaPost['judul'];
-    _penyelenggaraController.text = widget.beasiswaPost['penyelenggara'];
-    _urlController.text = widget.beasiswaPost['urlBeasiswa'];
-    _deskripsiController.text = widget.beasiswaPost['deskripsi'];
-    jenisValue = widget.beasiswaPost['jenis'];
-    // _endDate = widget.beasiswaPost['endDate'];
-    // _startdate = widget.beasiswa_screen['startDate'];
-  }
-
-  Future<void> _openFilePicker(BuildContext context) async {
-    try {
-      final result = await FilePicker.platform.pickFiles();
-      if (result != null) {
-        final filePath = result.files.single.path;
-      }
-    } catch (e) {
-      print('Error while picking the file: $e');
+    _judulController.text = widget.beasiswaPost['judul'] ?? '';
+    _penyelenggaraController.text = widget.beasiswaPost['penyelenggara'] ?? '';
+    _urlController.text = widget.beasiswaPost['urlBeasiswa'] ?? '';
+    _deskripsiController.text = widget.beasiswaPost['deskripsi'] ?? '';
+    jenisValue = widget.beasiswaPost['jenis'] ?? 'Swasta';
+    final endDate = widget.beasiswaPost['endDate'];
+    if (endDate is Timestamp) {
+      _endDate = endDate.toDate();
     }
   }
 
@@ -76,12 +68,6 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             TextFormField(
               controller: _judulController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -95,12 +81,6 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             TextFormField(
               controller: _penyelenggaraController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -114,12 +94,6 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             TextFormField(
               controller: _urlController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -132,12 +106,6 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             TextFormField(
               controller: _deskripsiController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -188,6 +156,7 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
               children: [
                 Expanded(
                   child: TextButton.icon(
+                    key: Key("date-picker"),
                     onPressed: () async {
                       final DateTime? pickedDate = await showDatePicker(
                         context: context,
@@ -224,10 +193,17 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
                     img: "/img/Wzrd.jpg",
                     jenis: jenisValue,
                     startDate: Timestamp.now(),
-                    endDate: Timestamp.fromDate(_endDate!),
+                    endDate: _endDate != null ? Timestamp.fromDate(_endDate!) : Timestamp.now(),
                     deskripsi: _deskripsiController.text,
                   );
-                  BeasiswaService.addToFirestore(context, beasiswaPost);
+                  print('Updating beasiswa post');
+                  BeasiswaService.updateBeasiswa(context, beasiswaPost, widget.beasiswaPost.id).then((_) {
+                    print('Beasiswa post updated successfully');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => BeasiswaAdmin()),
+                    );
+                  });
                 });
               },
               child: const Text('Unggah'),

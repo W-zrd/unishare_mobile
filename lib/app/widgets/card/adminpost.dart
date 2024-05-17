@@ -103,7 +103,7 @@ class AdminPostCard extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: Icon(Icons.edit,key: Key("edit-beasiswa"),),
                   onPressed: update,
                 ),
                 IconButton(

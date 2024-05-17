@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:unishare/app/models/karirmodel.dart';
 import 'package:unishare/app/modules/karir/form_daftar_karir.dart';
+import 'package:unishare/app/modules/karir/karir_page.dart';
 import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/detail_top_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';
 
+
 class DetailKarirRil extends StatefulWidget {
-  final String karirID;
-  final KarirPost karir;
-  const DetailKarirRil({Key? key, required this.karirID, required this.karir})
-      : super(key: key);
+  final String? karirID;
+  final KarirPost? karir;
+  const DetailKarirRil({Key? key, this.karirID, this.karir}) : super(key: key);
 
   @override
   _DetailKarirState createState() => _DetailKarirState();
@@ -25,7 +26,10 @@ class _DetailKarirState extends State<DetailKarirRil> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => KarirPage()),
+              );
             },
           ),
           title: const Text(
@@ -44,7 +48,7 @@ class _DetailKarirState extends State<DetailKarirRil> {
               width: 296,
               height: 180,
               margin:
-                  const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 5),
+              const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: const DecorationImage(
@@ -54,8 +58,8 @@ class _DetailKarirState extends State<DetailKarirRil> {
               ),
             ),
             CardDetailTop(
-              type: widget.karir.posisi,
-              title: widget.karir.penyelenggara,
+              type: widget.karir?.posisi ?? '',
+              title: widget.karir?.penyelenggara ?? '',
               period: 'Registrasi: 12 Agust - 28 Sept 2023',
               thumbnailAsset: 'assets/img/unishare_splash.png',
               salary: '50.000.000',
@@ -117,14 +121,14 @@ class _DetailKarirState extends State<DetailKarirRil> {
                           ListView(
                             children: [
                               DescriptionCard(
-                                  description: widget.karir.deskripsi),
+                                  description: widget.karir?.deskripsi ?? ''),
                             ],
                           ),
                           ListView(
                             children: const [
                               RegulationCard(
                                   regulation:
-                                      '- Diploma ke atas dalam bidang akuntansi dan bidang terkait. \n- 2 tahun pengalaman kerja yang relevan lebih disukai, lulusan  baru yang didorong akan dipertimbangkan.'),
+                                  '- Diploma ke atas dalam bidang akuntansi dan bidang terkait. \n- 2 tahun pengalaman kerja yang relevan lebih disukai, lulusan  baru yang didorong akan dipertimbangkan.'),
                             ],
                           ),
                         ],
@@ -142,7 +146,7 @@ class _DetailKarirState extends State<DetailKarirRil> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                DaftarKarir(karirID: widget.karirID),
+                                DaftarKarir(karirID: widget.karirID ?? ''),
                           ),
                         );
                       },
@@ -156,28 +160,6 @@ class _DetailKarirState extends State<DetailKarirRil> {
             ),
           ],
         ),
-        // floatingActionButton: Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     ElevatedButton(
-        //       style: const ButtonStyle(
-        //           backgroundColor:
-        //               MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
-        //           padding: MaterialStatePropertyAll(EdgeInsets.only(
-        //               left: 150, top: 20, right: 150, bottom: 20))),
-        //       onPressed: () {
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(
-        //             builder: (context) => DaftarKarir(),
-        //           ),
-        //         );
-        //       },
-        //       child:
-        //           const Text('Daftar', style: TextStyle(color: Colors.white)),
-        //     ),
-        //   ],
-        // ),
       ),
     );
   }

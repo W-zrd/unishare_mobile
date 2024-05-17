@@ -22,8 +22,8 @@ class KarirService {
   }
 
   //read
-  Stream<QuerySnapshot> getKarirs() {
-    return _firestore.collection('karir').snapshots();
+  Stream<QuerySnapshot> getKarirs({bool includeMetadataChanges = false}) {
+    return _firestore.collection('karir').snapshots(includeMetadataChanges: includeMetadataChanges);
   }
 
   //read by id

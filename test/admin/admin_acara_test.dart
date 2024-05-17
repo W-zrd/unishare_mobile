@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare/app/modules/admin/acara/make_acara_post_screen.dart';
 import 'package:unishare/app/widgets/file_picker.dart';
 
-import 'mock.dart';
-import 'test_helper.dart';
+import '../mock.dart';
+import '../test_helper.dart';
 
 void main() {
   group('Admin acara test group', () {

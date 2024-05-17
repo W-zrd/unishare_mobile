@@ -8,7 +8,7 @@ import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';
 
-import 'mock.dart';
+import '../mock.dart';
 
 void main() {
   group('Karir page test group', () {
