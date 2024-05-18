@@ -13,8 +13,8 @@ class KarirService {
           .collection("karir")
           .add(acaraPost.toMap());
       // Show success message or navigate to another screen
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Career post uploaded successfully!')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Career post uploaded successfully!')));
       Navigator.pop(context); // Assuming this is in a new screen
     } catch (error) {
       // Show error message to the user
@@ -23,7 +23,9 @@ class KarirService {
 
   //read
   Stream<QuerySnapshot> getKarirs({bool includeMetadataChanges = false}) {
-    return _firestore.collection('karir').snapshots(includeMetadataChanges: includeMetadataChanges);
+    return _firestore
+        .collection('karir')
+        .snapshots(includeMetadataChanges: includeMetadataChanges);
   }
 
   //read by id
@@ -46,6 +48,11 @@ class KarirService {
 
   //delete
   static Future<void> deleteKompetisi(String id) async {
-    await FirebaseFirestore.instance.collection('karir').doc(id).delete();
+    try {
+      await FirebaseFirestore.instance.collection('karir').doc(id).delete();
+    } catch (e) {
+      print('Error deleting karir post: $e');
+      // Handle the error appropriately (e.g., show an error message to the user)
+    }
   }
 }

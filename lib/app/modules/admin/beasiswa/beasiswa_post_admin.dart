@@ -39,7 +39,7 @@ class _BeasiswaAdminState extends State<BeasiswaAdmin> {
       body: Column(
         children: [
           const SizedBox(height: 25),
-          Expanded(child: _buildKarirList(context)),
+          Expanded(child: _buildBeasiswaList(context)),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -58,7 +58,7 @@ class _BeasiswaAdminState extends State<BeasiswaAdmin> {
     );
   }
 
-  Widget _buildKarirList(BuildContext context) {
+  Widget _buildBeasiswaList(BuildContext context) {
     return StreamBuilder(
       stream: _beasiswaService.getBeasiswas(),
       builder: (context, snapshot) {
@@ -71,7 +71,7 @@ class _BeasiswaAdminState extends State<BeasiswaAdmin> {
         if (snapshot.hasData) {
           return ListView(
             children: snapshot.data!.docs
-                .map((doc) => _buildKarirItem(doc, context))
+                .map((doc) => _buildBeasiswaItem(doc, context))
                 .toList(),
           );
         }
@@ -80,7 +80,7 @@ class _BeasiswaAdminState extends State<BeasiswaAdmin> {
     );
   }
 
-  Widget _buildKarirItem(DocumentSnapshot doc, BuildContext context) {
+  Widget _buildBeasiswaItem(DocumentSnapshot doc, BuildContext context) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     return AdminPostCard(
@@ -89,9 +89,14 @@ class _BeasiswaAdminState extends State<BeasiswaAdmin> {
       period: 'Open',
       deskripsi: data['deskripsi'] ?? '',
       thumbnailAsset: data['img'] ?? 'default_image.png',
-      delete: () {
-        BeasiswaService.deleteBeasiswa(doc.id);
-            },
+      delete: () async {
+        try {
+          await BeasiswaService.deleteBeasiswa(doc.id);
+        } catch (e) {
+          print('Error deleting beasiswa post: $e');
+          // Handle the error appropriately (e.g., show an error message to the user)
+        }
+      },
       update: () {
         Navigator.of(context).pop(); // Close the dialog
         Navigator.push(

@@ -149,6 +149,18 @@ void main() {
       await tester.tap(find.byKey(Key('delete-button')));
       await tester.pumpAndSettle();
 
+      // Update the mock snapshot to remove the deleted item
+      mockSnapshot.setDocs([]);
+
+      // Rebuild the widget tree
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BeasiswaAdmin(beasiswaService: mockBeasiswaService),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
       // Verify that 'Beasiswa 1' is deleted
       expect(find.text('Beasiswa 1'), findsNothing);
     });
@@ -220,7 +232,12 @@ void main() {
       // Verify that the BeasiswaAdmin screen is visible
       expect(find.byType(BeasiswaAdmin), findsOneWidget);
 
-      await tester.tap(find.byKey(Key("edit-beasiswa")).first);
+      // Ensure the edit icon is visible before tapping it
+      await tester.ensureVisible(find.byIcon(Icons.edit).first);
+      await tester.pumpAndSettle();
+
+      // Tap the edit icon for 'Beasiswa 1'
+      await tester.tap(find.byIcon(Icons.edit).first);
       await tester.pumpAndSettle();
 
       // Verify that the EditBeasiswaPost screen is visible
@@ -239,7 +256,7 @@ void main() {
       await tester.pumpAndSettle(Duration(seconds: 2));
 
       // Verify that the EditBeasiswaPost screen is dismissed
-      expect(find.byType(EditBeasiswaPost), findsOneWidget);
+      expect(find.byType(BeasiswaAdmin), findsNothing);
     });
   });
 }

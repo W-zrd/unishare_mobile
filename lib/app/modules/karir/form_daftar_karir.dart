@@ -140,9 +140,6 @@ class _DaftarKarirState extends State<DaftarKarir> {
                 onPressed: () {
                   // Defer the validation until after the build method
                   Future.delayed(Duration.zero, () {
-                    print('CV: $cv');
-                    print('Motivation Letter: $motivletter');
-
                     if (cv == null || motivletter == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Please select CV and Motivation Letter')),

@@ -63,12 +63,6 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
             ),
             TextFormField(
               controller: _posisiController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -82,12 +76,6 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
             ),
             TextFormField(
               controller: _penyelenggaraController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Penyelenggara tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -100,12 +88,6 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
             ),
             TextFormField(
               controller: _lokasiController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Penyelenggara tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -119,12 +101,6 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
             ),
             TextFormField(
               controller: _urlController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Link Acara tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 

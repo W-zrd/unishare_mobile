@@ -134,12 +134,10 @@ void main() {
       await tester.enterText(find.byType(TextFormField).at(8), 'Test Major');
 
       await tester.pumpAndSettle();
-      print('Form fields filled.');
 
       // Tap the "Daftar" button
       await tester.ensureVisible(find.text('Daftar'));
       await tester.pumpAndSettle();
-      print('Tapping the "Daftar" button...');
       await tester.tap(find.text('Daftar'));
       await tester.pumpAndSettle();
 
