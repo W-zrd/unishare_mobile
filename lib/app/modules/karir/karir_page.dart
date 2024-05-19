@@ -15,7 +15,7 @@ class _KarirPageState extends State<KarirPage> {
 
   final List<Widget> _pages = [
     LowonganKerjaPage(),
-    const MagangPage(),
+    MagangPage(),
   ];
 
   @override

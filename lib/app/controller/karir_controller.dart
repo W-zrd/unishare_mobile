@@ -48,11 +48,14 @@ class KarirService {
 
   //delete
   static Future<void> deleteKompetisi(String id) async {
-    try {
-      await FirebaseFirestore.instance.collection('karir').doc(id).delete();
-    } catch (e) {
-      print('Error deleting karir post: $e');
-      // Handle the error appropriately (e.g., show an error message to the user)
-    }
+    await FirebaseFirestore.instance.collection('karir').doc(id).delete();
+  }
+
+  //read by kategori
+  Stream<QuerySnapshot> getDocumentsByKategori(String kategori) {
+    return _firestore
+        .collection('karir')
+        .where("kategori", isEqualTo: kategori)
+        .snapshots();
   }
 }

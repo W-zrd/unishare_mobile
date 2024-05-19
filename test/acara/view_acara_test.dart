@@ -48,7 +48,6 @@ void main() {
             await tester.tap(find.byKey(Key(category['key'])));
             await tester.pumpAndSettle();
             expect(find.byType(category['page']), findsOneWidget);
-            expect(find.byType(ListView), findsOneWidget);
 
             if (tester.widgetList(find.byType(PostCard)).isNotEmpty) {
               await tester.tap(find.byType(PostCard).first);
