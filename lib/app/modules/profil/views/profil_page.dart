@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/modules/profil/controller/user_service.dart';
+import 'package:unishare/app/modules/profil/controller/image_service.dart';
 
 class ProfilPage extends StatefulWidget {
   @override
@@ -9,11 +10,13 @@ class ProfilPage extends StatefulWidget {
 
 class _ProfilPageState extends State<ProfilPage> {
   final ProfileService profileService = ProfileService();
+  final ImageService imageService = ImageService();
   Map<String, dynamic>? userData;
   TextEditingController namaController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController alamatController = TextEditingController();
+  String profileImageUrl = '';
 
   @override
   void initState() {
@@ -30,6 +33,16 @@ class _ProfilPageState extends State<ProfilPage> {
         emailController.text = userData?['email'] ?? '';
         passwordController.text = userData?['password'] ?? '';
         alamatController.text = userData?['alamat'] ?? '';
+        profileImageUrl = userData?['profile_picture'] ?? '';
+      });
+    }
+  }
+
+  Future<void> _updateProfilePicture() async {
+    String? newImageUrl = await imageService.pickImageAndUpload();
+    if (newImageUrl != null) {
+      setState(() {
+        profileImageUrl = newImageUrl;
       });
     }
   }
@@ -72,41 +85,46 @@ class _ProfilPageState extends State<ProfilPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 80,
-              backgroundImage: AssetImage(
-                  'assets/profile_picture.png'), // Provide your profile picture asset path
-              child: Icon(
-                Icons.account_circle,
-                size: 150,
+            GestureDetector(
+              onTap: _updateProfilePicture,
+              child: CircleAvatar(
+                radius: 80,
+                backgroundImage: profileImageUrl.isNotEmpty
+                    ? NetworkImage(profileImageUrl)
+                    : const AssetImage('assets/profile_picture.png') as ImageProvider,
+                child: profileImageUrl.isEmpty
+                    ? const Icon(
+                        Icons.account_circle,
+                        size: 150,
+                      )
+                    : null,
               ),
             ),
-            const SizedBox(
-                height: 20), // Spacer between profile picture and text fields
+            const SizedBox(height: 20),
             TextFormField(
               controller: namaController,
-              decoration: InputDecoration(labelText: 'Nama Lengkap'),
+              decoration: const InputDecoration(labelText: 'Nama Lengkap'),
             ),
-            const SizedBox(height: 10), // Spacer between text fields
+            const SizedBox(height: 10),
             TextFormField(
               controller: emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
-            const SizedBox(height: 10), // Spacer between text fields
+            const SizedBox(height: 10),
             TextFormField(
               controller: passwordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
             ),
-            const SizedBox(height: 10), // Spacer between text fields
+            const SizedBox(height: 10),
             TextFormField(
               controller: alamatController,
-              decoration: InputDecoration(labelText: 'Alamat'),
+              decoration: const InputDecoration(labelText: 'Alamat'),
             ),
-            const SizedBox(height: 20), // Spacer between text fields and button
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _updateUserData,
-              child: Text('Update'),
+              child: const Text('Update'),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.blue,
