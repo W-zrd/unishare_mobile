@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:unishare/app/modules/auth/controller/auth_controller.dart';
+import 'package:unishare/app/controller/auth_controller.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/widgets/button/primary_button.dart';
 import 'package:unishare/app/modules/auth/login/views/login_screen.dart';
 import 'package:unishare/app/widgets/button/google_button.dart';
 import 'package:logger/logger.dart';
-
 
 class RegisterPage extends StatefulWidget {
   final AuthService? registerService;
@@ -27,8 +26,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    _registerService = widget.registerService ?? AuthService(); // Or provide your default RegisterService constructor
-
+    _registerService = widget.registerService ??
+        AuthService(); // Or provide your default RegisterService constructor
   }
 
   Future<void> _register() async {
@@ -42,7 +41,8 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     // Call the registerUser method and await for the result
-    final user = await _registerService.registerUser(email, password, displayName);
+    final user =
+        await _registerService.registerUser(email, password, displayName);
 
     // Check if the user is not null (registration successful)
     if (user != null) {
@@ -140,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               const SizedBox(height: 20.0),
-             const SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

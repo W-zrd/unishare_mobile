@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:unishare/app/models/acara_kemahasiswaan.dart';
 import 'package:flutter/material.dart';
 
-class AcaraService{
+class AcaraService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
-  static Future<void> addToFirestore(BuildContext context, AcaraKemahasiswaan acaraPost) async {
+  static Future<void> addToFirestore(
+      BuildContext context, AcaraKemahasiswaan acaraPost) async {
     try {
       await FirebaseFirestore.instance
           .collection("acara")
@@ -17,5 +18,16 @@ class AcaraService{
     } catch (error) {
       // Show error message to the user
     }
+  }
+
+  Stream<QuerySnapshot> getAcaras() {
+    return _firestore.collection('acara').snapshots();
+  }
+
+  Stream<QuerySnapshot> getDocumentsByKategori(String kategori) {
+    return _firestore
+        .collection('acara')
+        .where("kategori", isEqualTo: kategori)
+        .snapshots();
   }
 }
