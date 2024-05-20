@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:unishare/app/modules/chat/chatroom.dart';
+import 'package:unishare/app/modules/chat/messages.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
 
 import 'mock.dart';
@@ -32,26 +33,42 @@ class MockQuerySnapshot extends Mock implements QuerySnapshot<Map<String, dynami
 }
 
 class MockQueryDocumentSnapshot extends Mock implements QueryDocumentSnapshot<Map<String, dynamic>> {
-  @override
-  Map<String, dynamic> data() => {'uid': 'user1', 'displayName': 'User 1'};
+  final Map<String, dynamic> _data;
+
+  MockQueryDocumentSnapshot(this._data);
 
   @override
-  String get id => 'user1';
+  Map<String, dynamic> data() => _data;
+
+  @override
+  String get id => _data['uid'];
 }
 
 void main() {
   group('ChatRoom test group', () {
+    late MockFirebaseAuth mockFirebaseAuth;
+    late MockFirebaseFirestore mockFirebaseFirestore;
+    late MockCollectionReference mockCollectionReference;
+    late MockQuerySnapshot mockQuerySnapshot;
+
     setupFirebaseAuthMocks();
 
     setUpAll(() async {
       await Firebase.initializeApp();
+      mockFirebaseAuth = MockFirebaseAuth();
+      mockFirebaseFirestore = MockFirebaseFirestore();
+      mockCollectionReference = MockCollectionReference();
+      mockQuerySnapshot = MockQuerySnapshot();
     });
 
     testWidgets(
         'Home screen can navigate to KARIR PAGE by tapping navbar icon, and vice versa',
             (WidgetTester tester) async {
           FlutterError.onError = ignoreOverflowErrors;
-          await tester.pumpWidget(MaterialApp(home: ChatRoom()));
+          await tester.pumpWidget(MaterialApp(home: ChatRoom(
+            firebaseAuth: mockFirebaseAuth,
+            firebaseFirestore: mockFirebaseFirestore,
+          )));
 
           expect(find.byType(ChatRoom), findsOneWidget);
           expect(find.byType(AppBar), findsOneWidget);
@@ -62,5 +79,93 @@ void main() {
           expect(find.byType(HomeScreen), findsOneWidget);
         });
 
+    testWidgets('_buildUserItem displays user item for non-current user', (WidgetTester tester) async {
+      final mockDocument = MockQueryDocumentSnapshot({
+        'uid': 'user2',
+        'displayName': 'User 2',
+      });
+
+      when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
+      when(mockCollectionReference.snapshots()).thenAnswer((_) => Stream.value(mockQuerySnapshot));
+      when(mockQuerySnapshot.docs).thenAnswer((_) => [mockDocument]);
+
+      print('mockQuerySnapshot.docs: ${mockQuerySnapshot.docs}');
+      print('mockDocument: $mockDocument');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChatRoom(
+            firebaseAuth: mockFirebaseAuth,
+            firebaseFirestore: mockFirebaseFirestore,
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('User 2'), findsOneWidget);
+      expect(find.byType(ListTile), findsOneWidget);
+    });
+
+    testWidgets('_buildUserItem does not display user item for current user', (WidgetTester tester) async {
+      final mockDocument = MockQueryDocumentSnapshot({
+        'uid': 'user1',
+        'displayName': 'User 1',
+      });
+
+      when(mockFirebaseAuth.currentUser).thenReturn(MockUser());
+      when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
+      when(mockCollectionReference.snapshots()).thenAnswer((_) => Stream.value(mockQuerySnapshot));
+      when(mockQuerySnapshot.docs).thenAnswer((_) => [mockDocument]);
+
+      print('mockQuerySnapshot.docs: ${mockQuerySnapshot.docs}');
+      print('mockDocument: $mockDocument');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChatRoom(
+            firebaseAuth: mockFirebaseAuth,
+            firebaseFirestore: mockFirebaseFirestore,
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('User 1'), findsNothing);
+      expect(find.byType(ListTile), findsNothing);
+    });
+
+    testWidgets('Tapping on user item navigates to ChatPage', (WidgetTester tester) async {
+      final mockDocument = MockQueryDocumentSnapshot({
+        'uid': 'user2',
+        'displayName': 'User 2',
+      });
+
+      when(mockFirebaseAuth.currentUser).thenReturn(MockUser());
+      when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
+      when(mockCollectionReference.snapshots()).thenAnswer((_) => Stream.value(mockQuerySnapshot));
+      when(mockQuerySnapshot.docs).thenAnswer((_) => [mockDocument]);
+
+      print('mockQuerySnapshot.docs: ${mockQuerySnapshot.docs}');
+      print('mockDocument: $mockDocument');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChatRoom(
+            firebaseAuth: mockFirebaseAuth,
+            firebaseFirestore: mockFirebaseFirestore,
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(ListTile));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ChatPage), findsOneWidget);
+      expect(find.text('User 2'), findsOneWidget);
+    });
   });
 }

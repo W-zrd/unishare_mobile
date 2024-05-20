@@ -1,39 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/acara_controller.dart';
-import 'package:unishare/app/models/acara_kemahasiswaan.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 
 class AllAcaraPage extends StatefulWidget {
-  AllAcaraPage({super.key});
+  final AcaraService? acaraService;
+
+  AllAcaraPage({super.key, this.acaraService});
 
   @override
   _AllAcaraPageState createState() => _AllAcaraPageState();
 }
 
 class _AllAcaraPageState extends State<AllAcaraPage> {
-  final PageController _pageController = PageController();
-  final AcaraService _acaraService = AcaraService();
+  late AcaraService _acaraService;
 
-  int _currentPage = 0;
-  final int _cardsPerPage = 5;
+  @override
+  void initState() {
+    super.initState();
+    _acaraService = widget.acaraService ?? AcaraService();
+  }
 
   Widget _buildAcaraList(BuildContext context) {
     return StreamBuilder(
-        stream: _acaraService.getAcaras(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('Loading...');
-          }
-          return ListView(
-            children: snapshot.data!.docs
-                .map((doc) => _buildAcaraItem(doc, context))
-                .toList(),
-          );
-        });
+      stream: _acaraService.getAcaras(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}')); // Display the error text
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: Text('Loading...')); // Center the loading text
+        }
+        return ListView(
+          children: snapshot.data!.docs
+              .map((doc) => _buildAcaraItem(doc, context))
+              .toList(),
+        );
+      },
+    );
   }
 
   Widget _buildAcaraItem(DocumentSnapshot doc, BuildContext context) {
@@ -64,8 +68,9 @@ class _AllAcaraPageState extends State<AllAcaraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [Expanded(child: _buildAcaraList(context))],
-    ));
+      body: Column(
+        children: [Expanded(child: _buildAcaraList(context))],
+      ),
+    );
   }
 }

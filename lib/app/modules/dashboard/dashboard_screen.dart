@@ -9,11 +9,13 @@ import 'package:unishare/app/modules/jadwal/jadwal_page.dart';
 import 'package:unishare/app/modules/leaderboard/views/leaderboard_page.dart';
 import 'package:unishare/app/modules/milestone/views/milestone_page.dart';
 import 'package:unishare/app/modules/notification/views/notification_screen.dart';
-import 'package:unishare/app/modules/dashboard/homepage_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+  final BeasiswaService? beasiswaService;
+  final KarirService? karirService;
+
+  const Dashboard({super.key, this.beasiswaService, this.karirService});
 
   @override
   Widget build(BuildContext context) {
@@ -366,7 +368,7 @@ class Dashboard extends StatelessWidget {
   }
 
   Widget _buildBeasiswaList(BuildContext context) {
-    BeasiswaService _beasiswaService = BeasiswaService();
+    BeasiswaService _beasiswaService = beasiswaService ?? BeasiswaService();
     return StreamBuilder(
       stream: _beasiswaService.getBeasiswas(),
       builder: (context, snapshot) {
@@ -410,9 +412,9 @@ class Dashboard extends StatelessWidget {
   }
 
   Widget _buildMagangList(BuildContext context) {
-    KarirService _beasiswaService = KarirService();
+    KarirService _karirService = karirService ?? KarirService();
     return StreamBuilder(
-      stream: _beasiswaService.getDocumentsByKategori('Magang'),
+      stream: _karirService.getDocumentsByKategori('Magang'),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text('Error');
