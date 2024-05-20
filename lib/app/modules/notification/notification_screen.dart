@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../homescreen/home_screen.dart';
+import '../homescreen/home_screen.dart';
 // import 'package:intl/intl.dart';
 
 class NotificationPage extends StatelessWidget {
@@ -66,6 +66,4 @@ class NotificationPage extends StatelessWidget {
           }),
     );
   }
-
-
 }
