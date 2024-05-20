@@ -16,31 +16,12 @@ class LowonganKerjaPage extends StatelessWidget {
     return Scaffold(
         body: Column(
       children: [Expanded(child: _buildKarirList(context))],
-    )
-        // ListView(
-        //   children: const [
-        //     PostCard(
-        //       type: 'Computer Forensic Analyst',
-        //       title: 'Virtual Talent Inc.',
-        //       period: 'Registrasi: 12 Agust - 28 Sept 2023',
-        //       location: 'Lokasi: Remote from Home',
-        //       thumbnailAsset: 'assets/img/unishare_splash.png',
-        //     ),
-        //     PostCard(
-        //       type: 'Full Stack Developer',
-        //       title: 'PT. Unity Dev Indonesia',
-        //       period: 'Registrasi: 12 Des - 30 Jan 2024',
-        //       location: 'Lembang, Bandung',
-        //       thumbnailAsset: 'assets/img/unishare_splash.png',
-        //     ),
-        //   ],
-        // ),
-        );
+    ));
   }
 
   Widget _buildKarirList(BuildContext context) {
     return StreamBuilder(
-        stream: _karirService.getKarirs(),
+        stream: _karirService.getDocumentsByKategori('Lowongan Kerja'),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error');

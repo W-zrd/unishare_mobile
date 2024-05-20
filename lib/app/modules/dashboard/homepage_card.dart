@@ -1,9 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:unishare/app/controller/beasiswa_controller.dart';
 
-class HomepageCard extends StatelessWidget {
-  const HomepageCard({super.key});
+class HomepageCard extends StatefulWidget {
+  final BeasiswaService? beasiswaService;
 
+  const HomepageCard({Key? key, this.beasiswaService}) : super(key: key);
+
+  @override
+  State<HomepageCard> createState() => _HomepageCardState();
+}
+
+class _HomepageCardState extends State<HomepageCard> {
   @override
   Widget build(BuildContext context) {
     return Container(

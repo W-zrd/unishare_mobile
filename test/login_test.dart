@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:unishare/app/modules/auth/controller/auth_controller.dart';
+import 'package:unishare/app/controller/auth_controller.dart';
 import 'package:unishare/app/modules/auth/login/views/login_screen.dart';
 import 'package:unishare/app/modules/auth/register/views/register_screen.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
@@ -32,8 +32,6 @@ class MockLoginService extends Mock implements AuthService {
 class MockUser extends Mock implements User {}
 
 void main() {
-
-
   group('LoginPage', () {
     late MockLoginService mockLoginService;
     setupFirebaseAuthMocks();
@@ -57,44 +55,50 @@ void main() {
       expect(find.text('Register!'), findsOneWidget);
     });
 
-    testWidgets('Login Page navigates to Home Screen when credentials are filled',
-            (WidgetTester tester) async {
-          FlutterError.onError = ignoreOverflowErrors;
+    testWidgets(
+        'Login Page navigates to Home Screen when credentials are filled',
+        (WidgetTester tester) async {
+      FlutterError.onError = ignoreOverflowErrors;
 
-          // Create a mock LoginService
-          final mockLoginService = MockLoginService();
+      // Create a mock LoginService
+      final mockLoginService = MockLoginService();
 
-          // Override the `signInWithEmailAndPassword` method to return a MockUser when valid credentials are provided
-          when(mockLoginService.signInWithEmailAndPassword('exploiter.47@gmail.com', 'Wzrd1234'))
-              .thenAnswer((_) async => MockUser());
+      // Override the `signInWithEmailAndPassword` method to return a MockUser when valid credentials are provided
+      when(mockLoginService.signInWithEmailAndPassword(
+              'exploiter.47@gmail.com', 'Wzrd1234'))
+          .thenAnswer((_) async => MockUser());
 
-          // Build the LoginPage with the mock service
-          await tester.pumpWidget(MaterialApp(
-            home: LoginPage(loginService: mockLoginService),
-          ));
+      // Build the LoginPage with the mock service
+      await tester.pumpWidget(MaterialApp(
+        home: LoginPage(loginService: mockLoginService),
+      ));
 
-          // Enter valid credentials
-          await tester.enterText(find.byKey(const Key('email-field')), 'exploiter.47@gmail.com');
-          await tester.enterText(find.byKey(const Key('password-field')), 'Wzrd1234');
+      // Enter valid credentials
+      await tester.enterText(
+          find.byKey(const Key('email-field')), 'exploiter.47@gmail.com');
+      await tester.enterText(
+          find.byKey(const Key('password-field')), 'Wzrd1234');
 
-          // Tap the "Masuk Akun" button
-          await tester.ensureVisible(find.byType(PrimaryButton));
-          await tester.pumpAndSettle();
-          await tester.tap(find.byType(PrimaryButton));
-          await tester.pumpAndSettle();
+      // Tap the "Masuk Akun" button
+      await tester.ensureVisible(find.byType(PrimaryButton));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(PrimaryButton));
+      await tester.pumpAndSettle();
 
-          // Verify that the HomeScreen is displayed
-          expect(find.byType(HomeScreen), findsOneWidget);
-        });
+      // Verify that the HomeScreen is displayed
+      expect(find.byType(HomeScreen), findsOneWidget);
+    });
 
-    testWidgets('Stay on login page message when login fails', (WidgetTester tester) async {
+    testWidgets('Stay on login page message when login fails',
+        (WidgetTester tester) async {
       FlutterError.onError = ignoreOverflowErrors;
 
       // Create a mock LoginService
       final mockLoginService = MockLoginService();
 
       // Override the `signInWithEmailAndPassword` method to simulate a failed login
-      when(mockLoginService.signInWithEmailAndPassword('invalid@example.com', 'wrongpassword'))
+      when(mockLoginService.signInWithEmailAndPassword(
+              'invalid@example.com', 'wrongpassword'))
           .thenAnswer((_) async => null);
 
       // Build the LoginPage with the mock service
@@ -103,8 +107,10 @@ void main() {
       ));
 
       // Enter invalid credentials
-      await tester.enterText(find.byKey(const Key('email-field')), 'invalid@example.com');
-      await tester.enterText(find.byKey(const Key('password-field')), 'wrongpassword');
+      await tester.enterText(
+          find.byKey(const Key('email-field')), 'invalid@example.com');
+      await tester.enterText(
+          find.byKey(const Key('password-field')), 'wrongpassword');
 
       // Tap the "Masuk Akun" button
       await tester.ensureVisible(find.byType(PrimaryButton));
@@ -116,7 +122,8 @@ void main() {
       expect(find.byType(LoginPage), findsOneWidget);
     });
 
-    testWidgets('Back button on Login screen navigates to OnboardingScreen', (WidgetTester tester) async {
+    testWidgets('Back button on Login screen navigates to OnboardingScreen',
+        (WidgetTester tester) async {
       // Build the RegisterPage widget
       await tester.pumpWidget(MaterialApp(
         routes: {
@@ -134,7 +141,8 @@ void main() {
       expect(find.byType(OnboardingScreen), findsOneWidget);
     });
 
-    testWidgets('Register text button navigates to register page', (WidgetTester tester) async {
+    testWidgets('Register text button navigates to register page',
+        (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(
         home: LoginPage(),
       ));
@@ -148,6 +156,5 @@ void main() {
       expect(find.text("Atau daftar menggunakan"), findsOneWidget);
       expect(find.byType(RegisterPage), findsOneWidget);
     });
-
   });
 }

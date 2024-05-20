@@ -48,4 +48,12 @@ class KarirService {
   static Future<void> deleteKompetisi(String id) async {
     await FirebaseFirestore.instance.collection('karir').doc(id).delete();
   }
+
+  //read by kategori
+  Stream<QuerySnapshot> getDocumentsByKategori(String kategori) {
+    return _firestore
+        .collection('karir')
+        .where("kategori", isEqualTo: kategori)
+        .snapshots();
+  }
 }

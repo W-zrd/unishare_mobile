@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:unishare/app/modules/beasiswa/views/beasiswa_screen.dart';
+import 'package:unishare/app/controller/beasiswa_controller.dart';
+import 'package:unishare/app/controller/karir_controller.dart';
+import 'package:unishare/app/modules/beasiswa/beasiswa_screen.dart';
 import 'package:unishare/app/modules/chat/chatroom.dart';
+import 'package:unishare/app/modules/dashboard/homepage_cardd.dart';
 import 'package:unishare/app/modules/jadwal/jadwal_page.dart';
 import 'package:unishare/app/modules/leaderboard/views/leaderboard_page.dart';
 import 'package:unishare/app/modules/milestone/views/milestone_page.dart';
 import 'package:unishare/app/modules/notification/views/notification_screen.dart';
-import 'package:unishare/app/widgets/card/homepage_card.dart';
+import 'package:unishare/app/modules/dashboard/homepage_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Dashboard extends StatelessWidget {
@@ -22,7 +26,7 @@ class Dashboard extends StatelessWidget {
         scrollDirection: Axis.vertical,
         child: SizedBox(
           width: screenWidth,
-          height: screenHeight + 200,
+          height: screenHeight + 250,
           child: Stack(
             children: [
               // SECTION 1: IMAGE & ILLUSTRATION (orange box)
@@ -326,27 +330,7 @@ class Dashboard extends StatelessWidget {
                           SizedBox(
                             width: screenWidth - 60,
                             height: 250,
-                            child: const Center(
-                              child: SingleChildScrollView(
-                                padding: EdgeInsets.only(
-                                    top: 10, left: 13, right: 13, bottom: 16),
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 15),
-                                      child: HomepageCard(),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 15),
-                                      child: HomepageCard(),
-                                    ),
-                                    HomepageCard()
-                                  ],
-                                ),
-                              ),
-                            ),
+                            child: Center(child: _buildBeasiswaList(context)),
                           ),
                           const Padding(
                             padding: EdgeInsets.only(top: 20),
@@ -363,28 +347,11 @@ class Dashboard extends StatelessWidget {
                           SizedBox(
                             width: screenWidth - 60,
                             height: 250,
-                            child: const Center(
-                              child: SingleChildScrollView(
-                                padding: EdgeInsets.only(
-                                    top: 10, left: 13, right: 13, bottom: 16),
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 15),
-                                      child: HomepageCard(),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 15),
-                                      child: HomepageCard(),
-                                    ),
-                                    HomepageCard()
-                                  ],
-                                ),
-                              ),
-                            ),
+                            child: Center(child: _buildMagangList(context)),
                           ),
+                          SizedBox(
+                            width: 15,
+                          )
                         ],
                       ),
                     ),
@@ -396,5 +363,93 @@ class Dashboard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildBeasiswaList(BuildContext context) {
+    BeasiswaService _beasiswaService = BeasiswaService();
+    return StreamBuilder(
+      stream: _beasiswaService.getBeasiswas(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Error');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text('Loading...');
+        }
+        if (snapshot.hasData) {
+          return Container(
+            height: 250, // Specify a height for the container
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: snapshot.data!.docs
+                  .map((doc) => _buildBeasiswaItem(doc, context))
+                  .toList(),
+            ),
+          );
+        }
+        return const Text('No data available');
+      },
+    );
+  }
+
+  Widget _buildBeasiswaItem(DocumentSnapshot doc, BuildContext context) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    Timestamp endDate = data['endDate'];
+    String endDateString = endDate.toDate().day.toString() +
+        "-" +
+        endDate.toDate().month.toString() +
+        "-" +
+        endDate.toDate().year.toString();
+
+    return Padding(
+        padding: EdgeInsets.only(right: 15),
+        child: HomepageCardd(
+            penyelenggara: data['penyelenggara'],
+            nama_beasiswa: data['judul'],
+            deadline: endDateString));
+  }
+
+  Widget _buildMagangList(BuildContext context) {
+    KarirService _beasiswaService = KarirService();
+    return StreamBuilder(
+      stream: _beasiswaService.getDocumentsByKategori('Magang'),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Error');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text('Loading...');
+        }
+        if (snapshot.hasData) {
+          return Container(
+            height: 250, // Specify a height for the container
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: snapshot.data!.docs
+                  .map((doc) => _buildMagangItem(doc, context))
+                  .toList(),
+            ),
+          );
+        }
+        return const Text('No data available');
+      },
+    );
+  }
+
+  Widget _buildMagangItem(DocumentSnapshot doc, BuildContext context) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    Timestamp endDate = data['endDate'];
+    String endDateString = endDate.toDate().day.toString() +
+        "-" +
+        endDate.toDate().month.toString() +
+        "-" +
+        endDate.toDate().year.toString();
+
+    return Padding(
+        padding: EdgeInsets.only(right: 15),
+        child: HomepageCardd(
+            penyelenggara: data['penyelenggara'],
+            nama_beasiswa: 'Magang ' + data['posisi'],
+            deadline: endDateString));
   }
 }
