@@ -13,7 +13,7 @@ import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/modules/karir/karir_page.dart';
 import 'package:unishare/app/modules/leaderboard/views/leaderboard_page.dart';
 import 'package:unishare/app/modules/milestone/views/milestone_page.dart';
-import 'package:unishare/app/modules/notification/views/notification_screen.dart';
+import 'package:unishare/app/modules/notification/notification_screen.dart';
 
 import '../mock.dart';
 import '../test_helper.dart';

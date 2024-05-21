@@ -8,7 +8,7 @@ import 'package:unishare/app/modules/dashboard/homepage_cardd.dart';
 import 'package:unishare/app/modules/jadwal/jadwal_page.dart';
 import 'package:unishare/app/modules/leaderboard/views/leaderboard_page.dart';
 import 'package:unishare/app/modules/milestone/views/milestone_page.dart';
-import 'package:unishare/app/modules/notification/views/notification_screen.dart';
+import 'package:unishare/app/modules/notification/notification_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Dashboard extends StatelessWidget {

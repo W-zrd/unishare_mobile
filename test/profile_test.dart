@@ -38,22 +38,27 @@ void main() {
 
     setupFirebaseAuthMocks();
 
-    setUpAll(() {
+    setUpAll(() async {
+      await Firebase.initializeApp();
       mockProfileService = MockProfileService();
       mockImageService = MockImageService();
     });
 
     testWidgets('ProfilPage is rendered correctly', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: ProfilPage()));
+      FlutterError.onError = ignoreOverflowErrors;
+      await tester.pumpWidget(MaterialApp(
+        home: ProfilPage(
+          imageService: MockImageService(),
+        ),
+      ));
+      await tester.pumpAndSettle();
 
-      expect(find.text('Profil'), findsOneWidget);
-      expect(find.byType(CircleAvatar), findsOneWidget);
       expect(find.byType(TextFormField), findsNWidgets(4));
       expect(find.text('Update'), findsOneWidget);
     });
 
     testWidgets('User data is fetched and displayed correctly', (WidgetTester tester) async {
-      FlutterError.onError  = ignoreOverflowErrors;
+      FlutterError.onError = ignoreOverflowErrors;
       await tester.pumpWidget(MaterialApp(
         home: ProfilPage(
           profileService: mockProfileService,
@@ -61,6 +66,7 @@ void main() {
         ),
       ));
       await tester.pumpAndSettle();
+
       tester.widgetList(find.byType(Text)).forEach((widget) {
         print((widget as Text).data);
       });

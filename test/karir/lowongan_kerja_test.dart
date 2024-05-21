@@ -32,6 +32,7 @@ class MockCollectionReference extends Mock implements CollectionReference<Object
   @override
   Stream<QuerySnapshot<Object?>> snapshots({
     bool includeMetadataChanges = false,
+    ListenSource? source,
   }) {
     final mockDocs = [
       MockQueryDocumentSnapshot({
