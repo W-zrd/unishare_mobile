@@ -26,13 +26,13 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
   void initState() {
     super.initState();
     // Set initial values for text fields
-    _posisiController.text = widget.karirPost['posisi'];
-    _penyelenggaraController.text = widget.karirPost['penyelenggara'];
-    _lokasiController.text = widget.karirPost['lokasi'];
-    _urlController.text = widget.karirPost['urlKarir'];
-    _deskripsiController.text = widget.karirPost['deskripsi'];
-    temaValue = widget.karirPost['tema'];
-    kategoriValue = widget.karirPost['kategori'];
+    _posisiController.text = widget.karirPost['posisi'] ?? '';
+    _penyelenggaraController.text = widget.karirPost['penyelenggara'] ?? '';
+    _lokasiController.text = widget.karirPost['lokasi'] ?? '';
+    _urlController.text = widget.karirPost['urlKarir'] ?? '';
+    _deskripsiController.text = widget.karirPost['deskripsi'] ?? '';
+    temaValue = widget.karirPost['tema'] ?? 'Teknologi';
+    kategoriValue = widget.karirPost['kategori'] ?? 'Lowongan Kerja';
   }
 
   Future<void> _openFilePicker(BuildContext context) async {
@@ -75,13 +75,8 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
               ),
             ),
             TextFormField(
+              key: Key('posisi-field'),
               controller: _posisiController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
             const Text(
@@ -92,13 +87,8 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
               ),
             ),
             TextFormField(
+              key: Key('penyelenggara-field'),
               controller: _penyelenggaraController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Penyelenggara tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
             const Text(
@@ -109,13 +99,8 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
               ),
             ),
             TextFormField(
+              key: Key('lokasi-field'),
               controller: _lokasiController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Lokasi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
             const Text(
@@ -126,13 +111,8 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
               ),
             ),
             TextFormField(
+              key: Key('url-field'),
               controller: _urlController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Link Acara tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
             const Text(
@@ -184,6 +164,7 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
               ),
             ),
             TextFormField(
+              key: Key('deskripsi-field'),
               controller: _deskripsiController,
               maxLines: null, // Allow for multi-line input
             ),
@@ -206,8 +187,8 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
                       lokasi: _lokasiController.text,
                       img: "/img/Wzrd.jpg",
                       deskripsi: _deskripsiController.text,
-                      startDate: widget.karirPost['startDate'],
-                      endDate: widget.karirPost['endDate'],
+                      startDate: widget.karirPost['startDate'] ?? Timestamp.now(),
+                      endDate: widget.karirPost['endDate'] ?? Timestamp.now(),
                       AnnouncementDate: Timestamp.now(),
                     );
                     KarirService.updateKarir(

@@ -5,6 +5,7 @@ on:
     branches:
       - "Wzrd/unit-test"
       - "development"
+      - "main"
 
 permissions:
   contents: read

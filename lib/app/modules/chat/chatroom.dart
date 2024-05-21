@@ -6,13 +6,19 @@ import 'package:unishare/app/modules/chat/messages.dart';
 import '../homescreen/home_screen.dart';
 
 class ChatRoom extends StatefulWidget {
+  final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firebaseFirestore;
+
+  ChatRoom({Key? key, FirebaseAuth? firebaseAuth, FirebaseFirestore? firebaseFirestore})
+      : firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
+        super(key: key);
+
   @override
   _ChatRoomState createState() => _ChatRoomState();
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +41,7 @@ class _ChatRoomState extends State<ChatRoom> {
   //build user list except for the current login user
   Widget _buildUserList() {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
+        stream: widget.firebaseFirestore.collection('users').snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -57,7 +63,7 @@ class _ChatRoomState extends State<ChatRoom> {
   Widget _buildUserItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-    if (data['uid']!= _auth.currentUser!.uid) {
+    if (data['uid']!= widget.firebaseAuth.currentUser!.uid) {
       return ListTile(
         title: Text(document['displayName']),
         onTap: () {

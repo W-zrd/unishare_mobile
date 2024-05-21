@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/karir_submission_controller.dart';
 import 'package:unishare/app/models/karir_submission_model.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
+import 'package:unishare/app/modules/karir/detail_karir_ril.dart';
+import 'package:unishare/app/modules/karir/karir_page.dart';
 import 'package:unishare/app/widgets/file_picker.dart';
 
 class DaftarKarir extends StatefulWidget {
   final String karirID;
+
   const DaftarKarir({Key? key, required this.karirID}) : super(key: key);
+
   @override
   _DaftarKarirState createState() => _DaftarKarirState();
 }
@@ -22,12 +26,24 @@ class _DaftarKarirState extends State<DaftarKarir> {
   TextEditingController universitasController = TextEditingController();
   TextEditingController fakultasController = TextEditingController();
   TextEditingController jurusanController = TextEditingController();
-  String? cv = '';
-  String? motivletter = '';
+  String? cv;
+  String? motivletter;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void _handleCvSelected(String? url) {
+    setState(() {
+      cv = url;
+    });
+  }
+
+  void _handleMotivletterSelected(String? url) {
+    setState(() {
+      motivletter = url;
+    });
   }
 
   @override
@@ -39,7 +55,7 @@ class _DaftarKarirState extends State<DaftarKarir> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              MaterialPageRoute(builder: (context) => const KarirPage()),
             );
           },
         ),
@@ -87,16 +103,12 @@ class _DaftarKarirState extends State<DaftarKarir> {
               const SizedBox(height: 10),
               FileInputWidget(
                 fileType: 'CV',
-                onSaveToDatabase: (_cv) {
-                  cv = _cv;
-                },
+                onSaveToDatabase: _handleCvSelected,
               ),
               const SizedBox(height: 10),
               FileInputWidget(
                 fileType: 'Motivation Letter',
-                onSaveToDatabase: (_ml) {
-                  motivletter = _ml;
-                },
+                onSaveToDatabase: _handleMotivletterSelected,
               ),
               const SizedBox(height: 10),
               TextFormField(
@@ -122,12 +134,19 @@ class _DaftarKarirState extends State<DaftarKarir> {
               ElevatedButton(
                 style: const ButtonStyle(
                     backgroundColor:
-                        MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
+                    MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
                     padding: MaterialStatePropertyAll(EdgeInsets.only(
                         left: 150, top: 20, right: 150, bottom: 20))),
                 onPressed: () {
                   // Defer the validation until after the build method
                   Future.delayed(Duration.zero, () {
+                    if (cv == null || motivletter == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please select CV and Motivation Letter')),
+                      );
+                      return;
+                    }
+
                     KarirSubmission karirSubmission = KarirSubmission(
                       nama: namaController.text,
                       email: emailController.text,
@@ -143,32 +162,26 @@ class _DaftarKarirState extends State<DaftarKarir> {
                       karirID: widget.karirID,
                       userID: FirebaseAuth.instance.currentUser!.uid,
                     );
-                    KarirSubmissionService.addToFirestore(
-                        context, karirSubmission);
+                    KarirSubmissionService.addToFirestore(context, karirSubmission);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Data pendaftaran berhasil dikirim!')),
+                    );
+                    Future.delayed(const Duration(seconds: 1), () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      );
+                    });
                   });
                 },
                 child:
-                    const Text('Daftar', style: TextStyle(color: Colors.white)),
+                const Text('Daftar', style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 10),
             ],
           ),
         ),
       ),
-      // floatingActionButton: Row(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [
-      //     ElevatedButton(
-      //       style: const ButtonStyle(
-      //           backgroundColor:
-      //               MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
-      //           padding: MaterialStatePropertyAll(EdgeInsets.only(
-      //               left: 150, top: 20, right: 150, bottom: 20))),
-      //       onPressed: () {},
-      //       child: const Text('Daftar', style: TextStyle(color: Colors.white)),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

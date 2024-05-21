@@ -9,9 +9,10 @@ import 'package:unishare/app/widgets/date/date_button.dart';
 
 class JadwalPage extends StatelessWidget {
   final KarirSubmissionService _karirSubmissionService =
-      KarirSubmissionService();
+  KarirSubmissionService();
 
   JadwalPage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,19 +40,32 @@ class JadwalPage extends StatelessWidget {
   }
 
   Widget _buildJadwalList(BuildContext context) {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    print('Current user: $currentUser');
+
+    if (currentUser == null) {
+      print('No user logged in');
+      return Center(child: Text('No user logged in'));
+    }
+
+    print('Building StreamBuilder');
     return StreamBuilder(
-      stream: _karirSubmissionService
-          .getDocumentsByField(FirebaseAuth.instance.currentUser!.uid),
+      stream: _karirSubmissionService.getDocumentsByField(currentUser.uid),
       builder: (context, snapshot) {
+        print('Inside StreamBuilder');
         if (snapshot.hasError) {
+          print('Error: ${snapshot.error}');
           return Center(child: Text('Error'));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
+          print('Loading...');
           return Center(child: CircularProgressIndicator());
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          print('No data available');
           return Center(child: Text('No data available'));
         }
+        print('Rendering ListView');
         return ListView(
           children: snapshot.data!.docs
               .map((doc) => _buildJadwalItem(doc, context))

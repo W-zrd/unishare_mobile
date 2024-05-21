@@ -6,7 +6,7 @@ class AdminPostCard extends StatelessWidget {
   final String period;
   final String thumbnailAsset;
   final String deskripsi;
-  final void Function()? delete;
+  final Future<void> Function()? delete;
   final void Function()? update;
 
   const AdminPostCard({
@@ -65,14 +65,14 @@ class AdminPostCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                      type,
-                      style: const TextStyle(
-                        fontFamily: 'Rubik',
-                        fontWeight: FontWeight.normal,
-                        fontSize: 12,
-                        color: Color(0xFFF75600),
+                        type,
+                        style: const TextStyle(
+                          fontFamily: 'Rubik',
+                          fontWeight: FontWeight.normal,
+                          fontSize: 12,
+                          color: Color(0xFFF75600),
+                        ),
                       ),
-                    ),
                       Text(
                         title,
                         style: const TextStyle(
@@ -103,12 +103,13 @@ class AdminPostCard extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: Icon(Icons.edit, key: Key("edit-karir")),
                   onPressed: update,
                 ),
                 IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: delete != null ? () {
+                  onPressed: delete != null
+                      ? () async {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -119,21 +120,19 @@ class AdminPostCard extends StatelessWidget {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop(); // Tutup dialog
+                                Navigator.of(context).pop(); // Close the dialog
                               },
                               child: Text('Cancel'),
                             ),
                             TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 try {
-                                  delete!();
-                                  Navigator.of(context).pop();
+                                  await delete!();
+                                  Navigator.of(context).pop(); // Close the dialog
                                 } catch (e) {
                                   print('Error in delete function: $e');
+                                  // Handle the error appropriately (e.g., show an error message to the user)
                                 }
-                                // Tambahkan logika untuk menghapus post di sini
-                                delete!();
-                                Navigator.of(context).pop(); // Tutup dialog
                               },
                               child: Text('Delete'),
                               key: Key("delete-button"),
@@ -143,7 +142,7 @@ class AdminPostCard extends StatelessWidget {
                       },
                     );
                   }
-                  : null,
+                      : null,
                 ),
               ],
             ),

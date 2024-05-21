@@ -46,6 +46,7 @@ dependencies:
   mockito: ^5.0.8
   file_picker: ^8.0.0+1
   firebase_messaging: ^14.9.2
+  image_picker: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -53,7 +54,7 @@ dev_dependencies:
   flutter_launcher_icons: "^0.9.0"
 
 flutter_icons:
-  image_path: "/assets/img/unishare_splash.png" 
+  image_path: "/assets/img/unishare_splash.png"
   android: true
   ios: true
 
