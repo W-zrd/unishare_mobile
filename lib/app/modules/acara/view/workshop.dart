@@ -4,14 +4,22 @@ import 'package:unishare/app/controller/acara_controller.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 
 class WorkshopPage extends StatefulWidget {
-  WorkshopPage({super.key});
+  final AcaraService? acaraService;
+
+  WorkshopPage({Key? key, this.acaraService}) : super(key: key);
 
   @override
   _WorkshopPageState createState() => _WorkshopPageState();
 }
 
 class _WorkshopPageState extends State<WorkshopPage> {
-  final AcaraService _kompetisiService = AcaraService();
+  late AcaraService _kompetisiService;
+
+  @override
+  void initState() {
+    super.initState();
+    _kompetisiService = widget.acaraService ?? AcaraService();
+  }
 
   Widget _buildAcaraList(BuildContext context) {
     return StreamBuilder(

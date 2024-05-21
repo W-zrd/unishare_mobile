@@ -4,18 +4,26 @@ import 'package:unishare/app/controller/acara_controller.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 
 class SeminarPage extends StatefulWidget {
-  SeminarPage({super.key});
+  final AcaraService? acaraService;
+
+  SeminarPage({Key? key, this.acaraService}) : super(key: key);
 
   @override
   _SeminarPageState createState() => _SeminarPageState();
 }
 
 class _SeminarPageState extends State<SeminarPage> {
-  final AcaraService _kompetisiService = AcaraService();
+  late AcaraService _seminarService;
+
+  @override
+  void initState() {
+    super.initState();
+    _seminarService = widget.acaraService ?? AcaraService();
+  }
 
   Widget _buildAcaraList(BuildContext context) {
     return StreamBuilder(
-        stream: _kompetisiService.getDocumentsByKategori('Seminar'),
+        stream: _seminarService.getDocumentsByKategori('Seminar'),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error');

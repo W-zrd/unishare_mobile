@@ -74,6 +74,7 @@ class DaDrawer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: ListTile(
+                  key: Key('beasiswa-button'),
                   title: const Text('Beasiswa',
                       style: TextStyle(color: Colors.white)),
                   leading: const Icon(Icons.settings),

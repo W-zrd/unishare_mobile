@@ -5,10 +5,23 @@ import 'package:unishare/app/modules/admin/karir/makekarirpost.dart';
 import 'package:unishare/app/modules/admin/karir/updatekarirpost.dart';
 import 'package:unishare/app/widgets/card/adminpost.dart';
 
-class KarirAdmin extends StatelessWidget {
-  final KarirService _karirService = KarirService();
+class KarirAdmin extends StatefulWidget {
+  final KarirService? karirService;
 
-  KarirAdmin({super.key});
+  KarirAdmin({super.key, this.karirService});
+
+  @override
+  _KarirAdminState createState() => _KarirAdminState();
+}
+
+class _KarirAdminState extends State<KarirAdmin> {
+  late KarirService _karirService;
+
+  @override
+  void initState() {
+    super.initState();
+    _karirService = widget.karirService ?? KarirService();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +49,11 @@ class KarirAdmin extends StatelessWidget {
           Navigator.pop(context);
 
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MakeKarirPost(),
-              ));
+            context,
+            MaterialPageRoute(
+              builder: (context) => MakeKarirPost(),
+            ),
+          );
         },
         backgroundColor: const Color(0xFFF75600),
         child: const Icon(Icons.add),
@@ -48,44 +62,49 @@ class KarirAdmin extends StatelessWidget {
   }
 
   Widget _buildKarirList(BuildContext context) {
-    return StreamBuilder(
-        stream: _karirService.getKarirs(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('Loading...');
-          }
+    return StreamBuilder<QuerySnapshot>(
+      stream: _karirService.getKarirs(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text('Loading...');
+        }
+        if (snapshot.hasData) {
           return ListView(
             children: snapshot.data!.docs
                 .map((doc) => _buildKarirItem(doc, context))
                 .toList(),
           );
-        });
+        }
+        return Text('No data');
+      },
+    );
   }
 
-  Widget _buildKarirItem(DocumentSnapshot doc, BuildContext context) {
+  Widget _buildKarirItem(QueryDocumentSnapshot doc, BuildContext context) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     return AdminPostCard(
-      type: data['posisi'],
-      title: data['penyelenggara'],
+      type: data['posisi'] ?? '',
+      title: data['penyelenggara'] ?? '',
       period: 'Open',
-      deskripsi: data['deskripsi'],
-      thumbnailAsset: data['img'],
-      delete: () {
-        KarirService.deleteKompetisi(doc.id);
+      deskripsi: data['deskripsi'] ?? '',
+      thumbnailAsset: data['img'] ?? '',
+      delete: () async {
+        await KarirService.deleteKompetisi(doc.id);
       },
       update: () {
-        Navigator.of(context).pop(); // Tutup dialog
+        Navigator.of(context).pop(); // Close the dialog
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UpdateKarirPost(
-                karirPost: doc,
-              ),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => UpdateKarirPost(
+              karirPost: doc,
+            ),
+          ),
+        );
       },
     );
   }

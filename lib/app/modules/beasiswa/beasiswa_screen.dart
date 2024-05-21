@@ -88,34 +88,25 @@ class _BeasiswaAdminState extends State<BeasiswaScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        // leading: Image(image: content[index]["image"]),
         title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Positioned(
-                child: Text(
-                  data["jenis"], // Replace with your data key
-                  style: const TextStyle(
-                    color: Colors.orange, // Set the desired orange color
-                    fontSize: 12.0, // Adjust font size as needed
-                  ),
-                ),
+            Text(
+              data["jenis"],
+              style: const TextStyle(
+                color: Colors.orange,
+                fontSize: 12.0,
               ),
             ),
-            // Title below the orange text
-            Align(
-              alignment: Alignment.centerLeft, // Or adjust alignment as needed
-              child: Text(
-                data["judul"],
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+            Text(
+              data["judul"],
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.0),
           ],
         ),
         subtitle:
-            Text('Deadline: ...\n' + 'Penyelenggara: ' + data["penyelenggara"]),
+        Text('Deadline: ...\n' + 'Penyelenggara: ' + data["penyelenggara"]),
         isThreeLine: true,
       ),
     );
