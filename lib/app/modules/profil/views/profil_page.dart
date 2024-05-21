@@ -5,16 +5,17 @@ import 'package:unishare/app/modules/profil/controller/image_service.dart';
 
 class ProfilPage extends StatefulWidget {
   final ProfileService? profileService;
+  final ImageService? imageService;
 
-  ProfilPage({this.profileService});
+  ProfilPage({this.profileService, this.imageService});
   @override
   _ProfilPageState createState() => _ProfilPageState();
 }
 
 class _ProfilPageState extends State<ProfilPage> {
   late final ProfileService profileService;
+  late final ImageService imageService;
 
-  final ImageService imageService = ImageService();
   Map<String, dynamic>? userData;
   TextEditingController namaController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -26,6 +27,7 @@ class _ProfilPageState extends State<ProfilPage> {
   void initState() {
     super.initState();
     profileService = widget.profileService ?? ProfileService();
+    imageService = widget.imageService ?? ImageService();
     _getUserData();
   }
 

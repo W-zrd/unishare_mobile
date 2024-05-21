@@ -19,7 +19,7 @@ void main() async {
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
     home: Scaffold(
-      body: HomeScreen(),
+      body: SplashScreen(),
     ),
   ));
 }

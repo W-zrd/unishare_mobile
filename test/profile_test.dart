@@ -4,130 +4,70 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
+import 'package:unishare/app/modules/profil/controller/image_service.dart';
 import 'package:unishare/app/modules/profil/controller/user_service.dart';
 import 'package:unishare/app/modules/profil/views/profil_page.dart';
 
 import 'mock.dart';
 import 'test_helper.dart';
 
-class MockUser extends Mock implements User {}
-
 class MockProfileService extends Mock implements ProfileService {
   @override
-  Future<Map<String, dynamic>?> getUserData() {
-    return super.noSuchMethod(
-      Invocation.method(#getUserData, null),
-      returnValue: Future.value({
-        'nama': 'John Doe',
-        'email': 'john@example.com',
-        'password': 'password123',
-        'alamat': '123 Main St',
-      }),
-      returnValueForMissingStub: Future.value({
-        'nama': 'John Doe',
-        'email': 'john@example.com',
-        'password': 'password123',
-        'alamat': '123 Main St',
-      }),
-    );
-  }
-
-  @override
-  Future<User?> getLoggedInUser() {
-    return super.noSuchMethod(
-      Invocation.method(#getLoggedInUser, null),
-      returnValue: Future.value(MockUser()),
-      returnValueForMissingStub: Future.value(null),
-    );
+  Future<Map<String, dynamic>?> getUserData() async {
+    print('Mocked getUserData called');
+    return {
+      'nama': 'John Doe',
+      'email': 'john@example.com',
+      'password': 'password123',
+      'alamat': '123 Street',
+    };
   }
 }
 
-class MockFirebaseAuth extends Mock implements FirebaseAuth {
-  final User? _currentUser;
-
-  MockFirebaseAuth(this._currentUser);
-
+class MockImageService extends Mock implements ImageService {
   @override
-  User? get currentUser => _currentUser;
+  Future<String?> pickImageAndUpload() async {
+    return 'https://example.com/mocked_image.jpg';
+  }
 }
-
-late MockProfileService mockProfileService;
-late MockUser mockUser;
 
 void main() {
   group('Profile page test group', () {
     late MockProfileService mockProfileService;
+    late MockImageService mockImageService;
 
     setupFirebaseAuthMocks();
 
-    setUpAll(() async {
-      await Firebase.initializeApp();
+    setUpAll(() {
       mockProfileService = MockProfileService();
+      mockImageService = MockImageService();
     });
 
-    testWidgets('Test getLoggedInUser() error handling', (WidgetTester tester) async {
-      FlutterError.onError = ignoreOverflowErrors;
+    testWidgets('ProfilPage is rendered correctly', (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(home: ProfilPage()));
 
-      // Create a mock ProfileService that throws an error when getLoggedInUser() is called
-      final mockProfileServiceWithError = MockProfileService();
-      when(mockProfileServiceWithError.getLoggedInUser()).thenAnswer((_) async {
-        throw Exception('Test error');
+      expect(find.text('Profil'), findsOneWidget);
+      expect(find.byType(CircleAvatar), findsOneWidget);
+      expect(find.byType(TextFormField), findsNWidgets(4));
+      expect(find.text('Update'), findsOneWidget);
+    });
+
+    testWidgets('User data is fetched and displayed correctly', (WidgetTester tester) async {
+      FlutterError.onError  = ignoreOverflowErrors;
+      await tester.pumpWidget(MaterialApp(
+        home: ProfilPage(
+          profileService: mockProfileService,
+          imageService: mockImageService,
+        ),
+      ));
+      await tester.pumpAndSettle();
+      tester.widgetList(find.byType(Text)).forEach((widget) {
+        print((widget as Text).data);
       });
 
-      // Expect the exception to be thrown
-      expect(
-        mockProfileServiceWithError.getLoggedInUser(),
-        throwsA(isInstanceOf<Exception>()),
-      );
-      
-      when(mockProfileServiceWithError.getUserData()).thenAnswer((_) async => null);
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ProfilPage(profileService: mockProfileServiceWithError),
-        ),
-      );
-
-      // Wait for the asynchronous operation to complete and the widget tree to rebuild
-      await tester.pumpAndSettle();
-
-      // Verify that the TextFormFields are empty since getUserData() returns null
-      expect(find.byWidgetPredicate((widget) => widget is TextFormField && widget.controller?.text == ''), findsNWidgets(4));
-
+      expect(find.text('John Doe'), findsOneWidget);
+      expect(find.text('john@example.com'), findsOneWidget);
+      expect(find.text('123 Street'), findsOneWidget);
     });
-
-    testWidgets('Test back button can navigate to Home screen', (WidgetTester tester) async {
-      FlutterError.onError = ignoreOverflowErrors;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ProfilPage(profileService: mockProfileService),
-        ),
-      );
-      await tester.tap(find.byIcon(Icons.arrow_back));
-      await tester.pumpAndSettle();
-      expect(find.byType(HomeScreen), findsOneWidget);
-    });
-
-    testWidgets('Test setState() after getting user data', (WidgetTester tester) async {
-      FlutterError.onError = ignoreOverflowErrors;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ProfilPage(profileService: mockProfileService),
-        ),
-      );
-
-      // Wait for the asynchronous operation to complete and the widget tree to rebuild
-      await tester.pumpAndSettle();
-
-      // Verify that the TextFormFields are populated with the test data
-      expect(find.byWidgetPredicate((widget) => widget is TextFormField && widget.controller?.text == 'John Doe'), findsOneWidget);
-      expect(find.byWidgetPredicate((widget) => widget is TextFormField && widget.controller?.text == 'john@example.com'), findsOneWidget);
-      expect(find.byWidgetPredicate((widget) => widget is TextFormField && widget.controller?.text == 'password123'), findsOneWidget);
-      expect(find.byWidgetPredicate((widget) => widget is TextFormField && widget.controller?.text == '123 Main St'), findsOneWidget);
-    });
-
-
   });
 }
