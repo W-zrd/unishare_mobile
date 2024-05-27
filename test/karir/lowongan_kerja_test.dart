@@ -113,7 +113,7 @@ void main() {
     setUp(() {
     });
 
-    testWidgets('Displays karir list when data is loaded successfully', (WidgetTester tester) async {
+    testWidgets('Displays Lowongan Kerja info when the data is loaded successfully', (WidgetTester tester) async {
       final karirService = MockKarirService();
 
       await tester.pumpWidget(

@@ -4,7 +4,7 @@ import 'package:unishare/app/modules/onboarding/views/onboarding_screen.dart';
 import 'package:unishare/app/modules/splashscreen/views/splash_screen.dart';
 
 void main() {
-  testWidgets('SplashScreen widget test', (WidgetTester tester) async {
+  testWidgets('Splash screen should be loaded if the user open the UniShare app in their phone', (WidgetTester tester) async {
     // Build the SplashScreen widget
     await tester.pumpWidget(MaterialApp(
       home: SplashScreen(),

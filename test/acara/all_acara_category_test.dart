@@ -73,7 +73,7 @@ void main() {
       await Firebase.initializeApp();
     });
 
-    testWidgets('Verify acara page can be loaded and rendered correctly',
+    testWidgets('Verify the system displays various student activities',
         (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: AcaraPage()));
 
@@ -86,7 +86,7 @@ void main() {
     });
 
     testWidgets(
-        'Verify post card on each category can navigates to detail acara, and "Persyaratan" tab on detail acara can be pressed',
+        'Verify the user can search Acara post by each category, and they can view its post detail',
         (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: AcaraPage()));
 
@@ -170,7 +170,7 @@ void main() {
       expect(find.text('Workshop 1'), findsOneWidget);
     });
 
-    testWidgets('Tapping on PostCard navigates to detail acara page',
+    testWidgets('Verify the user can select and view details of an activity',
         (WidgetTester tester) async {
       final mockDocumentSnapshot = MockQueryDocumentSnapshot({
         'kategori': 'Seminar',

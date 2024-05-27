@@ -16,7 +16,7 @@ void main() {
       await Firebase.initializeApp();
     });
 
-    testWidgets('Verify the presence of widgets', (WidgetTester tester) async {
+    testWidgets('Verify the presence of admin acara page widgets', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: MakeAcaraPost()));
 
       expect(find.widgetWithText(AppBar, 'Buat Acara'), findsOneWidget);

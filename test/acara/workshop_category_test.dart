@@ -73,7 +73,7 @@ void main() {
           expect(find.text('Loading...'), findsOneWidget);
         });
 
-    testWidgets('Calls _buildAcaraList method when WorkshopPage is rendered',
+    testWidgets('Confirms that Acara Post items which has "Workshop" category can be loaded correctly',
             (WidgetTester tester) async {
           final mockAcaraService = MockAcaraService();
           when(mockAcaraService.getDocumentsByKategori('Bootcamp'))

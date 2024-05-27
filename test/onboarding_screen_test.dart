@@ -12,7 +12,7 @@ void main() {
     await Firebase.initializeApp();
   });
 
-  testWidgets('OnboardingScreen widget test', (WidgetTester tester) async {
+  testWidgets('Splash screen should navigate to the Onboarding screen after 3 seconds delay', (WidgetTester tester) async {
     // Build the OnboardingScreen widget
     await tester.pumpWidget(const MaterialApp(
       home: OnboardingScreen(),

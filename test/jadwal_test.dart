@@ -61,7 +61,7 @@ void main() {
       await Firebase.initializeApp();
     });
 
-    testWidgets('Verify JadwalMain widget renders correctly', (WidgetTester tester) async {
+    testWidgets('Verify the system displays the user\'s registered activity ', (WidgetTester tester) async {
       FlutterError.onError = ignoreOverflowErrors;
       await tester.pumpWidget(MaterialApp(home: JadwalMain()));
 
@@ -70,37 +70,5 @@ void main() {
       expect(find.text('To-do List'), findsOneWidget);
       expect(find.byType(TabBarView), findsOneWidget);
     });
-
-    // testWidgets('Verify JadwalPage widget renders correctly when user is logged in', (WidgetTester tester) async {
-    //   final mockFirebaseAuth = MockFirebaseAuth();
-    //   final mockKarirSubmissionService = MockKarirSubmissionService();
-    //
-    //   when(mockFirebaseAuth.currentUser).thenReturn(MockUser());
-    //   when(mockKarirSubmissionService.getDocumentsByField(any)).thenAnswer((_) => Stream.value(MockQuerySnapshot()));
-    //
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: JadwalPage(),
-    //     ),
-    //   );
-    //
-    //   expect(find.text('Berikut adalah jadwalmu'), findsOneWidget);
-    //   expect(find.byType(ListView), findsOneWidget);
-    // });
-    //
-    // testWidgets('Verify JadwalPage widget shows "No user logged in" when user is not logged in', (WidgetTester tester) async {
-    //   final mockFirebaseAuth = MockFirebaseAuth();
-    //   when(mockFirebaseAuth.currentUser).thenReturn(null);
-    //
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: JadwalPage(),
-    //     ),
-    //   );
-    //
-    //   expect(find.text('No user logged in'), findsOneWidget);
-    // });
-
-    // Add more test cases as needed
   });
 }

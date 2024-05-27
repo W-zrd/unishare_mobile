@@ -48,7 +48,7 @@ void main() {
       expect(find.text('Daftar Akun'), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('Check if the user cant register with blank text fields',
+    testWidgets('Verify registration fails with blank text fields.',
         (WidgetTester tester) async {
       // Build our app and trigger a frame
       await tester.pumpWidget(MaterialApp(
@@ -65,7 +65,7 @@ void main() {
     });
 
     testWidgets(
-        'Register Page navigates to Home Screen when credentials are filled',
+        'Verify successful Register with valid credentials and redirect to user dashboard',
         (WidgetTester tester) async {
       FlutterError.onError = ignoreOverflowErrors;
       // Build the RegisterPage with the mock service
@@ -75,7 +75,7 @@ void main() {
 
       // Enter text into the text fields
       await tester.enterText(
-          find.byKey(const Key('fullname-field')), 'Wzrd@OurMine');
+          find.byKey(const Key('fullname-field')), 'Rafidhia Haikal');
       await tester.enterText(
           find.byKey(const Key('email-field')), 'test@unishare.com');
       await tester.enterText(

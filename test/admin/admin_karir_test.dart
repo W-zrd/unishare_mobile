@@ -61,7 +61,7 @@ void main() {
       mockSnapshot = MockQuerySnapshot();
     });
 
-    testWidgets('Verify the behavior of FloatingActionButton', (WidgetTester tester) async {
+    testWidgets('Verify the behavior of admin karir FloatingActionButton', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: KarirAdmin()));
 
       await tester.tap(find.byType(FloatingActionButton));

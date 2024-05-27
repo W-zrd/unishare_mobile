@@ -79,7 +79,7 @@ void main() {
       expect(find.text('Loading...'), findsOneWidget);
     });
 
-    testWidgets('Calls _buildAcaraList method when KompetisiPage is rendered',
+    testWidgets('Confirms that Acara Post items which has “Kompetisi” category can be loaded correctly',
         (WidgetTester tester) async {
       final mockAcaraService = MockAcaraService();
       when(mockAcaraService.getDocumentsByKategori('Kompetisi'))

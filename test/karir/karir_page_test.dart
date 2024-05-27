@@ -32,7 +32,7 @@ void main() {
     });
 
     testWidgets(
-        'Verify post card on each category can navigates to detail karir, and "Persyaratan" tab on detail karir can be pressed',
+        'Verify the user can search Karir post by each category, and they can view its post detail',
         (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: KarirPage()));
 

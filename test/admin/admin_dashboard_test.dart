@@ -39,7 +39,7 @@ void main() {
         });
 
 
-    testWidgets('Test success state with latest posts', (WidgetTester tester) async {
+    testWidgets('Admin Dashboard Page test success state with latest posts', (WidgetTester tester) async {
       // Override the getLatestPosts method to return a list of posts
       LatestPostService.getLatestPostsOverride = () async {
         return [
@@ -70,7 +70,7 @@ void main() {
       expect(find.text('Title 2'), findsOneWidget);
     });
 
-    testWidgets('Test success state with empty latest posts',
+    testWidgets('Admin Dashboard Test success state with empty latest posts',
             (WidgetTester tester) async {
           // Override the getLatestPosts method to return an empty list
           LatestPostService.getLatestPostsOverride = () async {

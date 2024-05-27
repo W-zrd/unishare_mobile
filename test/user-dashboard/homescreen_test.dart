@@ -71,7 +71,7 @@ void main() {
       await Firebase.initializeApp();
     });
 
-    testWidgets('Verify the presence of some widgets on the Home Screen',
+    testWidgets('Verify the presence of widgets on the Home Screen',
         (WidgetTester tester) async {
       FlutterError.onError = ignoreOverflowErrors;
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
@@ -127,7 +127,8 @@ void main() {
     });
 
     testWidgets(
-      'Navigation from home screen to specific pages and back',
+      // 'Navigation from home screen to specific pages and back'
+      'Verify the user can view notifications on their account',
       (WidgetTester tester) async {
         FlutterError.onError = ignoreOverflowErrors;
 
@@ -176,7 +177,7 @@ void main() {
       },
     );
 
-    testWidgets('Verify _buildBeasiswaList and _buildBeasiswaItem methods',
+    testWidgets('Confirms that Beasiswa Post items on the dashboard can be loaded correctly',
             (WidgetTester tester) async {
               FlutterError.onError = ignoreOverflowErrors;
           final mockBeasiswaService = MockBeasiswaService();
@@ -212,7 +213,7 @@ void main() {
           expect(find.text('Beasiswa 2'), findsOneWidget);
         });
 
-    testWidgets('Verify _buildMagangList and _buildMagangItem methods',
+    testWidgets('Confirms that Magang Post items on the dashboard can be loaded correctly',
             (WidgetTester tester) async {
               FlutterError.onError = ignoreOverflowErrors;
           final mockKarirService = MockKarirService();

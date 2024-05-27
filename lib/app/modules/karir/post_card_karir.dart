@@ -28,7 +28,6 @@ import 'package:flutter/material.dart'
         Text,
         TextStyle,
         Widget;
-import 'package:unishare/app/modules/karir/detail_karir.dart';
 
 import 'package:flutter/material.dart'
     show
@@ -60,7 +59,6 @@ import 'package:flutter/material.dart'
         Text,
         TextStyle,
         Widget;
-import 'package:unishare/app/modules/karir/detail_karir.dart';
 
 class PostCardKarir extends StatelessWidget {
   final String? type;
