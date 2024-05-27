@@ -1,9 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/modules/profil/controller/image_service.dart';
 import 'package:unishare/app/modules/profil/controller/user_service.dart';
 import 'package:unishare/app/modules/profil/views/profil_page.dart';
@@ -57,7 +55,7 @@ void main() {
       expect(find.text('Update'), findsOneWidget);
     });
 
-    testWidgets('User data is fetched and displayed correctly', (WidgetTester tester) async {
+    testWidgets('Verify the user can view their profile information', (WidgetTester tester) async {
       FlutterError.onError = ignoreOverflowErrors;
       await tester.pumpWidget(MaterialApp(
         home: ProfilPage(

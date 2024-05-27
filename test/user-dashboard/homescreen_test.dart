@@ -127,7 +127,8 @@ void main() {
     });
 
     testWidgets(
-      'Navigation from home screen to specific pages and back',
+      // 'Navigation from home screen to specific pages and back'
+      'Verify the user can view notifications on their account',
       (WidgetTester tester) async {
         FlutterError.onError = ignoreOverflowErrors;
 

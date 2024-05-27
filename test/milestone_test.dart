@@ -19,7 +19,7 @@ void main() {
     });
 
     testWidgets(
-        'Verify the presence of widgets on the Milestone Page',
+        'Verify the user can view their achieved milestones',
             (WidgetTester tester) async {
           FlutterError.onError = ignoreOverflowErrors;
           await tester.pumpWidget(const MaterialApp(home:MilestonePage()));

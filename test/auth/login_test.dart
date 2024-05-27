@@ -56,7 +56,7 @@ void main() {
     });
 
     testWidgets(
-        'Login Page navigates to Home Screen when credentials are filled',
+        'Verify successful login with valid credentials and redirect to user dashboard',
         (WidgetTester tester) async {
       FlutterError.onError = ignoreOverflowErrors;
 
@@ -65,7 +65,7 @@ void main() {
 
       // Override the `signInWithEmailAndPassword` method to return a MockUser when valid credentials are provided
       when(mockLoginService.signInWithEmailAndPassword(
-              'exploiter.47@gmail.com', 'Wzrd1234'))
+              'rfdhaikal.wizz@proton.me', 'Wzrd1234'))
           .thenAnswer((_) async => MockUser());
 
       // Build the LoginPage with the mock service
@@ -75,7 +75,7 @@ void main() {
 
       // Enter valid credentials
       await tester.enterText(
-          find.byKey(const Key('email-field')), 'exploiter.47@gmail.com');
+          find.byKey(const Key('email-field')), 'rfdhaikal.wizz@proton.me');
       await tester.enterText(
           find.byKey(const Key('password-field')), 'Wzrd1234');
 
@@ -89,7 +89,7 @@ void main() {
       expect(find.byType(HomeScreen), findsOneWidget);
     });
 
-    testWidgets('Stay on login page message when login fails',
+    testWidgets('Verify login fails with invalid email',
         (WidgetTester tester) async {
       FlutterError.onError = ignoreOverflowErrors;
 

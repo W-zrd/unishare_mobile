@@ -113,7 +113,7 @@ void main() {
       expect(find.text('Penyelenggara 2'), findsOneWidget);
     });
 
-    testWidgets('Verify the delete behavior of beasiswa items', (WidgetTester tester) async {
+    testWidgets('Verify the admin can Delete a Scholarship post', (WidgetTester tester) async {
       final mockDocumentSnapshots = [
         MockQueryDocumentSnapshot('doc1', {
           'judul': 'Beasiswa 1',
@@ -165,7 +165,7 @@ void main() {
       expect(find.text('Beasiswa 1'), findsNothing);
     });
 
-    testWidgets('Verify form submission with valid data', (WidgetTester tester) async {
+    testWidgets('Verify the admin can add a new Scholarship post', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: MakeBeasiswaPost()));
 
       expect(find.byType(TextFormField), findsNWidgets(4));
@@ -174,10 +174,10 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(home: MakeBeasiswaPost()));
 
-      await tester.enterText(find.byType(TextFormField).at(0), 'Judul Beasiswa');
-      await tester.enterText(find.byType(TextFormField).at(1), 'Penyelenggara');
-      await tester.enterText(find.byType(TextFormField).at(2), 'https://example.com');
-      await tester.enterText(find.byType(TextFormField).at(3), 'Deskripsi Beasiswa');
+      await tester.enterText(find.byType(TextFormField).at(0), 'IISMA Scholarship');
+      await tester.enterText(find.byType(TextFormField).at(1), 'Kemendikbud');
+      await tester.enterText(find.byType(TextFormField).at(2), 'https://iisma.kemdikbud.go.id/');
+      await tester.enterText(find.byType(TextFormField).at(3), 'Beasiswa IISMA Fully funded');
 
       // Tap the date picker button
       await tester.ensureVisible(find.byKey(Key('date-picker')));
@@ -197,7 +197,7 @@ void main() {
       expect(find.byType(BeasiswaAdmin), findsNothing);
     });
 
-    testWidgets('Verify the update behavior of beasiswa items', (WidgetTester tester) async {
+    testWidgets('Verify the admin can Update a Scholarship post', (WidgetTester tester) async {
       final mockDocumentSnapshots = [
         MockQueryDocumentSnapshot('doc1', {
           'judul': 'Beasiswa 1',
