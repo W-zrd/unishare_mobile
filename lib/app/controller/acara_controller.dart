@@ -20,6 +20,19 @@ class AcaraService {
     }
   }
 
+  //update
+  static Future<AcaraKemahasiswaan> updateAcara(
+      BuildContext context, acaraPost, String id) async {
+    await FirebaseFirestore.instance
+        .collection('acara')
+        .doc(id)
+        .update(acaraPost.toJson());
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Acara post updated successfully!')));
+    Navigator.pop(context);
+    return acaraPost;
+  }
+
   Stream<QuerySnapshot> getAcaras() {
     return _firestore.collection('acara').snapshots();
   }
@@ -29,5 +42,10 @@ class AcaraService {
         .collection('acara')
         .where("kategori", isEqualTo: kategori)
         .snapshots();
+  }
+
+  //delete
+  static Future<void> deleteAcara(String id) async {
+    await FirebaseFirestore.instance.collection('acara').doc(id).delete();
   }
 }

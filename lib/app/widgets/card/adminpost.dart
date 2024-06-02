@@ -24,7 +24,7 @@ class AdminPostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String finaldeskripsi = deskripsi;
     if (deskripsi.length > 19) {
-      finaldeskripsi = deskripsi.substring(0, 36) + '...';
+      finaldeskripsi = deskripsi.substring(0, 19) + '...';
     }
     return GestureDetector(
       child: Card(
@@ -110,38 +110,40 @@ class AdminPostCard extends StatelessWidget {
                   icon: Icon(Icons.delete),
                   onPressed: delete != null
                       ? () async {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Delete Post'),
-                          content: Text(
-                              'Are you sure you want to delete this post?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // Close the dialog
-                              },
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                try {
-                                  await delete!();
-                                  Navigator.of(context).pop(); // Close the dialog
-                                } catch (e) {
-                                  print('Error in delete function: $e');
-                                  // Handle the error appropriately (e.g., show an error message to the user)
-                                }
-                              },
-                              child: Text('Delete'),
-                              key: Key("delete-button"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Delete Post'),
+                                content: Text(
+                                    'Are you sure you want to delete this post?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      try {
+                                        await delete!();
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      } catch (e) {
+                                        print('Error in delete function: $e');
+                                        // Handle the error appropriately (e.g., show an error message to the user)
+                                      }
+                                    },
+                                    child: Text('Delete'),
+                                    key: Key("delete-button"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
                       : null,
                 ),
               ],
