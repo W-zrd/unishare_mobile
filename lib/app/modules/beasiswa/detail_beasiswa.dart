@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:unishare/app/models/acara_kemahasiswaan.dart';
-import 'package:unishare/app/modules/acara/view/acara_page.dart';
-import 'package:unishare/app/modules/acara/view/form_daftar_acara.dart';
+import 'package:unishare/app/models/beasiswa_model.dart';
+import 'package:unishare/app/modules/beasiswa/form_daftar_beasiswa.dart';
 import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/detail_top_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';
 
-class DetailAcara extends StatefulWidget {
-  final String? acaraID;
-  final AcaraKemahasiswaan? acara;
+class DetailBeasiswa extends StatefulWidget {
+  final String? beasiswaID;
+  final BeasiswaPost? beasiswaPost;
 
-  const DetailAcara({Key? key, this.acaraID, this.acara}) : super(key: key);
+  const DetailBeasiswa({Key? key, this.beasiswaID, this.beasiswaPost})
+      : super(key: key);
 
   @override
-  _DetailAcaraState createState() => _DetailAcaraState();
+  _DetailBeasiswaState createState() => _DetailBeasiswaState();
 }
 
-class _DetailAcaraState extends State<DetailAcara> {
+class _DetailBeasiswaState extends State<DetailBeasiswa> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -24,7 +24,7 @@ class _DetailAcaraState extends State<DetailAcara> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Detail Acara',
+            'Detail Beasiswa',
             style: TextStyle(
               fontFamily: 'Rubik',
               fontSize: 18,
@@ -49,10 +49,10 @@ class _DetailAcaraState extends State<DetailAcara> {
               ),
             ),
             CardDetailTop(
-              type: widget.acara?.kategori ?? '',
-              title: widget.acara?.judul ?? '',
+              type: widget.beasiswaPost?.jenis ?? '',
+              title: widget.beasiswaPost?.judul ?? '',
               period:
-                  'Registrasi: ${widget.acara?.startDate?.toDate().day}/${widget.acara?.startDate?.toDate().month} - ${widget.acara?.endDate?.toDate().day}/${widget.acara?.endDate?.toDate().month}/${widget.acara?.endDate?.toDate().year}',
+                  'Registrasi: ${widget.beasiswaPost?.startDate?.toDate().day}/${widget.beasiswaPost?.startDate?.toDate().month} - ${widget.beasiswaPost?.endDate?.toDate().day}/${widget.beasiswaPost?.endDate?.toDate().month}/${widget.beasiswaPost?.endDate?.toDate().year}',
               thumbnailAsset: 'assets/img/unishare_splash.png',
               salary: '', // Replace with relevant info or remove
               minimumWorkExperience: '', // Replace with relevant info or remove
@@ -113,14 +113,16 @@ class _DetailAcaraState extends State<DetailAcara> {
                           ListView(
                             children: [
                               DescriptionCard(
-                                  description: widget.acara?.deskripsi ?? ''),
+                                  description:
+                                      widget.beasiswaPost?.deskripsi ?? ''),
                             ],
                           ),
                           ListView(
                             children: [
                               RegulationCard(
-                                  regulation: widget.acara?.guidebook ??
-                                      'Persyaratan tidak tersedia'),
+                                  regulation:
+                                      widget.beasiswaPost?.urlBeasiswa ??
+                                          'Persyaratan tidak tersedia'),
                             ],
                           ),
                         ],
@@ -137,8 +139,8 @@ class _DetailAcaraState extends State<DetailAcara> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DaftarAcara(acaraID: widget.acaraID ?? ''),
+                            builder: (context) => DaftarBeasiswa(
+                                beasiswaID: widget.beasiswaID ?? ''),
                           ),
                         );
                       },

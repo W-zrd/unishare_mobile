@@ -3,7 +3,7 @@ import 'package:unishare/app/controller/acara_controller.dart';
 import 'package:unishare/app/modules/acara/view/acara_all.dart';
 import 'package:unishare/app/modules/acara/view/kompetisi.dart';
 import 'package:unishare/app/modules/acara/view/seminar.dart';
-import 'package:unishare/app/modules/acara/view/workshop.dart';
+import 'package:unishare/app/modules/acara/view/bootcamp.dart';
 
 import '../../homescreen/home_screen.dart';
 

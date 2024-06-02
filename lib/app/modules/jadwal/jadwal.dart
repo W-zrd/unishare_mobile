@@ -3,12 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:unishare/app/controller/acara_submission_controller.dart';
+import 'package:unishare/app/controller/beasiswa_submission_controller.dart';
 import 'package:unishare/app/controller/karir_submission_controller.dart';
 import 'package:unishare/app/widgets/date/date_card.dart';
 
 class JadwalPage extends StatelessWidget {
-  final KarirSubmissionService _karirSubmissionService = KarirSubmissionService();
-  final AcaraSubmissionService _acaraSubmissionService = AcaraSubmissionService();
+  final KarirSubmissionService _karirSubmissionService =
+      KarirSubmissionService();
+  final AcaraSubmissionService _acaraSubmissionService =
+      AcaraSubmissionService();
+  final BeasiswaSubmissionService _beasiswaSubmissionService =
+      BeasiswaSubmissionService();
 
   JadwalPage({super.key});
 
@@ -58,7 +63,8 @@ class JadwalPage extends StatelessWidget {
 
         return ListView(
           children: snapshot.data!
-              .map<Widget>((submission) => _buildJadwalItem(submission, context))
+              .map<Widget>(
+                  (submission) => _buildJadwalItem(submission, context))
               .toList(),
         );
       },
@@ -66,37 +72,65 @@ class JadwalPage extends StatelessWidget {
   }
 
   Stream<List<Map<String, dynamic>>> _getCombinedSubmissions(String userID) {
-    final karirStream = _karirSubmissionService.getDocumentsByField(userID).map(
-        (snapshot) => snapshot.docs.map((doc) => {
-          ...doc.data() as Map<String, dynamic>,
-          'type': 'karir',
-        }).toList());
+    final karirStream = _karirSubmissionService
+        .getDocumentsByField(userID)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {
+                  ...doc.data() as Map<String, dynamic>,
+                  'type': 'karir',
+                })
+            .toList());
 
-    final acaraStream = _acaraSubmissionService.getDocumentsByField(userID).map(
-        (snapshot) => snapshot.docs.map((doc) => {
-          ...doc.data() as Map<String, dynamic>,
-          'type': 'acara',
-        }).toList());
+    final acaraStream = _acaraSubmissionService
+        .getDocumentsByField(userID)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {
+                  ...doc.data() as Map<String, dynamic>,
+                  'type': 'acara',
+                })
+            .toList());
 
-    return Rx.combineLatest2(karirStream, acaraStream,
-        (List<Map<String, dynamic>> karirList, List<Map<String, dynamic>> acaraList) {
-      return [...karirList, ...acaraList];
-    });
+    final beasiswaStream = _beasiswaSubmissionService
+        .getDocumentsByField(userID)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {
+                  ...doc.data() as Map<String, dynamic>,
+                  'type': 'beasiswa',
+                })
+            .toList());
+
+    return Rx.combineLatest3(
+      karirStream,
+      acaraStream,
+      beasiswaStream,
+      (List<Map<String, dynamic>> karirList,
+          List<Map<String, dynamic>> acaraList,
+          List<Map<String, dynamic>> beasiswaList) {
+        return [...karirList, ...acaraList, ...beasiswaList];
+      },
+    );
   }
 
-  Widget _buildJadwalItem(Map<String, dynamic> submission, BuildContext context) {
+  Widget _buildJadwalItem(
+      Map<String, dynamic> submission, BuildContext context) {
     if (submission['type'] == 'karir') {
       return _buildKarirItem(submission, context);
     } else if (submission['type'] == 'acara') {
       return _buildAcaraItem(submission, context);
+    } else if (submission['type'] == 'beasiswa') {
+      return _buildBeasiswaItem(submission, context);
     } else {
       return Container();
     }
   }
 
-  Widget _buildKarirItem(Map<String, dynamic> dataSubmission, BuildContext context) {
+  Widget _buildKarirItem(
+      Map<String, dynamic> dataSubmission, BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('karir').doc(dataSubmission['karirID']).get(),
+      future: FirebaseFirestore.instance
+          .collection('karir')
+          .doc(dataSubmission['karirID'])
+          .get(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -108,7 +142,8 @@ class JadwalPage extends StatelessWidget {
           return Center(child: Text('Karir data not available'));
         }
 
-        Map<String, dynamic> dataKarir = snapshot.data!.data() as Map<String, dynamic>;
+        Map<String, dynamic> dataKarir =
+            snapshot.data!.data() as Map<String, dynamic>;
         String tanggal = dataKarir['endDate'].toDate().day.toString() +
             "-" +
             dataKarir['endDate'].toDate().month.toString() +
@@ -124,9 +159,13 @@ class JadwalPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAcaraItem(Map<String, dynamic> dataSubmission, BuildContext context) {
+  Widget _buildAcaraItem(
+      Map<String, dynamic> dataSubmission, BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('acara').doc(dataSubmission['acaraID']).get(),
+      future: FirebaseFirestore.instance
+          .collection('acara')
+          .doc(dataSubmission['acaraID'])
+          .get(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -138,7 +177,8 @@ class JadwalPage extends StatelessWidget {
           return Center(child: Text('Acara data not available'));
         }
 
-        Map<String, dynamic> dataAcara = snapshot.data!.data() as Map<String, dynamic>;
+        Map<String, dynamic> dataAcara =
+            snapshot.data!.data() as Map<String, dynamic>;
         String tanggal = dataAcara['announcementDate'] != null
             ? '${dataAcara['announcementDate'].toDate().day}-${dataAcara['announcementDate'].toDate().month}-${dataAcara['announcementDate'].toDate().year}'
             : 'TBA';
@@ -146,6 +186,39 @@ class JadwalPage extends StatelessWidget {
         return DateCard(
           penyelenggara: dataAcara['penyelenggara'],
           kategori: dataAcara['kategori'],
+          tanggal: tanggal,
+        );
+      },
+    );
+  }
+
+  Widget _buildBeasiswaItem(
+      Map<String, dynamic> dataSubmission, BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('beasiswa')
+          .doc(dataSubmission['beasiswaID'])
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error fetching beasiswa data'));
+        }
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return Center(child: Text('Beasiswa data not available'));
+        }
+
+        Map<String, dynamic> dataBeasiswa =
+            snapshot.data!.data() as Map<String, dynamic>;
+        String tanggal = dataBeasiswa['announcementDate'] != null
+            ? '${dataBeasiswa['announcementDate'].toDate().day}-${dataBeasiswa['announcementDate'].toDate().month}-${dataBeasiswa['announcementDate'].toDate().year}'
+            : 'TBA';
+
+        return DateCard(
+          penyelenggara: dataBeasiswa['penyelenggara'],
+          kategori: "Beasiswa " + dataBeasiswa['jenis'],
           tanggal: tanggal,
         );
       },

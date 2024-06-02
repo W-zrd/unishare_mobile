@@ -21,6 +21,7 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
 
   String jenisValue = 'Swasta';
   DateTime? _endDate;
+  DateTime? _annnouncementDate;
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Buat Beasiswa',
+          'Edit Beasiswa',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white),
         ),
@@ -130,6 +131,92 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
               },
             ),
             const SizedBox(height: 20),
+            //banner acara
+            const Text(
+              'Banner Acara',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            //file input
+            const SizedBox(height: 20),
+
+            //enddate
+            const Text(
+              'Tanggal Selesai',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    key: Key("date-picker"),
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _endDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _endDate != null
+                          ? '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const Text(
+              'Tanggal Pengumuman',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    key: Key("date-picker"),
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _annnouncementDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _annnouncementDate != null
+                          ? '${_annnouncementDate!.day}/${_annnouncementDate!.month}/${_annnouncementDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
 
             ElevatedButton(
               onPressed: () {
@@ -140,9 +227,11 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
                     urlBeasiswa: _urlController.text,
                     img: "/img/Wzrd.jpg",
                     jenis: jenisValue,
-                    startDate: widget.beasiswaPost['startDate'] ?? Timestamp.now(),
+                    startDate:
+                        widget.beasiswaPost['startDate'] ?? Timestamp.now(),
                     endDate: widget.beasiswaPost['endDate'] ?? Timestamp.now(),
                     deskripsi: _deskripsiController.text,
+                    announcementDate: widget.beasiswaPost['announcementDate'],
                   );
                   BeasiswaService.updateBeasiswa(
                       context, updatedBeasiswaPost, widget.beasiswaPost.id);

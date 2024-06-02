@@ -6,7 +6,6 @@ import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/detail_top_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';
 
-
 class DetailKarirRil extends StatefulWidget {
   final String? karirID;
   final KarirPost? karir;
@@ -23,15 +22,6 @@ class _DetailKarirState extends State<DetailKarirRil> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => KarirPage()),
-              );
-            },
-          ),
           title: const Text(
             'Detail Karir',
             style: TextStyle(
@@ -48,7 +38,7 @@ class _DetailKarirState extends State<DetailKarirRil> {
               width: 296,
               height: 180,
               margin:
-              const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 5),
+                  const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: const DecorationImage(
@@ -128,7 +118,7 @@ class _DetailKarirState extends State<DetailKarirRil> {
                             children: const [
                               RegulationCard(
                                   regulation:
-                                  '- Diploma ke atas dalam bidang akuntansi dan bidang terkait. \n- 2 tahun pengalaman kerja yang relevan lebih disukai, lulusan  baru yang didorong akan dipertimbangkan.'),
+                                      '- Diploma ke atas dalam bidang akuntansi dan bidang terkait. \n- 2 tahun pengalaman kerja yang relevan lebih disukai, lulusan  baru yang didorong akan dipertimbangkan.'),
                             ],
                           ),
                         ],

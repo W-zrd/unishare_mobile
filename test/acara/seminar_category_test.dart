@@ -8,7 +8,7 @@ import 'package:unishare/app/modules/acara/view/acara_all.dart';
 import 'package:unishare/app/modules/acara/view/acara_page.dart';
 import 'package:unishare/app/modules/acara/view/kompetisi.dart';
 import 'package:unishare/app/modules/acara/view/seminar.dart';
-import 'package:unishare/app/modules/acara/view/workshop.dart';
+import 'package:unishare/app/modules/acara/view/bootcamp.dart';
 import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';
@@ -59,7 +59,6 @@ class MockQueryDocumentSnapshot extends Mock implements QueryDocumentSnapshot {
 }
 
 void main() {
-
   group('SeminarPage test suite', () {
     late MockAcaraService mockAcaraService;
     late MockQuerySnapshot mockSnapshot;
@@ -74,77 +73,78 @@ void main() {
       await Firebase.initializeApp();
     });
 
-    testWidgets('Displays loading text in Seminar category when data is loading',
-            (WidgetTester tester) async {
-          when(mockAcaraService.getDocumentsByKategori('Seminar'))
-              .thenAnswer((_) => Stream.value(MockQuerySnapshot()));
+    testWidgets(
+        'Displays loading text in Seminar category when data is loading',
+        (WidgetTester tester) async {
+      when(mockAcaraService.getDocumentsByKategori('Seminar'))
+          .thenAnswer((_) => Stream.value(MockQuerySnapshot()));
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: SeminarPage(),
-            ),
-          );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SeminarPage(),
+        ),
+      );
 
-          expect(find.text('Loading...'), findsOneWidget);
-        });
+      expect(find.text('Loading...'), findsOneWidget);
+    });
 
     testWidgets('Calls _buildAcaraList method when SeminarPage is rendered',
-            (WidgetTester tester) async {
-          final mockAcaraService = MockAcaraService();
-          when(mockAcaraService.getDocumentsByKategori('Seminar'))
-              .thenAnswer((_) => Stream.value(MockQuerySnapshot()));
+        (WidgetTester tester) async {
+      final mockAcaraService = MockAcaraService();
+      when(mockAcaraService.getDocumentsByKategori('Seminar'))
+          .thenAnswer((_) => Stream.value(MockQuerySnapshot()));
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: SeminarPage(),
-            ),
-          );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SeminarPage(),
+        ),
+      );
 
-          final streamBuilderFinder = find.byWidgetPredicate((widget) =>
-          widget is StreamBuilder<QuerySnapshot>);
+      final streamBuilderFinder = find.byWidgetPredicate(
+          (widget) => widget is StreamBuilder<QuerySnapshot>);
 
-          expect(streamBuilderFinder, findsOneWidget);
-        });
+      expect(streamBuilderFinder, findsOneWidget);
+    });
 
     testWidgets('Displays PostCard for each seminar item',
-            (WidgetTester tester) async {
-          final mockDocumentSnapshots = [
-            MockQueryDocumentSnapshot({
-              'kategori': 'Seminar',
-              'judul': 'Seminar 1',
-              'startDate': Timestamp.fromDate(DateTime(2023, 1, 1)),
-              'endDate': Timestamp.fromDate(DateTime(2023, 1, 31)),
-              'lokasi': 'Location 1',
-            }),
-            MockQueryDocumentSnapshot({
-              'kategori': 'Seminar',
-              'judul': 'Seminar 2',
-              'startDate': Timestamp.fromDate(DateTime(2023, 2, 1)),
-              'endDate': Timestamp.fromDate(DateTime(2023, 2, 28)),
-              'lokasi': 'Location 2',
-            }),
-          ];
+        (WidgetTester tester) async {
+      final mockDocumentSnapshots = [
+        MockQueryDocumentSnapshot({
+          'kategori': 'Seminar',
+          'judul': 'Seminar 1',
+          'startDate': Timestamp.fromDate(DateTime(2023, 1, 1)),
+          'endDate': Timestamp.fromDate(DateTime(2023, 1, 31)),
+          'lokasi': 'Location 1',
+        }),
+        MockQueryDocumentSnapshot({
+          'kategori': 'Seminar',
+          'judul': 'Seminar 2',
+          'startDate': Timestamp.fromDate(DateTime(2023, 2, 1)),
+          'endDate': Timestamp.fromDate(DateTime(2023, 2, 28)),
+          'lokasi': 'Location 2',
+        }),
+      ];
 
-          final mockSnapshot = MockQuerySnapshot();
-          mockSnapshot.setDocs(mockDocumentSnapshots);
+      final mockSnapshot = MockQuerySnapshot();
+      mockSnapshot.setDocs(mockDocumentSnapshots);
 
-          final mockAcaraService = MockAcaraService();
-          when(mockAcaraService.getDocumentsByKategori('Seminar'))
-              .thenAnswer((_) => Stream.value(mockSnapshot));
+      final mockAcaraService = MockAcaraService();
+      when(mockAcaraService.getDocumentsByKategori('Seminar'))
+          .thenAnswer((_) => Stream.value(mockSnapshot));
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: SeminarPage(acaraService: mockAcaraService),
-            ),
-          );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SeminarPage(acaraService: mockAcaraService),
+        ),
+      );
 
-          await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-          final acaraItemFinder = find.byWidgetPredicate((widget) =>
+      final acaraItemFinder = find.byWidgetPredicate((widget) =>
           widget is PostCard &&
-              (widget.title == 'Seminar 1' || widget.title == 'Seminar 2'));
+          (widget.title == 'Seminar 1' || widget.title == 'Seminar 2'));
 
-          expect(acaraItemFinder, findsNWidgets(2));
-        });
+      expect(acaraItemFinder, findsNWidgets(2));
+    });
   });
 }
