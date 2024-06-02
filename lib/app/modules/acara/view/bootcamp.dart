@@ -23,7 +23,7 @@ class WorkshopPage extends StatelessWidget {
 
   Widget _buildAcaraList(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: acaraService.getDocumentsByKategori('Workshop'),
+      stream: acaraService.getDocumentsByKategori('Bootcamp'),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print('Error: ${snapshot.error}');
@@ -64,7 +64,7 @@ class WorkshopPage extends StatelessWidget {
       title: acara.judul,
       period: 'Registrasi: $startDateString sampai $endDateString',
       location: acara.lokasi,
-      thumbnailAsset:'assets/img/unishare_splash.png',
+      thumbnailAsset: 'assets/img/unishare_splash.png',
       announcementDate: acara.announcementDate != null
           ? 'Pengumuman: ${acara.announcementDate!.toDate().day}-${acara.announcementDate!.toDate().month}-${acara.announcementDate!.toDate().year}'
           : 'Pengumuman: TBA',
