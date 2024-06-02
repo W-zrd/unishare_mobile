@@ -5,7 +5,7 @@ import 'package:unishare/app/controller/karir_controller.dart';
 import 'package:unishare/app/modules/beasiswa/beasiswa_screen.dart';
 import 'package:unishare/app/modules/chat/chatroom.dart';
 import 'package:unishare/app/modules/dashboard/homepage_cardd.dart';
-import 'package:unishare/app/modules/jadwal/jadwal_page.dart';
+import 'package:unishare/app/modules/jadwal/jadwal_mainpage.dart';
 import 'package:unishare/app/modules/leaderboard/views/leaderboard_page.dart';
 import 'package:unishare/app/modules/milestone/views/milestone_page.dart';
 import 'package:unishare/app/modules/notification/notification_screen.dart';

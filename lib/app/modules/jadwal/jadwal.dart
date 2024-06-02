@@ -1,18 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:unishare/app/controller/karir_controller.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:unishare/app/controller/acara_submission_controller.dart';
 import 'package:unishare/app/controller/karir_submission_controller.dart';
-import 'package:unishare/app/models/karirmodel.dart';
 import 'package:unishare/app/widgets/date/date_card.dart';
-import 'package:unishare/app/widgets/date/date_button.dart';
 
 class JadwalPage extends StatelessWidget {
-  final KarirSubmissionService _karirSubmissionService =
-  KarirSubmissionService();
+  final KarirSubmissionService _karirSubmissionService = KarirSubmissionService();
+  final AcaraSubmissionService _acaraSubmissionService = AcaraSubmissionService();
 
   JadwalPage({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,47 +39,64 @@ class JadwalPage extends StatelessWidget {
 
   Widget _buildJadwalList(BuildContext context) {
     User? currentUser = FirebaseAuth.instance.currentUser;
-    print('Current user: $currentUser');
-
     if (currentUser == null) {
-      print('No user logged in');
       return Center(child: Text('No user logged in'));
     }
 
-    print('Building StreamBuilder');
-    return StreamBuilder(
-      stream: _karirSubmissionService.getDocumentsByField(currentUser.uid),
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: _getCombinedSubmissions(currentUser.uid),
       builder: (context, snapshot) {
-        print('Inside StreamBuilder');
         if (snapshot.hasError) {
-          print('Error: ${snapshot.error}');
-          return Center(child: Text('Error'));
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print('Loading...');
           return Center(child: CircularProgressIndicator());
         }
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          print('No data available');
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(child: Text('No data available'));
         }
-        print('Rendering ListView');
+
         return ListView(
-          children: snapshot.data!.docs
-              .map((doc) => _buildJadwalItem(doc, context))
+          children: snapshot.data!
+              .map<Widget>((submission) => _buildJadwalItem(submission, context))
               .toList(),
         );
       },
     );
   }
 
-  Widget _buildJadwalItem(DocumentSnapshot doc, BuildContext context) {
-    Map<String, dynamic> dataSubmission = doc.data() as Map<String, dynamic>;
-    KarirService _karirService = KarirService();
+  Stream<List<Map<String, dynamic>>> _getCombinedSubmissions(String userID) {
+    final karirStream = _karirSubmissionService.getDocumentsByField(userID).map(
+        (snapshot) => snapshot.docs.map((doc) => {
+          ...doc.data() as Map<String, dynamic>,
+          'type': 'karir',
+        }).toList());
 
+    final acaraStream = _acaraSubmissionService.getDocumentsByField(userID).map(
+        (snapshot) => snapshot.docs.map((doc) => {
+          ...doc.data() as Map<String, dynamic>,
+          'type': 'acara',
+        }).toList());
+
+    return Rx.combineLatest2(karirStream, acaraStream,
+        (List<Map<String, dynamic>> karirList, List<Map<String, dynamic>> acaraList) {
+      return [...karirList, ...acaraList];
+    });
+  }
+
+  Widget _buildJadwalItem(Map<String, dynamic> submission, BuildContext context) {
+    if (submission['type'] == 'karir') {
+      return _buildKarirItem(submission, context);
+    } else if (submission['type'] == 'acara') {
+      return _buildAcaraItem(submission, context);
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _buildKarirItem(Map<String, dynamic> dataSubmission, BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: _karirService.getKarirByID(dataSubmission[
-          'karirID']), // Ensure you use the correct key for the ID
+      future: FirebaseFirestore.instance.collection('karir').doc(dataSubmission['karirID']).get(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -93,30 +108,45 @@ class JadwalPage extends StatelessWidget {
           return Center(child: Text('Karir data not available'));
         }
 
-        Map<String, dynamic> dataKarir =
-            snapshot.data!.data() as Map<String, dynamic>;
-        KarirPost karirPost = KarirPost(
-          posisi: dataKarir['posisi'],
-          penyelenggara: dataKarir['penyelenggara'],
-          lokasi: dataKarir['lokasi'],
-          urlKarir: dataKarir['urlKarir'],
-          img: dataKarir['img'],
-          tema: dataKarir['tema'],
-          kategori: dataKarir['kategori'],
-          deskripsi: dataKarir['deskripsi'],
-          startDate: dataKarir['startDate'],
-          endDate: dataKarir['endDate'],
-          AnnouncementDate: dataKarir['AnnouncementDate'],
-        );
+        Map<String, dynamic> dataKarir = snapshot.data!.data() as Map<String, dynamic>;
+        String tanggal = dataKarir['endDate'].toDate().day.toString() +
+            "-" +
+            dataKarir['endDate'].toDate().month.toString() +
+            "-" +
+            dataKarir['endDate'].toDate().year.toString();
 
         return DateCard(
-          penyelenggara: karirPost.penyelenggara,
-          kategori: karirPost.kategori,
-          tanggal: karirPost.endDate.toDate().day.toString() +
-              "-" +
-              karirPost.endDate.toDate().month.toString() +
-              "-" +
-              karirPost.endDate.toDate().year.toString(),
+          penyelenggara: dataKarir['penyelenggara'],
+          kategori: dataKarir['kategori'],
+          tanggal: tanggal,
+        );
+      },
+    );
+  }
+
+  Widget _buildAcaraItem(Map<String, dynamic> dataSubmission, BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection('acara').doc(dataSubmission['acaraID']).get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error fetching acara data'));
+        }
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return Center(child: Text('Acara data not available'));
+        }
+
+        Map<String, dynamic> dataAcara = snapshot.data!.data() as Map<String, dynamic>;
+        String tanggal = dataAcara['announcementDate'] != null
+            ? '${dataAcara['announcementDate'].toDate().day}-${dataAcara['announcementDate'].toDate().month}-${dataAcara['announcementDate'].toDate().year}'
+            : 'TBA';
+
+        return DateCard(
+          penyelenggara: dataAcara['penyelenggara'],
+          kategori: dataAcara['kategori'],
+          tanggal: tanggal,
         );
       },
     );

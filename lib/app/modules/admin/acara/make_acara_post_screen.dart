@@ -23,6 +23,7 @@ class _MakeAcaraPostState extends State<MakeAcaraPost> {
   String? _guidebook = '';
   DateTime? _startDate;
   DateTime? _endDate;
+  DateTime? _announcementDate;
 
   final List<String> _temaList = [
     "Teknologi",
@@ -288,6 +289,43 @@ class _MakeAcaraPostState extends State<MakeAcaraPost> {
             ),
             const SizedBox(height: 20),
 
+            // Announcement Date
+            const Text(
+              'Tanggal Pengumuman',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _announcementDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _announcementDate != null
+                          ? '${_announcementDate!.day}/${_announcementDate!.month}/${_announcementDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () {
                 // Defer the validation until after the build method
@@ -303,6 +341,7 @@ class _MakeAcaraPostState extends State<MakeAcaraPost> {
                     deskripsi: _deskripsiController.text,
                     startDate: Timestamp.fromDate(_startDate!),
                     endDate: Timestamp.fromDate(_endDate!),
+                    announcementDate: Timestamp.fromDate(_announcementDate!),
                   );
                   AcaraService.addToFirestore(context, acaraPost);
                 });
