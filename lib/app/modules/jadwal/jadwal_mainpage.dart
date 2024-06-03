@@ -14,7 +14,7 @@ class _JadwalMainState extends State<JadwalMain> {
 
   final List<Widget> _pages = [
     JadwalPage(),
-    const ToDoList(),
+    ToDoListPage(),
   ];
 
   @override
