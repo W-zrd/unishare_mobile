@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:unishare/app/controller/karir_submission_controller.dart';
 import 'package:unishare/app/modules/jadwal/jadwal.dart';
-import 'package:unishare/app/modules/jadwal/jadwal_page.dart';
+import 'package:unishare/app/modules/jadwal/jadwal_mainpage.dart';
 import 'package:unishare/app/modules/jadwal/to_do_list.dart';
 import 'package:unishare/app/widgets/card/to_do_list_card.dart';
 import 'package:unishare/app/widgets/chart/chart.dart';

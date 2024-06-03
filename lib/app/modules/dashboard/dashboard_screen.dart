@@ -2,10 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/beasiswa_controller.dart';
 import 'package:unishare/app/controller/karir_controller.dart';
+import 'package:unishare/app/models/beasiswa_model.dart';
+import 'package:unishare/app/models/karirmodel.dart';
 import 'package:unishare/app/modules/beasiswa/beasiswa_screen.dart';
+import 'package:unishare/app/modules/beasiswa/detail_beasiswa.dart';
 import 'package:unishare/app/modules/chat/chatroom.dart';
 import 'package:unishare/app/modules/dashboard/homepage_cardd.dart';
-import 'package:unishare/app/modules/jadwal/jadwal_page.dart';
+import 'package:unishare/app/modules/jadwal/jadwal_mainpage.dart';
+import 'package:unishare/app/modules/karir/detail_karir_ril.dart';
 import 'package:unishare/app/modules/leaderboard/views/leaderboard_page.dart';
 import 'package:unishare/app/modules/milestone/views/milestone_page.dart';
 import 'package:unishare/app/modules/notification/notification_screen.dart';
@@ -402,13 +406,34 @@ class Dashboard extends StatelessWidget {
         endDate.toDate().month.toString() +
         "-" +
         endDate.toDate().year.toString();
-
+    BeasiswaPost beasiswaPostt = BeasiswaPost(
+      penyelenggara: data['penyelenggara'],
+      img: data['img'],
+      deskripsi: data['deskripsi'],
+      startDate: data['startDate'],
+      endDate: data['endDate'],
+      judul: data['judul'],
+      urlBeasiswa: data['urlBeasiswa'],
+      jenis: data['jenis'],
+      announcementDate: data['announcementDate'],
+    );
     return Padding(
         padding: EdgeInsets.only(right: 15),
         child: HomepageCardd(
             penyelenggara: data['penyelenggara'],
             nama_beasiswa: data['judul'],
-            deadline: endDateString));
+            deadline: endDateString,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailBeasiswa(
+                    beasiswaPost: beasiswaPostt,
+                    beasiswaID: doc.id,
+                  ),
+                ),
+              );
+            }));
   }
 
   Widget _buildMagangList(BuildContext context) {
@@ -441,6 +466,18 @@ class Dashboard extends StatelessWidget {
   Widget _buildMagangItem(DocumentSnapshot doc, BuildContext context) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     Timestamp endDate = data['endDate'];
+    KarirPost karirPost = KarirPost(
+        posisi: data['posisi'],
+        penyelenggara: data['penyelenggara'],
+        lokasi: data['lokasi'],
+        urlKarir: data['urlKarir'],
+        img: data['img'],
+        tema: data['tema'],
+        kategori: data['kategori'],
+        deskripsi: data['deskripsi'],
+        startDate: data['startDate'],
+        endDate: data['endDate'],
+        AnnouncementDate: data['AnnouncementDate']);
     String endDateString = endDate.toDate().day.toString() +
         "-" +
         endDate.toDate().month.toString() +
@@ -450,8 +487,20 @@ class Dashboard extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.only(right: 15),
         child: HomepageCardd(
-            penyelenggara: data['penyelenggara'],
-            nama_beasiswa: 'Magang ' + data['posisi'],
-            deadline: endDateString));
+          penyelenggara: data['penyelenggara'],
+          nama_beasiswa: 'Magang ' + data['posisi'],
+          deadline: endDateString,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailKarirRil(
+                  karirID: doc.id,
+                  karir: karirPost,
+                ),
+              ),
+            );
+          },
+        ));
   }
 }

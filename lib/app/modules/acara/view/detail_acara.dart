@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:unishare/app/models/karirmodel.dart';
-import 'package:unishare/app/modules/karir/form_daftar_karir.dart';
-import 'package:unishare/app/modules/karir/karir_page.dart';
+import 'package:unishare/app/models/acara_kemahasiswaan.dart';
+import 'package:unishare/app/modules/acara/view/acara_page.dart';
+import 'package:unishare/app/modules/acara/view/form_daftar_acara.dart';
 import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/detail_top_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';
 
-class DetailKarirRil extends StatefulWidget {
-  final String? karirID;
-  final KarirPost? karir;
-  const DetailKarirRil({Key? key, this.karirID, this.karir}) : super(key: key);
+class DetailAcara extends StatefulWidget {
+  final String? acaraID;
+  final AcaraKemahasiswaan? acara;
+
+  const DetailAcara({Key? key, this.acaraID, this.acara}) : super(key: key);
 
   @override
-  _DetailKarirState createState() => _DetailKarirState();
+  _DetailAcaraState createState() => _DetailAcaraState();
 }
 
-class _DetailKarirState extends State<DetailKarirRil> {
+class _DetailAcaraState extends State<DetailAcara> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -23,7 +24,7 @@ class _DetailKarirState extends State<DetailKarirRil> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Detail Karir',
+            'Detail Acara',
             style: TextStyle(
               fontFamily: 'Rubik',
               fontSize: 18,
@@ -41,19 +42,20 @@ class _DetailKarirState extends State<DetailKarirRil> {
                   const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                image: const DecorationImage(
+                image: DecorationImage(
                   image: AssetImage('assets/img/onboarding.png'),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
             CardDetailTop(
-              type: widget.karir?.posisi ?? '',
-              title: widget.karir?.penyelenggara ?? '',
-              period: 'Registrasi: 12 Agust - 28 Sept 2023',
+              type: widget.acara?.kategori ?? '',
+              title: widget.acara?.judul ?? '',
+              period:
+                  'Registrasi: ${widget.acara?.startDate?.toDate().day}/${widget.acara?.startDate?.toDate().month} - ${widget.acara?.endDate?.toDate().day}/${widget.acara?.endDate?.toDate().month}/${widget.acara?.endDate?.toDate().year}',
               thumbnailAsset: 'assets/img/unishare_splash.png',
-              salary: '50.000.000',
-              minimumWorkExperience: '1 year of work experience',
+              salary: '', // Replace with relevant info or remove
+              minimumWorkExperience: '', // Replace with relevant info or remove
             ),
             Expanded(
               child: DefaultTabController(
@@ -111,14 +113,14 @@ class _DetailKarirState extends State<DetailKarirRil> {
                           ListView(
                             children: [
                               DescriptionCard(
-                                  description: widget.karir?.deskripsi ?? ''),
+                                  description: widget.acara?.deskripsi ?? ''),
                             ],
                           ),
                           ListView(
-                            children: const [
+                            children: [
                               RegulationCard(
-                                  regulation:
-                                      '- Diploma ke atas dalam bidang akuntansi dan bidang terkait. \n- 2 tahun pengalaman kerja yang relevan lebih disukai, lulusan  baru yang didorong akan dipertimbangkan.'),
+                                  regulation: widget.acara?.guidebook ??
+                                      'Persyaratan tidak tersedia'),
                             ],
                           ),
                         ],
@@ -136,7 +138,7 @@ class _DetailKarirState extends State<DetailKarirRil> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                DaftarKarir(karirID: widget.karirID ?? ''),
+                                DaftarAcara(acaraID: widget.acaraID ?? ''),
                           ),
                         );
                       },

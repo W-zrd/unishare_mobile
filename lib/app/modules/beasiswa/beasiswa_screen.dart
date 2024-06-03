@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/beasiswa_controller.dart';
-import 'package:unishare/app/modules/admin/beasiswa/make_beasiswa_post.dart';
-import 'package:unishare/app/modules/admin/beasiswa/update_beasiswa_post.dart';
+import 'package:unishare/app/models/beasiswa_model.dart';
+import 'package:unishare/app/modules/beasiswa/detail_beasiswa.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
-import 'package:unishare/app/widgets/card/adminpost.dart';
 
 class BeasiswaScreen extends StatefulWidget {
   final BeasiswaService? beasiswaService;
@@ -70,7 +69,7 @@ class _BeasiswaAdminState extends State<BeasiswaScreen> {
         if (snapshot.hasData) {
           return ListView(
             children: snapshot.data!.docs
-                .map((doc) => _buildKarirItem(doc, context))
+                .map((doc) => _buildBeasiswaItem(doc, context))
                 .toList(),
           );
         }
@@ -79,35 +78,60 @@ class _BeasiswaAdminState extends State<BeasiswaScreen> {
     );
   }
 
-  Widget _buildKarirItem(DocumentSnapshot doc, BuildContext context) {
+  Widget _buildBeasiswaItem(DocumentSnapshot doc, BuildContext context) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    return Card(
-      child: ListTile(
-        tileColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              data["jenis"],
-              style: const TextStyle(
-                color: Colors.orange,
-                fontSize: 12.0,
+    BeasiswaPost beasiswaPostt = BeasiswaPost(
+      penyelenggara: data['penyelenggara'],
+      img: data['img'],
+      deskripsi: data['deskripsi'],
+      startDate: data['startDate'],
+      endDate: data['endDate'],
+      judul: data['judul'],
+      urlBeasiswa: data['urlBeasiswa'],
+      jenis: data['jenis'],
+      announcementDate: data['announcementDate'],
+    );
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailBeasiswa(
+              beasiswaPost: beasiswaPostt,
+              beasiswaID: doc.id,
+            ),
+          ),
+        );
+      },
+      child: Card(
+        child: ListTile(
+          tileColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data["jenis"],
+                style: const TextStyle(
+                  color: Colors.orange,
+                  fontSize: 12.0,
+                ),
               ),
-            ),
-            Text(
-              data["judul"],
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-          ],
+              Text(
+                data["judul"],
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8.0),
+            ],
+          ),
+          subtitle: Text(
+              'Deadline: ...\n' + 'Penyelenggara: ' + data["penyelenggara"]),
+          isThreeLine: true,
         ),
-        subtitle:
-        Text('Deadline: ...\n' + 'Penyelenggara: ' + data["penyelenggara"]),
-        isThreeLine: true,
       ),
     );
   }

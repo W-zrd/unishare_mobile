@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:unishare/app/models/karirmodel.dart';
-import 'package:unishare/app/modules/karir/form_daftar_karir.dart';
-import 'package:unishare/app/modules/karir/karir_page.dart';
+import 'package:unishare/app/models/beasiswa_model.dart';
+import 'package:unishare/app/modules/beasiswa/form_daftar_beasiswa.dart';
 import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/detail_top_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';
 
-class DetailKarirRil extends StatefulWidget {
-  final String? karirID;
-  final KarirPost? karir;
-  const DetailKarirRil({Key? key, this.karirID, this.karir}) : super(key: key);
+class DetailBeasiswa extends StatefulWidget {
+  final String? beasiswaID;
+  final BeasiswaPost? beasiswaPost;
+
+  const DetailBeasiswa({Key? key, this.beasiswaID, this.beasiswaPost})
+      : super(key: key);
 
   @override
-  _DetailKarirState createState() => _DetailKarirState();
+  _DetailBeasiswaState createState() => _DetailBeasiswaState();
 }
 
-class _DetailKarirState extends State<DetailKarirRil> {
+class _DetailBeasiswaState extends State<DetailBeasiswa> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -23,7 +24,7 @@ class _DetailKarirState extends State<DetailKarirRil> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Detail Karir',
+            'Detail Beasiswa',
             style: TextStyle(
               fontFamily: 'Rubik',
               fontSize: 18,
@@ -41,19 +42,20 @@ class _DetailKarirState extends State<DetailKarirRil> {
                   const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                image: const DecorationImage(
+                image: DecorationImage(
                   image: AssetImage('assets/img/onboarding.png'),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
             CardDetailTop(
-              type: widget.karir?.posisi ?? '',
-              title: widget.karir?.penyelenggara ?? '',
-              period: 'Registrasi: 12 Agust - 28 Sept 2023',
+              type: widget.beasiswaPost?.jenis ?? '',
+              title: widget.beasiswaPost?.judul ?? '',
+              period:
+                  'Registrasi: ${widget.beasiswaPost?.startDate?.toDate().day}/${widget.beasiswaPost?.startDate?.toDate().month} - ${widget.beasiswaPost?.endDate?.toDate().day}/${widget.beasiswaPost?.endDate?.toDate().month}/${widget.beasiswaPost?.endDate?.toDate().year}',
               thumbnailAsset: 'assets/img/unishare_splash.png',
-              salary: '50.000.000',
-              minimumWorkExperience: '1 year of work experience',
+              salary: '', // Replace with relevant info or remove
+              minimumWorkExperience: '', // Replace with relevant info or remove
             ),
             Expanded(
               child: DefaultTabController(
@@ -111,14 +113,16 @@ class _DetailKarirState extends State<DetailKarirRil> {
                           ListView(
                             children: [
                               DescriptionCard(
-                                  description: widget.karir?.deskripsi ?? ''),
+                                  description:
+                                      widget.beasiswaPost?.deskripsi ?? ''),
                             ],
                           ),
                           ListView(
-                            children: const [
+                            children: [
                               RegulationCard(
                                   regulation:
-                                      '- Diploma ke atas dalam bidang akuntansi dan bidang terkait. \n- 2 tahun pengalaman kerja yang relevan lebih disukai, lulusan  baru yang didorong akan dipertimbangkan.'),
+                                      widget.beasiswaPost?.urlBeasiswa ??
+                                          'Persyaratan tidak tersedia'),
                             ],
                           ),
                         ],
@@ -135,8 +139,8 @@ class _DetailKarirState extends State<DetailKarirRil> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DaftarKarir(karirID: widget.karirID ?? ''),
+                            builder: (context) => DaftarBeasiswa(
+                                beasiswaID: widget.beasiswaID ?? ''),
                           ),
                         );
                       },

@@ -12,6 +12,7 @@ class AcaraKemahasiswaan {
   final String? deskripsi;
   final Timestamp? startDate;
   final Timestamp? endDate;
+  final Timestamp? announcementDate;
 
   AcaraKemahasiswaan({
     this.id,
@@ -25,6 +26,7 @@ class AcaraKemahasiswaan {
     this.deskripsi,
     this.startDate,
     this.endDate,
+    this.announcementDate,
   });
 
   factory AcaraKemahasiswaan.fromJson(Map<String, dynamic>? json) =>
@@ -39,6 +41,7 @@ class AcaraKemahasiswaan {
         kategori: json?['kategori'],
         startDate: json?['startDate'],
         endDate: json?['endDate'],
+        announcementDate: json?['announcementDate'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,5 +55,6 @@ class AcaraKemahasiswaan {
         'deskripsi': deskripsi,
         'startDate': startDate,
         'endDate': endDate,
+        'announcementDate': announcementDate,
       };
 }

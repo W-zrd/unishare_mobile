@@ -4,14 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:unishare/app/models/acara_kemahasiswaan.dart';
 import 'package:unishare/app/widgets/file_picker.dart';
 
-class MakeAcaraPost extends StatefulWidget {
-  const MakeAcaraPost({super.key});
+class UpdateAcaraPost extends StatefulWidget {
+  final DocumentSnapshot acaraPost;
+  UpdateAcaraPost({super.key, required this.acaraPost});
 
   @override
   _MakeAcaraPostState createState() => _MakeAcaraPostState();
 }
 
-class _MakeAcaraPostState extends State<MakeAcaraPost> {
+class _MakeAcaraPostState extends State<UpdateAcaraPost> {
   final TextEditingController _judulController = TextEditingController();
   final TextEditingController _penyelenggaraController =
       TextEditingController();
@@ -40,6 +41,11 @@ class _MakeAcaraPostState extends State<MakeAcaraPost> {
   @override
   void initState() {
     super.initState();
+    _judulController.text = widget.acaraPost['judul'];
+    _penyelenggaraController.text = widget.acaraPost['penyelenggara'];
+    _urlAcaraController.text = widget.acaraPost['urlAcara'];
+    _deskripsiController.text = widget.acaraPost['deskripsi'];
+    _lokasiController.text = widget.acaraPost['lokasi'];
     _selectedTema = _temaList[0];
     _selectedKategori = _kategoriList[0];
   }
@@ -343,7 +349,8 @@ class _MakeAcaraPostState extends State<MakeAcaraPost> {
                     endDate: Timestamp.fromDate(_endDate!),
                     announcementDate: Timestamp.fromDate(_announcementDate!),
                   );
-                  AcaraService.addToFirestore(context, acaraPost);
+                  AcaraService.updateAcara(
+                      context, acaraPost, widget.acaraPost.id);
                 });
               },
               child:

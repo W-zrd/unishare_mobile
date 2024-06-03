@@ -32,7 +32,7 @@ class _ChatRoomState extends State<ChatRoom> {
             );
           },
         ),
-        title: Text('Chat Room'),
+        title: const Text('Chat Room'),
       ),
       body: _buildUserList(),
     );
@@ -48,13 +48,13 @@ class _ChatRoomState extends State<ChatRoom> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
           return ListView(
-            children: snapshot.data!.docs.map<Widget>((docs)=>_buildUserItem(docs)).toList(),
+            children: snapshot.data!.docs.map<Widget>((docs) => _buildUserItem(docs)).toList(),
           );
         }));
   }
@@ -63,20 +63,23 @@ class _ChatRoomState extends State<ChatRoom> {
   Widget _buildUserItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-    if (data['uid']!= widget.firebaseAuth.currentUser!.uid) {
-      return ListTile(
-        title: Text(document['displayName']),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatPage(
-                receiverUserName: document['displayName'],
-                receiverId: document.id,
+    if (data['uid'] != widget.firebaseAuth.currentUser!.uid) {
+      return Card(
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+        child: ListTile(
+          title: Text(document['displayName']),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatPage(
+                  receiverUserName: document['displayName'],
+                  receiverId: document.id,
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
     } else {
       return Container();

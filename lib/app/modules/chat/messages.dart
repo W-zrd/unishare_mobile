@@ -22,7 +22,7 @@ class _ChatPageState extends State<ChatPage> {
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
       try {
-        chatController.sendMessage(widget.receiverId, _messageController.text);
+        await chatController.sendMessage(widget.receiverId, _messageController.text);
         _messageController.clear();
       } catch (e) {
         print('Error sending message: $e');
@@ -39,7 +39,7 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: [
           Expanded(
-            child: _buildMessagelist(),
+            child: _buildMessageList(),
           ),
           _buildMessageInput(),
         ],
@@ -48,7 +48,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   //build message list
-  Widget _buildMessagelist() {
+  Widget _buildMessageList() {
     return StreamBuilder(
         stream: chatController.getMessages(
             widget.receiverId, _auth.currentUser!.uid),
@@ -57,7 +57,7 @@ class _ChatPageState extends State<ChatPage> {
             return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -74,38 +74,56 @@ class _ChatPageState extends State<ChatPage> {
   Widget _buildMessageItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-    //allign the message to the right if the sender is the current user, otherwise to the left
-    var alignment = (data['senderId'] == _auth.currentUser!.uid)
-        ? Alignment.centerRight
-        : Alignment.centerLeft;
+    // Align the message to the right if the sender is the current user, otherwise to the left
+    bool isCurrentUser = data['senderId'] == _auth.currentUser!.uid;
+    var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+    var backgroundColor = isCurrentUser ? Color.fromARGB(255, 247, 86, 0) : Colors.grey[300];
+    var textColor = isCurrentUser ? Colors.white : Colors.black;
 
     return Container(
-        alignment: alignment,
-        child: Column(
-          children: [
-            Text(data['senderName']),
-            Text(data['message']),
-          ],
-        ));
+      alignment: alignment,
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      child: Column(
+        crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              data['message'],
+              style: TextStyle(color: textColor),
+            ),
+          ),
+          Text(
+            data['senderName'],
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+    );
   }
 
   //build message input
   Widget _buildMessageInput() {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: [
           Expanded(
             child: TextField(
               controller: _messageController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Type a message',
+                border: OutlineInputBorder(),
               ),
               obscureText: false,
             ),
           ),
           IconButton(
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
             onPressed: sendMessage,
           ),
         ],

@@ -25,7 +25,7 @@ class CardDetailTop extends StatelessWidget {
         elevation: 4,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white, 
+            color: Colors.white,
             borderRadius: BorderRadius.circular(8.0),
             boxShadow: [
               BoxShadow(
@@ -34,7 +34,7 @@ class CardDetailTop extends StatelessWidget {
                 blurRadius: 5,
                 offset: const Offset(0, 3),
               ),
-            ], 
+            ],
           ),
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -97,7 +97,7 @@ class CardDetailTop extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Informasi Pekerjaan',
+                          'Informasi',
                           style: TextStyle(
                             fontFamily: 'Rubik',
                             fontWeight: FontWeight.bold,

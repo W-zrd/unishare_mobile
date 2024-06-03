@@ -18,6 +18,7 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
 
   String jenisValue = 'Swasta';
   DateTime? _endDate;
+  DateTime? _annnouncementDate;
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +169,41 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
                 ),
               ],
             ),
+            const Text(
+              'Tanggal Pengumuman',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    key: Key("date-picker"),
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _annnouncementDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _annnouncementDate != null
+                          ? '${_annnouncementDate!.day}/${_annnouncementDate!.month}/${_annnouncementDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
             const SizedBox(height: 20),
 
@@ -183,6 +219,7 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
                     deskripsi: _deskripsiController.text,
                     startDate: Timestamp.now(),
                     endDate: Timestamp.fromDate(_endDate!),
+                    announcementDate: Timestamp.fromDate(_annnouncementDate!),
                   );
                   BeasiswaService.addToFirestore(context, beasiswaPost);
                 });

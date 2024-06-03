@@ -8,7 +8,7 @@ import 'package:unishare/app/modules/acara/view/acara_all.dart';
 import 'package:unishare/app/modules/acara/view/acara_page.dart';
 import 'package:unishare/app/modules/acara/view/kompetisi.dart';
 import 'package:unishare/app/modules/acara/view/seminar.dart';
-import 'package:unishare/app/modules/acara/view/workshop.dart';
+import 'package:unishare/app/modules/acara/view/bootcamp.dart';
 import 'package:unishare/app/widgets/card/description_card.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 import 'package:unishare/app/widgets/card/regulation_card.dart';

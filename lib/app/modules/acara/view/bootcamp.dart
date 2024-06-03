@@ -5,10 +5,10 @@ import 'package:unishare/app/models/acara_kemahasiswaan.dart';
 import 'package:unishare/app/modules/acara/view/acara_post_card.dart';
 import 'package:unishare/app/modules/acara/view/detail_acara.dart';
 
-class AllAcaraPage extends StatelessWidget {
+class WorkshopPage extends StatelessWidget {
   final AcaraService acaraService;
 
-  AllAcaraPage({Key? key, AcaraService? acaraService})
+  WorkshopPage({Key? key, AcaraService? acaraService})
       : acaraService = acaraService ?? AcaraService(),
         super(key: key);
 
@@ -23,7 +23,7 @@ class AllAcaraPage extends StatelessWidget {
 
   Widget _buildAcaraList(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: acaraService.getAcaras(),
+      stream: acaraService.getDocumentsByKategori('Bootcamp'),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print('Error: ${snapshot.error}');

@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 
-class AdminPostCard extends StatelessWidget {
-  final String type;
-  final String title;
-  final String period;
+class PostCardAcara extends StatelessWidget {
+  final String? type;
+  final String? title;
+  final String? period;
   final String thumbnailAsset;
-  final String deskripsi;
-  final Future<void> Function()? delete;
-  final void Function()? update;
+  final String? location;
+  final String? announcementDate;
+  final void Function()? onTap;
 
-  const AdminPostCard({
-    Key? key,
+  const PostCardAcara({
+    super.key,
     required this.type,
     required this.title,
     required this.period,
-    required this.deskripsi,
+    required this.location,
     required this.thumbnailAsset,
-    this.delete,
-    this.update,
-  }) : super(key: key);
+    required this.announcementDate,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    String finaldeskripsi = deskripsi;
-    if (deskripsi.length > 19) {
-      finaldeskripsi = deskripsi.substring(0, 19) + '...';
-    }
     return GestureDetector(
+      onTap: onTap,
       child: Card(
         margin: const EdgeInsets.only(top: 5, right: 30, left: 30, bottom: 15),
         elevation: 4,
@@ -54,7 +51,9 @@ class AdminPostCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
-                      image: AssetImage(thumbnailAsset),
+                      image: thumbnailAsset.isNotEmpty
+                          ? AssetImage(thumbnailAsset)
+                          : const AssetImage('assets/img/dazai.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -65,7 +64,7 @@ class AdminPostCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        type,
+                        type!,
                         style: const TextStyle(
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.normal,
@@ -74,7 +73,7 @@ class AdminPostCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        title,
+                        title!,
                         style: const TextStyle(
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.bold,
@@ -83,7 +82,7 @@ class AdminPostCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        period,
+                        period!,
                         style: const TextStyle(
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.normal,
@@ -92,59 +91,25 @@ class AdminPostCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        finaldeskripsi,
+                        location!,
                         style: const TextStyle(
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.w200,
                           fontSize: 12,
                         ),
                       ),
+                      const SizedBox(height: 10),
+                      Text(
+                        announcementDate!,
+                        style: const TextStyle(
+                          fontFamily: 'Rubik',
+                          fontWeight: FontWeight.normal,
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.edit, key: Key("edit-karir")),
-                  onPressed: update,
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: delete != null
-                      ? () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Delete Post'),
-                                content: Text(
-                                    'Are you sure you want to delete this post?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pop(); // Close the dialog
-                                    },
-                                    child: Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      try {
-                                        await delete!();
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      } catch (e) {
-                                        print('Error in delete function: $e');
-                                        // Handle the error appropriately (e.g., show an error message to the user)
-                                      }
-                                    },
-                                    child: Text('Delete'),
-                                    key: Key("delete-button"),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      : null,
                 ),
               ],
             ),

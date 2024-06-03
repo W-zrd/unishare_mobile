@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:unishare/app/controller/acara_controller.dart';
-import 'package:unishare/app/modules/acara/view/workshop.dart';
+import 'package:unishare/app/modules/acara/view/bootcamp.dart';
 import 'package:unishare/app/widgets/card/post_card.dart';
 
 import '../mock.dart';
@@ -60,76 +60,76 @@ void main() {
 
     testWidgets(
         'Displays loading text in Workshop category when data is loading',
-            (WidgetTester tester) async {
-          when(mockAcaraService.getDocumentsByKategori('Bootcamp'))
-              .thenAnswer((_) => Stream.value(MockQuerySnapshot()));
+        (WidgetTester tester) async {
+      when(mockAcaraService.getDocumentsByKategori('Bootcamp'))
+          .thenAnswer((_) => Stream.value(MockQuerySnapshot()));
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: WorkshopPage(),
-            ),
-          );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: WorkshopPage(),
+        ),
+      );
 
-          expect(find.text('Loading...'), findsOneWidget);
-        });
+      expect(find.text('Loading...'), findsOneWidget);
+    });
 
     testWidgets('Calls _buildAcaraList method when WorkshopPage is rendered',
-            (WidgetTester tester) async {
-          final mockAcaraService = MockAcaraService();
-          when(mockAcaraService.getDocumentsByKategori('Bootcamp'))
-              .thenAnswer((_) => Stream.value(MockQuerySnapshot()));
+        (WidgetTester tester) async {
+      final mockAcaraService = MockAcaraService();
+      when(mockAcaraService.getDocumentsByKategori('Bootcamp'))
+          .thenAnswer((_) => Stream.value(MockQuerySnapshot()));
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: WorkshopPage(),
-            ),
-          );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: WorkshopPage(),
+        ),
+      );
 
-          final streamBuilderFinder = find.byWidgetPredicate(
-                  (widget) => widget is StreamBuilder<QuerySnapshot>);
+      final streamBuilderFinder = find.byWidgetPredicate(
+          (widget) => widget is StreamBuilder<QuerySnapshot>);
 
-          expect(streamBuilderFinder, findsOneWidget);
-        });
+      expect(streamBuilderFinder, findsOneWidget);
+    });
 
     testWidgets('Displays PostCard for each workshop item',
-            (WidgetTester tester) async {
-          final mockDocumentSnapshots = [
-            MockQueryDocumentSnapshot({
-              'kategori': 'Bootcamp',
-              'judul': 'Workshop 1',
-              'startDate': Timestamp.fromDate(DateTime(2023, 1, 1)),
-              'endDate': Timestamp.fromDate(DateTime(2023, 1, 31)),
-              'lokasi': 'Location 1',
-            }),
-            MockQueryDocumentSnapshot({
-              'kategori': 'Bootcamp',
-              'judul': 'Workshop 2',
-              'startDate': Timestamp.fromDate(DateTime(2023, 2, 1)),
-              'endDate': Timestamp.fromDate(DateTime(2023, 2, 28)),
-              'lokasi': 'Location 2',
-            }),
-          ];
+        (WidgetTester tester) async {
+      final mockDocumentSnapshots = [
+        MockQueryDocumentSnapshot({
+          'kategori': 'Bootcamp',
+          'judul': 'Workshop 1',
+          'startDate': Timestamp.fromDate(DateTime(2023, 1, 1)),
+          'endDate': Timestamp.fromDate(DateTime(2023, 1, 31)),
+          'lokasi': 'Location 1',
+        }),
+        MockQueryDocumentSnapshot({
+          'kategori': 'Bootcamp',
+          'judul': 'Workshop 2',
+          'startDate': Timestamp.fromDate(DateTime(2023, 2, 1)),
+          'endDate': Timestamp.fromDate(DateTime(2023, 2, 28)),
+          'lokasi': 'Location 2',
+        }),
+      ];
 
-          final mockSnapshot = MockQuerySnapshot();
-          mockSnapshot.setDocs(mockDocumentSnapshots);
+      final mockSnapshot = MockQuerySnapshot();
+      mockSnapshot.setDocs(mockDocumentSnapshots);
 
-          final mockAcaraService = MockAcaraService();
-          when(mockAcaraService.getDocumentsByKategori('Bootcamp'))
-              .thenAnswer((_) => Stream.value(mockSnapshot));
+      final mockAcaraService = MockAcaraService();
+      when(mockAcaraService.getDocumentsByKategori('Bootcamp'))
+          .thenAnswer((_) => Stream.value(mockSnapshot));
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: WorkshopPage(acaraService: mockAcaraService),
-            ),
-          );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: WorkshopPage(acaraService: mockAcaraService),
+        ),
+      );
 
-          await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-          final acaraItemFinder = find.byWidgetPredicate((widget) =>
+      final acaraItemFinder = find.byWidgetPredicate((widget) =>
           widget is PostCard &&
-              (widget.title == 'Workshop 1' || widget.title == 'Workshop 2'));
+          (widget.title == 'Workshop 1' || widget.title == 'Workshop 2'));
 
-          expect(acaraItemFinder, findsNWidgets(2));
-        });
+      expect(acaraItemFinder, findsNWidgets(2));
+    });
   });
 }
