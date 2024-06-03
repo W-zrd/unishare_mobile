@@ -9,14 +9,16 @@ class KarirSubmissionService {
   static Future<void> addToFirestore(
       BuildContext context, KarirSubmission submission) async {
     try {
+      print('Adding submission to Firestore...');
       await FirebaseFirestore.instance
           .collection("karir_submission")
           .add(submission.toMap());
-      // Show success message or navigate to another screen
+      print('Submission added successfully!');
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Data pendaftaran berhasil dikirim!')));
-      Navigator.pop(context); // Assuming this is in a new screen
+      Navigator.pop(context);
     } catch (error) {
+      print('Error adding submission: $error');
       // Show error message to the user
     }
   }

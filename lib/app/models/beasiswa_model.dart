@@ -9,6 +9,7 @@ class BeasiswaPost {
   final String deskripsi;
   final Timestamp startDate;
   final Timestamp endDate;
+  final Timestamp announcementDate;
 
   BeasiswaPost({
     required this.judul,
@@ -18,6 +19,7 @@ class BeasiswaPost {
     required this.img,
     required this.startDate,
     required this.endDate,
+    required this.announcementDate,
     required this.deskripsi,
   });
 
@@ -29,6 +31,7 @@ class BeasiswaPost {
         'img': img,
         'startDate': startDate,
         'endDate': endDate,
+        'announcementDate': announcementDate,
         'deskripsi': deskripsi,
       };
 }

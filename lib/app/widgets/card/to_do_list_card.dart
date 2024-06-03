@@ -1,100 +1,114 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ToDoListCard extends StatefulWidget {
-  const ToDoListCard({Key? key}) : super(key: key);
+  final String id;
+  final String title;
+  final String category;
+  final DateTime deadline;
+  final bool isCompleted;
+
+  const ToDoListCard({
+    Key? key,
+    required this.id,
+    required this.title,
+    required this.category,
+    required this.deadline,
+    required this.isCompleted,
+  }) : super(key: key);
 
   @override
   _ToDoListCardState createState() => _ToDoListCardState();
 }
 
 class _ToDoListCardState extends State<ToDoListCard> {
-  bool isChecked = false;
+  late bool _isCompleted;
+  late bool _isLate;
+
+  @override
+  void initState() {
+    super.initState();
+    _isCompleted = widget.isCompleted;
+    _checkIfLate(); // Check and update if the task is late
+  }
+
+  void _checkIfLate() async {
+    final now = DateTime.now();
+    if (now.isAfter(widget.deadline) && !_isCompleted) {
+      setState(() {
+        _isLate = true;
+      });
+
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('todos')
+            .doc(widget.id)
+            .update({'status': 'late'});
+      }
+    } else {
+      setState(() {
+        _isLate = false;
+      });
+    }
+  }
+
+  void _toggleCompletion(bool? value) async {
+    if (_isLate) return;
+
+    setState(() {
+      _isCompleted = value ?? false;
+    });
+
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('todos')
+          .doc(widget.id)
+          .update({'status': _isCompleted ? 'completed' : 'ongoing'});
+    }
+
+    _checkIfLate(); // Recheck if the deadline has passed
+  }
 
   @override
   Widget build(BuildContext context) {
+    final currentTime = DateTime.now();
+    final isPastDeadline = currentTime.isAfter(widget.deadline);
+
+    if (isPastDeadline && !_isCompleted) {
+      setState(() {
+        _isLate = true;
+      });
+    }
+
+    Color backgroundColor;
+    if (_isCompleted) {
+      backgroundColor = Colors.green.withOpacity(0.2);
+    } else if (_isLate) {
+      backgroundColor = Colors.red.withOpacity(0.2);
+    } else {
+      backgroundColor = Colors.white;
+    }
+
     return Card(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      color: backgroundColor,
+      child: ListTile(
+        leading: Checkbox(
+          value: _isCompleted,
+          onChanged: isPastDeadline ? null : _toggleCompletion,
+          tristate: false,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Checkbox(
-                value: isChecked,
-                activeColor: const Color.fromARGB(255, 247, 86, 0),
-                onChanged: (bool? value) {
-                  setState(() {
-                    isChecked = value ?? false;
-                  });
-                },
-              ),
-              const Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Dashboard Web Design',
-                    style: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  Text(
-                    'Tugas Webpro',
-                    style: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                  Divider(),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_today_outlined,
-                        size: 22,
-                      ),
-                      SizedBox(width: 3),
-                      Text(
-                        'Tenggat: 21 Juli 2023',
-                        style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      Icon(
-                        Icons.access_time_outlined,
-                        size: 25,
-                      ),
-                      SizedBox(width:3),
-                      Text(
-                        '20.00',
-                        style: TextStyle(
-                          fontFamily: 'Rubik',
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+        title: Text(widget.title),
+        subtitle: Text(widget.category),
+        trailing: Text(
+          '${widget.deadline.day}-${widget.deadline.month}-${widget.deadline.year} ${widget.deadline.hour.toString().padLeft(2, '0')}:${widget.deadline.minute.toString().padLeft(2, '0')}',
         ),
       ),
     );

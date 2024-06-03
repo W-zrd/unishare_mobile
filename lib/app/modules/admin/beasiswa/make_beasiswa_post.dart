@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/beasiswa_controller.dart';
 import 'package:unishare/app/models/beasiswa_model.dart';
-import 'package:unishare/app/modules/admin/beasiswa/make_beasiswa_post.dart';
 
 class MakeBeasiswaPost extends StatefulWidget {
   MakeBeasiswaPost({Key? key}) : super(key: key);
@@ -20,17 +18,7 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
 
   String jenisValue = 'Swasta';
   DateTime? _endDate;
-
-  Future<void> _openFilePicker(BuildContext context) async {
-    try {
-      final result = await FilePicker.platform.pickFiles();
-      if (result != null) {
-        final filePath = result.files.single.path;
-      }
-    } catch (e) {
-      print('Error while picking the file: $e');
-    }
-  }
+  DateTime? _annnouncementDate;
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +51,8 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
               ),
             ),
             TextFormField(
+              key: Key('judul_field'),
               controller: _judulController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -82,13 +65,8 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
               ),
             ),
             TextFormField(
+              key: Key('penyelenggara_field'),
               controller: _penyelenggaraController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -101,13 +79,8 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
               ),
             ),
             TextFormField(
+              key: Key('url_field'),
               controller: _urlController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -120,13 +93,8 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
               ),
             ),
             TextFormField(
+              key: Key('deskripsi_field'),
               controller: _deskripsiController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -177,6 +145,7 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
               children: [
                 Expanded(
                   child: TextButton.icon(
+                    key: Key("date-picker"),
                     onPressed: () async {
                       final DateTime? pickedDate = await showDatePicker(
                         context: context,
@@ -200,6 +169,41 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
                 ),
               ],
             ),
+            const Text(
+              'Tanggal Pengumuman',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    key: Key("date-picker"),
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _annnouncementDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _annnouncementDate != null
+                          ? '${_annnouncementDate!.day}/${_annnouncementDate!.month}/${_annnouncementDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
             const SizedBox(height: 20),
 
@@ -215,6 +219,7 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
                     deskripsi: _deskripsiController.text,
                     startDate: Timestamp.now(),
                     endDate: Timestamp.fromDate(_endDate!),
+                    announcementDate: Timestamp.fromDate(_annnouncementDate!),
                   );
                   BeasiswaService.addToFirestore(context, beasiswaPost);
                 });

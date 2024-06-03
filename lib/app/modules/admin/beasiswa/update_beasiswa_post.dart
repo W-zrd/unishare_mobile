@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/beasiswa_controller.dart';
 import 'package:unishare/app/models/beasiswa_model.dart';
+
+import 'beasiswa_post_admin.dart';
 
 class EditBeasiswaPost extends StatefulWidget {
   final DocumentSnapshot beasiswaPost;
@@ -20,27 +21,19 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
 
   String jenisValue = 'Swasta';
   DateTime? _endDate;
+  DateTime? _annnouncementDate;
 
   @override
   void initState() {
     super.initState();
-    _judulController.text = widget.beasiswaPost['judul'];
-    _penyelenggaraController.text = widget.beasiswaPost['penyelenggara'];
-    _urlController.text = widget.beasiswaPost['urlBeasiswa'];
-    _deskripsiController.text = widget.beasiswaPost['deskripsi'];
-    jenisValue = widget.beasiswaPost['jenis'];
-    // _endDate = widget.beasiswaPost['endDate'];
-    // _startdate = widget.beasiswa_screen['startDate'];
-  }
-
-  Future<void> _openFilePicker(BuildContext context) async {
-    try {
-      final result = await FilePicker.platform.pickFiles();
-      if (result != null) {
-        final filePath = result.files.single.path;
-      }
-    } catch (e) {
-      print('Error while picking the file: $e');
+    _judulController.text = widget.beasiswaPost['judul'] ?? '';
+    _penyelenggaraController.text = widget.beasiswaPost['penyelenggara'] ?? '';
+    _urlController.text = widget.beasiswaPost['urlBeasiswa'] ?? '';
+    _deskripsiController.text = widget.beasiswaPost['deskripsi'] ?? '';
+    jenisValue = widget.beasiswaPost['jenis'] ?? 'Swasta';
+    final endDate = widget.beasiswaPost['endDate'];
+    if (endDate is Timestamp) {
+      _endDate = endDate.toDate();
     }
   }
 
@@ -49,7 +42,7 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Buat Beasiswa',
+          'Edit Beasiswa',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white),
         ),
@@ -76,12 +69,6 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             TextFormField(
               controller: _judulController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -95,12 +82,6 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             TextFormField(
               controller: _penyelenggaraController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -114,12 +95,6 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             TextFormField(
               controller: _urlController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -132,12 +107,6 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             ),
             TextFormField(
               controller: _deskripsiController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Posisi tidak boleh kosong';
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 20),
 
@@ -162,57 +131,92 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
               },
             ),
             const SizedBox(height: 20),
-
             //banner acara
-            // const Text(
-            //   'Banner Acara',
-            //   style: TextStyle(
-            //     fontSize: 16,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
-            // const SizedBox(height: 20),
+            const Text(
+              'Banner Acara',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
 
-            // //file input
-            // const SizedBox(height: 20),
+            //file input
+            const SizedBox(height: 20),
 
             //enddate
-            // const Text(
-            //   'Tanggal Selesai',
-            //   style: TextStyle(
-            //     fontSize: 16,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: TextButton.icon(
-            //         onPressed: () async {
-            //           final DateTime? pickedDate = await showDatePicker(
-            //             context: context,
-            //             initialDate: DateTime.now(),
-            //             firstDate: DateTime(2000),
-            //             lastDate: DateTime(2100),
-            //           );
-            //           if (pickedDate != null) {
-            //             setState(() {
-            //               _endDate = pickedDate;
-            //             });
-            //           }
-            //         },
-            //         icon: Icon(Icons.calendar_today),
-            //         label: Text(
-            //           _endDate != null
-            //               ? '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'
-            //               : 'Pilih Tanggal',
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
+            const Text(
+              'Tanggal Selesai',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    key: Key("date-picker"),
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _endDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _endDate != null
+                          ? '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const Text(
+              'Tanggal Pengumuman',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    key: Key("date-picker"),
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _annnouncementDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _annnouncementDate != null
+                          ? '${_annnouncementDate!.day}/${_annnouncementDate!.month}/${_annnouncementDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
-            // const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             ElevatedButton(
               onPressed: () {
@@ -223,11 +227,11 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
                     urlBeasiswa: _urlController.text,
                     img: "/img/Wzrd.jpg",
                     jenis: jenisValue,
-                    startDate: widget.beasiswaPost['startDate'],
-                    endDate: widget.beasiswaPost['endDate'],
-                    // startDate: Timestamp.now(),
-                    // endDate: Timestamp.fromDate(_endDate!),
+                    startDate:
+                        widget.beasiswaPost['startDate'] ?? Timestamp.now(),
+                    endDate: widget.beasiswaPost['endDate'] ?? Timestamp.now(),
                     deskripsi: _deskripsiController.text,
+                    announcementDate: widget.beasiswaPost['announcementDate'],
                   );
                   BeasiswaService.updateBeasiswa(
                       context, updatedBeasiswaPost, widget.beasiswaPost.id);

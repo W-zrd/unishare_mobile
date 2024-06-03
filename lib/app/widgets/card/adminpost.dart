@@ -6,7 +6,7 @@ class AdminPostCard extends StatelessWidget {
   final String period;
   final String thumbnailAsset;
   final String deskripsi;
-  final void Function()? delete;
+  final Future<void> Function()? delete;
   final void Function()? update;
 
   const AdminPostCard({
@@ -24,7 +24,7 @@ class AdminPostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String finaldeskripsi = deskripsi;
     if (deskripsi.length > 19) {
-      finaldeskripsi = deskripsi.substring(0, 36) + '...';
+      finaldeskripsi = deskripsi.substring(0, 19) + '...';
     }
     return GestureDetector(
       child: Card(
@@ -65,14 +65,14 @@ class AdminPostCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                      type,
-                      style: const TextStyle(
-                        fontFamily: 'Rubik',
-                        fontWeight: FontWeight.normal,
-                        fontSize: 12,
-                        color: Color(0xFFF75600),
+                        type,
+                        style: const TextStyle(
+                          fontFamily: 'Rubik',
+                          fontWeight: FontWeight.normal,
+                          fontSize: 12,
+                          color: Color(0xFFF75600),
+                        ),
                       ),
-                    ),
                       Text(
                         title,
                         style: const TextStyle(
@@ -103,47 +103,48 @@ class AdminPostCard extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: Icon(Icons.edit, key: Key("edit-karir")),
                   onPressed: update,
                 ),
                 IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: delete != null ? () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Delete Post'),
-                          content: Text(
-                              'Are you sure you want to delete this post?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // Tutup dialog
-                              },
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                try {
-                                  delete!();
-                                  Navigator.of(context).pop();
-                                } catch (e) {
-                                  print('Error in delete function: $e');
-                                }
-                                // Tambahkan logika untuk menghapus post di sini
-                                delete!();
-                                Navigator.of(context).pop(); // Tutup dialog
-                              },
-                              child: Text('Delete'),
-                              key: Key("delete-button"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                  : null,
+                  onPressed: delete != null
+                      ? () async {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Delete Post'),
+                                content: Text(
+                                    'Are you sure you want to delete this post?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      try {
+                                        await delete!();
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      } catch (e) {
+                                        print('Error in delete function: $e');
+                                        // Handle the error appropriately (e.g., show an error message to the user)
+                                      }
+                                    },
+                                    child: Text('Delete'),
+                                    key: Key("delete-button"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      : null,
                 ),
               ],
             ),

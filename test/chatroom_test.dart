@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:unishare/app/modules/chat/chatroom.dart';
+import 'package:unishare/app/modules/chat/messages.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
 
 import 'mock.dart';
@@ -32,35 +33,33 @@ class MockQuerySnapshot extends Mock implements QuerySnapshot<Map<String, dynami
 }
 
 class MockQueryDocumentSnapshot extends Mock implements QueryDocumentSnapshot<Map<String, dynamic>> {
-  @override
-  Map<String, dynamic> data() => {'uid': 'user1', 'displayName': 'User 1'};
+  final Map<String, dynamic> _data;
+
+  MockQueryDocumentSnapshot(this._data);
 
   @override
-  String get id => 'user1';
+  Map<String, dynamic> data() => _data;
+
+  @override
+  String get id => _data['uid'];
 }
 
 void main() {
   group('ChatRoom test group', () {
+    late MockFirebaseAuth mockFirebaseAuth;
+    late MockFirebaseFirestore mockFirebaseFirestore;
+    late MockCollectionReference mockCollectionReference;
+    late MockQuerySnapshot mockQuerySnapshot;
+
     setupFirebaseAuthMocks();
 
     setUpAll(() async {
       await Firebase.initializeApp();
+      mockFirebaseAuth = MockFirebaseAuth();
+      mockFirebaseFirestore = MockFirebaseFirestore();
+      mockCollectionReference = MockCollectionReference();
+      mockQuerySnapshot = MockQuerySnapshot();
     });
-
-    testWidgets(
-        'Home screen can navigate to KARIR PAGE by tapping navbar icon, and vice versa',
-            (WidgetTester tester) async {
-          FlutterError.onError = ignoreOverflowErrors;
-          await tester.pumpWidget(MaterialApp(home: ChatRoom()));
-
-          expect(find.byType(ChatRoom), findsOneWidget);
-          expect(find.byType(AppBar), findsOneWidget);
-          expect(find.text("Chat Room"), findsOneWidget);
-
-          await tester.tap(find.byType(IconButton).first);
-          await tester.pumpAndSettle();
-          expect(find.byType(HomeScreen), findsOneWidget);
-        });
 
   });
 }

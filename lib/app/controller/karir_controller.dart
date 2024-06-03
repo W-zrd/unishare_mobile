@@ -13,8 +13,8 @@ class KarirService {
           .collection("karir")
           .add(acaraPost.toMap());
       // Show success message or navigate to another screen
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Career post uploaded successfully!')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Career post uploaded successfully!')));
       Navigator.pop(context); // Assuming this is in a new screen
     } catch (error) {
       // Show error message to the user
@@ -22,8 +22,10 @@ class KarirService {
   }
 
   //read
-  Stream<QuerySnapshot> getKarirs() {
-    return _firestore.collection('karir').snapshots();
+  Stream<QuerySnapshot> getKarirs({bool includeMetadataChanges = false}) {
+    return _firestore
+        .collection('karir')
+        .snapshots(includeMetadataChanges: includeMetadataChanges);
   }
 
   //read by id

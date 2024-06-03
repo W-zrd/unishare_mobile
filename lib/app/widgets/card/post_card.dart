@@ -19,7 +19,6 @@ import 'package:flutter/material.dart'
         GestureDetector,
         MaterialPageRoute,
         Navigator,
-        NetworkImage,
         Offset,
         Padding,
         Row,
@@ -28,7 +27,7 @@ import 'package:flutter/material.dart'
         Text,
         TextStyle,
         Widget;
-import 'package:unishare/app/modules/karir/detail_karir.dart';
+import 'package:unishare/app/modules/karir/detail_karir_ril.dart';
 
 class PostCard extends StatelessWidget {
   final String? type;
@@ -52,7 +51,7 @@ class PostCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                const DetailKarir(), // Replace with your actual detail page
+                const DetailKarirRil(), // Replace with your actual detail page
           ),
         );
       },

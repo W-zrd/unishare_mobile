@@ -16,7 +16,7 @@ class FileInputWidget extends StatefulWidget {
 }
 
 class _FileInputWidgetState extends State<FileInputWidget> {
-  late String _filePath = '';
+  String _filePath = '';
 
   Future<String?> _pickPdfFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -26,7 +26,9 @@ class _FileInputWidgetState extends State<FileInputWidget> {
 
     if (result != null) {
       PlatformFile file = result.files.first;
-      _filePath = file.path!;
+      setState(() {
+        _filePath = file.path!;
+      });
 
       // Tentukan direktori Firebase Storage berdasarkan jenis file
       String directory = widget.fileType == 'Image' ? 'img/' : 'file/';
@@ -66,11 +68,7 @@ class _FileInputWidgetState extends State<FileInputWidget> {
         ),
         TextButton(
           onPressed: () async {
-            String? firebaseUrl = await _pickPdfFile();
-            if (firebaseUrl != null) {
-              // Do something with firebaseUrl, such as save it to database
-              // Tidak perlu melakukan apa pun di sini karena sudah ditangani di _pickPdfFile
-            }
+            await _pickPdfFile();
           },
           child: Row(
             children: [
@@ -88,7 +86,7 @@ class _FileInputWidgetState extends State<FileInputWidget> {
         ),
         const SizedBox(
             height:
-                8), // Add some spacing between the text button and file path
+            8), // Add some spacing between the text button and file path
         Text(
           _filePath,
           style: const TextStyle(

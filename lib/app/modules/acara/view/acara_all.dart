@@ -2,148 +2,83 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/acara_controller.dart';
 import 'package:unishare/app/models/acara_kemahasiswaan.dart';
-import 'package:unishare/app/widgets/card/post_card.dart';
+import 'package:unishare/app/modules/acara/view/acara_post_card.dart';
+import 'package:unishare/app/modules/acara/view/detail_acara.dart';
 
-class AllAcaraPage extends StatefulWidget {
-  AllAcaraPage({super.key});
+class AllAcaraPage extends StatelessWidget {
+  final AcaraService acaraService;
 
-  @override
-  _AllAcaraPageState createState() => _AllAcaraPageState();
-}
-
-class _AllAcaraPageState extends State<AllAcaraPage> {
-  final PageController _pageController = PageController();
-  final AcaraService _acaraService = AcaraService();
-
-  int _currentPage = 0;
-  final int _cardsPerPage = 5;
-
-  Widget _buildAcaraList(BuildContext context) {
-    return StreamBuilder(
-        stream: _acaraService.getAcaras(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('Loading...');
-          }
-          return ListView(
-            children: snapshot.data!.docs
-                .map((doc) => _buildAcaraItem(doc, context))
-                .toList(),
-          );
-        });
-  }
-
-  Widget _buildAcaraItem(DocumentSnapshot doc, BuildContext context) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-    Timestamp startDate = data['startDate'];
-    String startDateString = startDate.toDate().day.toString() +
-        "-" +
-        startDate.toDate().month.toString() +
-        "-" +
-        startDate.toDate().year.toString();
-
-    Timestamp endDate = data['endDate'];
-    String endDateString = endDate.toDate().day.toString() +
-        "-" +
-        endDate.toDate().month.toString() +
-        "-" +
-        endDate.toDate().year.toString();
-    return PostCard(
-      type: data['kategori'],
-      title: data['judul'],
-      period: 'Registrasi: ' + startDateString + ' sampai ' + endDateString,
-      location: data['lokasi'],
-      thumbnailAsset: 'assets/img/unishare_splash.png',
-    );
-  }
-
-  // final List<Widget> _cards = const [
-  //   PostCard(
-  //     type: 'INI WORKSHOP',
-  //     title: 'Virtual Talent Inc.',
-  //     period: 'Registrasi: 12 Agust - 28 Sept 2023',
-  //     location: 'Lokasi: Remote from Home',
-  //     thumbnailAsset: 'assets/img/unishare_splash.png',
-  //   ),
-  //   PostCard(
-  //     type: 'Full Stack Developer',
-  //     title: 'PT. Unity Dev Indonesia',
-  //     period: 'Registrasi: 12 Des - 30 Jan 2024',
-  //     location: 'Lembang, Bandung',
-  //     thumbnailAsset: 'assets/img/unishare_splash.png',
-  //   ),
-  //   // Add more PostCard widgets as needed
-  // ];
+  AllAcaraPage({Key? key, AcaraService? acaraService})
+      : acaraService = acaraService ?? AcaraService(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    //yang di comment ini pagination
-
-    // return Column(
-    //   children: [
-    //     Expanded(
-    //       //pagination
-    //       child: PageView.builder(
-    //         controller: _pageController,
-    //         itemCount: (_cards.length / _cardsPerPage).ceil(),
-    //         onPageChanged: (index) {
-    //           setState(() {
-    //             _currentPage = index;
-    //           });
-    //         },
-    //         itemBuilder: (context, index) {
-    //           final startIndex = index * _cardsPerPage;
-    //           final endIndex = (startIndex + _cardsPerPage < _cards.length)
-    //               ? startIndex + _cardsPerPage
-    //               : _cards.length;
-    //           return ListView(
-    //             children: _cards.sublist(startIndex, endIndex),
-    //           );
-    //         },
-    //       ),
-    //     ),
-    //     Row(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: List.generate(
-    //         (_cards.length / _cardsPerPage).ceil(),
-    //         (index) => GestureDetector(
-    //           onTap: () {
-    //             _pageController.animateToPage(
-    //               index,
-    //               duration: const Duration(milliseconds: 300),
-    //               curve: Curves.easeInOut,
-    //             );
-    //           },
-    //           child: Container(
-    //             padding: const EdgeInsets.all(8),
-    //             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-    //             decoration: BoxDecoration(
-    //               color: _currentPage == index
-    //                   ? const Color(0xFFF75600)
-    //                   : Colors.grey,
-    //               borderRadius: BorderRadius.circular(4),
-    //             ),
-    //             child: Text(
-    //               '${index + 1}',
-    //               style: const TextStyle(
-    //                 color: Colors.white,
-    //                 fontSize: 16,
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ],
-    // );
-
     return Scaffold(
-        body: Column(
-      children: [Expanded(child: _buildAcaraList(context))],
-    ));
+      body: Column(
+        children: [Expanded(child: _buildAcaraList(context))],
+      ),
+    );
+  }
+
+  Widget _buildAcaraList(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: acaraService.getAcaras(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print('Error: ${snapshot.error}');
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: Text('Loading...'));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(child: Text('No data available'));
+        }
+
+        final docs = snapshot.data!.docs;
+        return ListView(
+          key: Key('acara_list'),
+          children: docs.map((doc) => _buildAcaraItem(doc, context)).toList(),
+        );
+      },
+    );
+  }
+
+  Widget _buildAcaraItem(DocumentSnapshot doc, BuildContext context) {
+    final data = doc.data() as Map<String, dynamic>;
+    final acara = AcaraKemahasiswaan.fromJson(data);
+
+    final startDate = acara.startDate?.toDate();
+    final endDate = acara.endDate?.toDate();
+    final startDateString = startDate != null
+        ? '${startDate.day}-${startDate.month}-${startDate.year}'
+        : 'TBA';
+    final endDateString = endDate != null
+        ? '${endDate.day}-${endDate.month}-${endDate.year}'
+        : 'TBA';
+
+    return PostCardAcara(
+      key: Key('acara_item_${doc.id}'),
+      type: acara.kategori,
+      title: acara.judul,
+      period: 'Registrasi: $startDateString sampai $endDateString',
+      location: acara.lokasi,
+      thumbnailAsset: 'assets/img/unishare_splash.png',
+      announcementDate: acara.announcementDate != null
+          ? 'Pengumuman: ${acara.announcementDate!.toDate().day}-${acara.announcementDate!.toDate().month}-${acara.announcementDate!.toDate().year}'
+          : 'Pengumuman: TBA',
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailAcara(
+              acaraID: doc.id,
+              acara: acara,
+            ),
+          ),
+        );
+      },
+    );
   }
 }
