@@ -97,16 +97,19 @@ class Dashboard extends StatelessWidget {
               Positioned(
                 top: 50,
                 right: 30,
-                child: Container(
-                  width: 54,
-                  height: 54,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF1F1D18),
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: AssetImage('assets/img/demonzz.jpg'),
-                        fit: BoxFit.cover),
+                child: GestureDetector(
+                  child: Container(
+                    width: 54,
+                    height: 54,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF1F1D18),
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: AssetImage('assets/img/demonzz.jpg'),
+                          fit: BoxFit.cover),
+                    ),
                   ),
+                  onTap: () {},
                 ),
               ),
 

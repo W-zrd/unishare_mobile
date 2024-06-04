@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unishare/app/modules/admin/acara/acara_post_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/modules/admin/beasiswa/beasiswa_post_admin.dart';
 import 'package:unishare/app/modules/admin/karir/karirpostadmin.dart';
+import 'package:unishare/app/modules/auth/login/views/login_screen.dart';
+import 'package:unishare/app/modules/onboarding/views/onboarding_screen.dart';
+import 'package:unishare/app/modules/splashscreen/views/splash_screen.dart';
 
 class DaDrawer extends StatelessWidget {
   const DaDrawer({super.key});
@@ -103,7 +107,16 @@ class DaDrawer extends StatelessWidget {
                 Icons.logout,
                 color: Colors.red,
               ),
-              onTap: () {},
+              onTap: () {
+                FirebaseAuth _auth = FirebaseAuth.instance;
+                _auth.signOut();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SplashScreen(),
+                  ),
+                );
+              },
             ),
           ),
         ],
