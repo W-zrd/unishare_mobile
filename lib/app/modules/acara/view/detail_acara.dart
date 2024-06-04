@@ -54,8 +54,9 @@ class _DetailAcaraState extends State<DetailAcara> {
               period:
                   'Registrasi: ${widget.acara?.startDate?.toDate().day}/${widget.acara?.startDate?.toDate().month} - ${widget.acara?.endDate?.toDate().day}/${widget.acara?.endDate?.toDate().month}/${widget.acara?.endDate?.toDate().year}',
               thumbnailAsset: 'assets/img/unishare_splash.png',
-              salary: '', // Replace with relevant info or remove
-              minimumWorkExperience: '', // Replace with relevant info or remove
+              salary: '70.000', // Replace with relevant info or remove
+              minimumWorkExperience:
+                  '1 month', // Replace with relevant info or remove
             ),
             Expanded(
               child: DefaultTabController(
