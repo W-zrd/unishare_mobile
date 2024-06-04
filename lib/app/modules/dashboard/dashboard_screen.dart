@@ -417,11 +417,21 @@ class Dashboard extends StatelessWidget {
       jenis: data['jenis'],
       announcementDate: data['announcementDate'],
     );
+
+    String name = data['judul'];
+    if (name.length > 15) {
+      name = name.substring(0, 15) + "...";
+    }
+    String nameP = data['penyelenggara'];
+    if (nameP.length > 15) {
+      nameP = nameP.substring(0, 15) + "...";
+    }
+
     return Padding(
         padding: EdgeInsets.only(right: 15),
         child: HomepageCardd(
-            penyelenggara: data['penyelenggara'],
-            nama_beasiswa: data['judul'],
+            penyelenggara: nameP,
+            nama_beasiswa: name,
             deadline: endDateString,
             onTap: () {
               Navigator.push(
@@ -483,12 +493,20 @@ class Dashboard extends StatelessWidget {
         endDate.toDate().month.toString() +
         "-" +
         endDate.toDate().year.toString();
+    String name = 'Magang ' + data['posisi'];
+    if (name.length > 15) {
+      name = name.substring(0, 15) + "...";
+    }
+    String nameP = data['penyelenggara'];
+    if (nameP.length > 15) {
+      nameP = nameP.substring(0, 15) + "...";
+    }
 
     return Padding(
         padding: EdgeInsets.only(right: 15),
         child: HomepageCardd(
-          penyelenggara: data['penyelenggara'],
-          nama_beasiswa: 'Magang ' + data['posisi'],
+          penyelenggara: nameP,
+          nama_beasiswa: name,
           deadline: endDateString,
           onTap: () {
             Navigator.push(

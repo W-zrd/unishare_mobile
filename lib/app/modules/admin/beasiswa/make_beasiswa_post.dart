@@ -16,7 +16,8 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
   TextEditingController _urlController = TextEditingController();
   TextEditingController _deskripsiController = TextEditingController();
 
-  String jenisValue = 'Swasta';
+  final List<String> jenisValue = ['Swasta', 'Pemerintah'];
+  late String selectedValue = jenisValue[0];
   DateTime? _endDate;
   DateTime? _annnouncementDate;
 
@@ -106,31 +107,17 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            MyDropdownButton(
-              dropdownValue: 'Swasta',
-              items: const [
-                'Swasta',
-                'Pemerintah',
-              ],
-              onChanged: (newValue) {
-                setState(() {
-                  jenisValue = newValue!;
-                });
-              },
+            DropdownButtonFormField<String>(
+              value: selectedValue,
+              items: jenisValue
+                  .map((jenis) => DropdownMenuItem<String>(
+                        value: jenis,
+                        child: Text(jenis),
+                      ))
+                  .toList(),
+              onChanged: (value) => setState(() => selectedValue = value!),
             ),
-            const SizedBox(height: 20),
 
-            //banner acara
-            const Text(
-              'Banner Acara',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            //file input
             const SizedBox(height: 20),
 
             //enddate
@@ -208,6 +195,11 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
             const SizedBox(height: 20),
 
             ElevatedButton(
+              style: const ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
+                  padding: MaterialStatePropertyAll(EdgeInsets.only(
+                      left: 140, top: 20, right: 140, bottom: 20))),
               onPressed: () {
                 Future.delayed(Duration.zero, () {
                   BeasiswaPost beasiswaPost = BeasiswaPost(
@@ -215,7 +207,7 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
                     penyelenggara: _penyelenggaraController.text,
                     urlBeasiswa: _urlController.text,
                     img: "/img/Wzrd.jpg",
-                    jenis: jenisValue,
+                    jenis: selectedValue,
                     deskripsi: _deskripsiController.text,
                     startDate: Timestamp.now(),
                     endDate: Timestamp.fromDate(_endDate!),
@@ -224,7 +216,10 @@ class _MakeBeasiswaPostState extends State<MakeBeasiswaPost> {
                   BeasiswaService.addToFirestore(context, beasiswaPost);
                 });
               },
-              child: const Text('Unggah'),
+              child: const Text(
+                'Unggah',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 20),
           ],

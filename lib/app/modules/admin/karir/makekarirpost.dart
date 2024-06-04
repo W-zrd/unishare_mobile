@@ -179,17 +179,6 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
             ),
             const SizedBox(height: 20),
 
-            //banner Karir
-            const Text(
-              'Banner Karir',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            //file input
-            const SizedBox(height: 20),
-
             //deskripsi Karir
             const Text(
               'Deskripsi Karir',
@@ -210,7 +199,7 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
                     backgroundColor:
                         MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
                     padding: MaterialStatePropertyAll(EdgeInsets.only(
-                        left: 150, top: 20, right: 150, bottom: 20))),
+                        left: 140, top: 20, right: 140, bottom: 20))),
                 onPressed: () {
                   // Defer the validation until after the build method
                   Future.delayed(Duration.zero, () {
@@ -230,8 +219,10 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
                     KarirService.addToFirestore(context, karirPost);
                   });
                 },
-                child: const Text('Unggah',
-                    style: TextStyle(color: Colors.black87)),
+                child: const Text(
+                  'Unggah',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
             const SizedBox(height: 20),

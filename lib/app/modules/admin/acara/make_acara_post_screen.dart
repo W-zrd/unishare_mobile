@@ -327,6 +327,11 @@ class _MakeAcaraPostState extends State<MakeAcaraPost> {
             const SizedBox(height: 20),
 
             ElevatedButton(
+              style: const ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
+                  padding: MaterialStatePropertyAll(EdgeInsets.only(
+                      left: 140, top: 20, right: 140, bottom: 20))),
               onPressed: () {
                 // Defer the validation until after the build method
                 Future.delayed(Duration.zero, () {
@@ -347,7 +352,7 @@ class _MakeAcaraPostState extends State<MakeAcaraPost> {
                 });
               },
               child:
-                  const Text('Unggah', style: TextStyle(color: Colors.black87)),
+                  const Text('Unggah', style: TextStyle(color: Colors.white)),
             ),
 
             const SizedBox(height: 20),
