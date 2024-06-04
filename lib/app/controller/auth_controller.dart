@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
+import 'package:unishare/app/controller/database_helper.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,6 +16,7 @@ class AuthService {
         email: email,
         password: password,
       );
+      await DatabaseHelper().insertUser(email, userCredential.user!.uid);
       return userCredential.user;
     } catch (e) {
       logger.e("Error signing in: $e");

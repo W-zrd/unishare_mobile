@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unishare/app/modules/onboarding/views/onboarding_screen.dart';
+import 'package:unishare/app/modules/auth/gate.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             // Setelah menunggu 5 detik, pindah ke layar onboarding
-            return const OnboardingScreen();
+            return const AuthGate();
           } else {
             // Selama menunggu, tampilkan tampilan splash screen
             return Stack(
@@ -113,6 +113,7 @@ class CustomOrangeLayer extends StatelessWidget {
     );
   }
 }
+
 class CustomClipPath extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

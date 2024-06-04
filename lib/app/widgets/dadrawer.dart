@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unishare/app/controller/database_helper.dart';
 import 'package:unishare/app/modules/admin/acara/acara_post_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:unishare/app/modules/admin/beasiswa/beasiswa_post_admin.dart';
@@ -107,8 +108,9 @@ class DaDrawer extends StatelessWidget {
                 Icons.logout,
                 color: Colors.red,
               ),
-              onTap: () {
+              onTap: () async {
                 FirebaseAuth _auth = FirebaseAuth.instance;
+                await DatabaseHelper().deleteDatabase();
                 _auth.signOut();
                 Navigator.push(
                   context,

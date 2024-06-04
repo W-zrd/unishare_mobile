@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:unishare/app/controller/database_helper.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/modules/profil/controller/user_service.dart';
 import 'package:unishare/app/modules/profil/controller/image_service.dart';
@@ -100,7 +101,8 @@ class _ProfilPageState extends State<ProfilPage> {
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Show Snackbar',
-            onPressed: () {
+            onPressed: () async {
+              await DatabaseHelper().deleteDatabase();
               FirebaseAuth _auth = FirebaseAuth.instance;
               _auth.signOut();
               Navigator.push(
