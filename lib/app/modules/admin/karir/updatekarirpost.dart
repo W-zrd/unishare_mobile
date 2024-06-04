@@ -175,7 +175,7 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
                     backgroundColor:
                         MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
                     padding: MaterialStatePropertyAll(EdgeInsets.only(
-                        left: 150, top: 20, right: 150, bottom: 20))),
+                        left: 140, top: 20, right: 140, bottom: 20))),
                 onPressed: () {
                   Future.delayed(Duration.zero, () {
                     KarirPost updatedKarirPost = KarirPost(
@@ -187,7 +187,8 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
                       lokasi: _lokasiController.text,
                       img: "/img/Wzrd.jpg",
                       deskripsi: _deskripsiController.text,
-                      startDate: widget.karirPost['startDate'] ?? Timestamp.now(),
+                      startDate:
+                          widget.karirPost['startDate'] ?? Timestamp.now(),
                       endDate: widget.karirPost['endDate'] ?? Timestamp.now(),
                       AnnouncementDate: Timestamp.now(),
                     );
@@ -195,8 +196,8 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
                         context, updatedKarirPost, widget.karirPost.id);
                   });
                 },
-                child: const Text('Update',
-                    style: TextStyle(color: Colors.black87)),
+                child:
+                    const Text('Update', style: TextStyle(color: Colors.white)),
               ),
             ),
             const SizedBox(height: 20),

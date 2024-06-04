@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:unishare/app/controller/database_helper.dart';
 import 'package:unishare/app/modules/homescreen/home_screen.dart';
 import 'package:unishare/app/modules/profil/controller/user_service.dart';
 import 'package:unishare/app/modules/profil/controller/image_service.dart';
+import 'package:unishare/app/modules/splashscreen/views/splash_screen.dart';
 
 class ProfilPage extends StatefulWidget {
   final ProfileService? profileService;
@@ -94,6 +97,23 @@ class _ProfilPageState extends State<ProfilPage> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Show Snackbar',
+            onPressed: () async {
+              await DatabaseHelper().deleteDatabase();
+              FirebaseAuth _auth = FirebaseAuth.instance;
+              _auth.signOut();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SplashScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -106,7 +126,8 @@ class _ProfilPageState extends State<ProfilPage> {
                 radius: 80,
                 backgroundImage: profileImageUrl.isNotEmpty
                     ? NetworkImage(profileImageUrl)
-                    : const AssetImage('assets/profile_picture.png') as ImageProvider,
+                    : const AssetImage('assets/profile_picture.png')
+                        as ImageProvider,
                 child: profileImageUrl.isEmpty
                     ? const Icon(
                         Icons.account_circle,

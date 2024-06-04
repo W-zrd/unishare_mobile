@@ -4,10 +4,8 @@ import 'package:unishare/app/modules/auth/register/views/register_screen.dart';
 import 'package:unishare/app/widgets/button/primary_button.dart';
 import 'package:unishare/app/widgets/button/secondary_button.dart';
 
-
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,7 +67,7 @@ class OnboardingScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                 SecondaryButton("Daftar Akun", null,  onPressed: () {
+                SecondaryButton("Daftar Akun", null, onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(

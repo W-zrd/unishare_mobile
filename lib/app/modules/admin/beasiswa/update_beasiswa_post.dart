@@ -19,7 +19,8 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
   TextEditingController _urlController = TextEditingController();
   TextEditingController _deskripsiController = TextEditingController();
 
-  String jenisValue = 'Swasta';
+  final List<String> jenisValue = ['Swasta', 'Pemerintah'];
+  late String selectedValue = jenisValue[0];
   DateTime? _endDate;
   DateTime? _annnouncementDate;
 
@@ -30,7 +31,7 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
     _penyelenggaraController.text = widget.beasiswaPost['penyelenggara'] ?? '';
     _urlController.text = widget.beasiswaPost['urlBeasiswa'] ?? '';
     _deskripsiController.text = widget.beasiswaPost['deskripsi'] ?? '';
-    jenisValue = widget.beasiswaPost['jenis'] ?? 'Swasta';
+    selectedValue = widget.beasiswaPost['jenis'] ?? 'Swasta';
     final endDate = widget.beasiswaPost['endDate'];
     if (endDate is Timestamp) {
       _endDate = endDate.toDate();
@@ -118,17 +119,15 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            MyDropdownButton(
-              dropdownValue: 'Swasta',
-              items: const [
-                'Swasta',
-                'Pemerintah',
-              ],
-              onChanged: (newValue) {
-                setState(() {
-                  jenisValue = newValue!;
-                });
-              },
+            DropdownButtonFormField<String>(
+              value: selectedValue,
+              items: jenisValue
+                  .map((jenis) => DropdownMenuItem<String>(
+                        value: jenis,
+                        child: Text(jenis),
+                      ))
+                  .toList(),
+              onChanged: (value) => setState(() => selectedValue = value!),
             ),
             const SizedBox(height: 20),
             //banner acara
@@ -219,6 +218,11 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
             const SizedBox(height: 20),
 
             ElevatedButton(
+              style: const ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
+                  padding: MaterialStatePropertyAll(EdgeInsets.only(
+                      left: 140, top: 20, right: 140, bottom: 20))),
               onPressed: () {
                 Future.delayed(Duration.zero, () {
                   BeasiswaPost updatedBeasiswaPost = BeasiswaPost(
@@ -226,7 +230,7 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
                     penyelenggara: _penyelenggaraController.text,
                     urlBeasiswa: _urlController.text,
                     img: "/img/Wzrd.jpg",
-                    jenis: jenisValue,
+                    jenis: selectedValue,
                     startDate:
                         widget.beasiswaPost['startDate'] ?? Timestamp.now(),
                     endDate: widget.beasiswaPost['endDate'] ?? Timestamp.now(),
@@ -237,7 +241,10 @@ class _EditBeasiswaPostState extends State<EditBeasiswaPost> {
                       context, updatedBeasiswaPost, widget.beasiswaPost.id);
                 });
               },
-              child: const Text('Update'),
+              child: const Text(
+                'Update',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 20),
           ],
