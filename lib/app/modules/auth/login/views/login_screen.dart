@@ -33,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email or password is empty')));
       _logger.e("Email or password is empty");
       return;
     }
@@ -42,18 +44,24 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       if (user.email != "admin@unishare.com") {
         _logger.i("Login successful");
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Login berhasil!')));
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       } else {
         _logger.i("Login successful");
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Login berhasil!')));
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AdminHomePage()),
         );
       }
     } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Login belum berhasil!')));
       _logger.w("Login failed");
     }
   }
