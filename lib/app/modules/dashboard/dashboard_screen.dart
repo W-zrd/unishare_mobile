@@ -433,6 +433,7 @@ class Dashboard extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.only(right: 15),
         child: HomepageCardd(
+            image_url: data['img'],
             penyelenggara: nameP,
             nama_beasiswa: name,
             deadline: endDateString,
@@ -508,6 +509,7 @@ class Dashboard extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.only(right: 15),
         child: HomepageCardd(
+          image_url: data['img'],
           penyelenggara: nameP,
           nama_beasiswa: name,
           deadline: endDateString,

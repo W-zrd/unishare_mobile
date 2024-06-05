@@ -64,7 +64,7 @@ class AllAcaraPage extends StatelessWidget {
       title: acara.judul,
       period: 'Registrasi: $startDateString sampai $endDateString',
       location: acara.lokasi,
-      thumbnailAsset: 'assets/img/unishare_splash.png',
+      thumbnailAsset: acara.img!,
       announcementDate: acara.announcementDate != null
           ? 'Pengumuman: ${acara.announcementDate!.toDate().day}-${acara.announcementDate!.toDate().month}-${acara.announcementDate!.toDate().year}'
           : 'Pengumuman: TBA',

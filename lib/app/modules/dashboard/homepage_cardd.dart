@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class HomepageCardd extends StatefulWidget {
   final String penyelenggara;
   final String nama_beasiswa;
+  final String image_url;
   final String deadline;
   final void Function()? onTap;
 
@@ -11,6 +13,7 @@ class HomepageCardd extends StatefulWidget {
       {Key? key,
       required this.penyelenggara,
       required this.nama_beasiswa,
+      required this.image_url,
       required this.deadline,
       required this.onTap})
       : super(key: key);
@@ -47,9 +50,9 @@ class _HomepageCardState extends State<HomepageCardd> {
               margin: const EdgeInsets.only(top: 12),
               width: 150,
               height: 100,
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/img/dazai.jpg'),
+                    image: NetworkImage(widget.image_url),
                     fit: BoxFit.cover),
               ),
             ),
