@@ -93,7 +93,7 @@ class ToDoListPage extends StatelessWidget {
                                   ? 'Tidak ada data'
                                   : '$onTimeValue% selesai tepat waktu',
                               color: total == 0
-                                  ? Colors.blue.withOpacity(0.3)
+                                  ? Color.fromARGB(255, 255, 193, 58).withOpacity(0.3)
                                   : const Color.fromARGB(255, 34, 222, 154)),
                           total > 0
                               ? ChartExplanation(
@@ -136,8 +136,8 @@ class ToDoListPage extends StatelessWidget {
               'Hari ini',
               style: TextStyle(
                 fontFamily: 'Rubik',
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 10),
@@ -167,36 +167,20 @@ class ToDoListPage extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(73),
-              ),
-              child: Center(
-                child: TernaryButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddToDoPage()),
-                    );
-                  },
-                  label: 'Tambah To-do List',
-                  iconData: Icons.add_circle_outline_outlined,
-                  width: 319,
-                ),
-              ),
-            ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddToDoPage()),
+          );
+        },
+        backgroundColor: const Color(0xFFF75600),
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
@@ -215,7 +199,7 @@ class BlueCirclePlaceholder extends StatelessWidget {
       width: radiusValue * 2,
       height: radiusValue * 2,
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.3),
+        color: Color.fromARGB(255, 255, 193, 58).withOpacity(0.3),
         shape: BoxShape.circle,
       ),
     );
