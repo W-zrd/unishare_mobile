@@ -13,8 +13,8 @@ class KarirService {
           .collection("karir")
           .add(acaraPost.toMap());
       // Show success message or navigate to another screen
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Career post uploaded successfully!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Career post uploaded successfully!')));
       Navigator.pop(context); // Assuming this is in a new screen
     } catch (error) {
       // Show error message to the user
@@ -25,6 +25,7 @@ class KarirService {
   Stream<QuerySnapshot> getKarirs({bool includeMetadataChanges = false}) {
     return _firestore
         .collection('karir')
+        .orderBy('startDate', descending: true) // Urutkan berdasarkan startDate
         .snapshots(includeMetadataChanges: includeMetadataChanges);
   }
 

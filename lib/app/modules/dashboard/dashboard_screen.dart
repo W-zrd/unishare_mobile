@@ -21,6 +21,12 @@ class Dashboard extends StatelessWidget {
 
   const Dashboard({super.key, this.beasiswaService, this.karirService});
 
+  Future<String> getProfileImageUrl(String userId) async {
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    return userDoc['profile_picture'] ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -98,16 +104,35 @@ class Dashboard extends StatelessWidget {
                 top: 50,
                 right: 30,
                 child: GestureDetector(
-                  child: Container(
-                    width: 54,
-                    height: 54,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF1F1D18),
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage('assets/img/demonzz.jpg'),
-                          fit: BoxFit.cover),
-                    ),
+                  child: FutureBuilder<String>(
+                    future: getProfileImageUrl(user!.uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircleAvatar(
+                          radius: 27,
+                          backgroundColor: Color(0xFF1F1D18),
+                          child: CircularProgressIndicator(color: Colors.white),
+                        );
+                      } else if (snapshot.hasError) {
+                        return CircleAvatar(
+                          radius: 27,
+                          backgroundColor: Color(0xFF1F1D18),
+                          child: Icon(Icons.error, color: Colors.red),
+                        );
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return CircleAvatar(
+                          radius: 27,
+                          backgroundColor: Color(0xFF1F1D18),
+                          backgroundImage: AssetImage('assets/img/demonzz.jpg'),
+                        );
+                      } else {
+                        return CircleAvatar(
+                          radius: 27,
+                          backgroundColor: Color(0xFF1F1D18),
+                          backgroundImage: NetworkImage(snapshot.data!),
+                        );
+                      }
+                    },
                   ),
                   onTap: () {},
                 ),

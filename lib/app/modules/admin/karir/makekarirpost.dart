@@ -17,6 +17,7 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
   TextEditingController _urlController = TextEditingController();
   TextEditingController _deskripsiController = TextEditingController();
   TextEditingController _penyelenggaraController = TextEditingController();
+  DateTime? _announcementDate;
 
   String temaValue = 'Teknologi';
   String kategoriValue = 'Lowongan Kerja';
@@ -148,7 +149,41 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
               },
             ),
             const SizedBox(height: 20),
-
+            const Text(
+              'Tanggal Pengumuman',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    key: Key("date-picker"),
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _announcementDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _announcementDate != null
+                          ? '${_announcementDate!.day}/${_announcementDate!.month}/${_announcementDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
             //guidebook
             const Text(
               'Guidebook',
@@ -213,8 +248,8 @@ class _MakeKarirPostState extends State<MakeKarirPost> {
                       img: "/img/Wzrd.jpg",
                       deskripsi: _deskripsiController.text,
                       startDate: Timestamp.now(),
-                      endDate: Timestamp.now(),
-                      AnnouncementDate: Timestamp.now(),
+                      endDate: Timestamp.fromDate(_announcementDate!),
+                      AnnouncementDate: Timestamp.fromDate(_announcementDate!),
                     );
                     KarirService.addToFirestore(context, karirPost);
                   });

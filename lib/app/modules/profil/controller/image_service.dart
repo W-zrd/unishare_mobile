@@ -9,9 +9,9 @@ class ImageService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String?> pickImageAndUpload() async {
+  Future<String?> pickImageAndUpload(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
       File file = File(pickedFile.path);
@@ -20,11 +20,13 @@ class ImageService {
         User? currentUser = _auth.currentUser;
 
         if (currentUser == null) {
-          throw FirebaseAuthException(code: 'no-user', message: 'No user is signed in.');
+          throw FirebaseAuthException(
+              code: 'no-user', message: 'No user is signed in.');
         }
 
         String userId = currentUser.uid;
-        Reference ref = _storage.ref().child('user_profiles/$userId/profile_picture.jpg');
+        Reference ref =
+            _storage.ref().child('user_profiles/$userId/profile_picture.jpg');
 
         // Hapus file yang ada terlebih dahulu
         try {
@@ -52,5 +54,13 @@ class ImageService {
     }
 
     return null;
+  }
+
+  Future<String?> pickImageFromCamera() async {
+    return await pickImageAndUpload(ImageSource.camera);
+  }
+
+  Future<String?> pickImageFromGallery() async {
+    return await pickImageAndUpload(ImageSource.gallery);
   }
 }

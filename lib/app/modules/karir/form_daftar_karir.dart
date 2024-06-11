@@ -48,6 +48,8 @@ class _DaftarKarirState extends State<DaftarKarir> {
 
   @override
   Widget build(BuildContext context) {
+    namaController.text = FirebaseAuth.instance.currentUser!.displayName!;
+    emailController.text = FirebaseAuth.instance.currentUser!.email!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -134,7 +136,7 @@ class _DaftarKarirState extends State<DaftarKarir> {
               ElevatedButton(
                 style: const ButtonStyle(
                     backgroundColor:
-                    MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
+                        MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
                     padding: MaterialStatePropertyAll(EdgeInsets.only(
                         left: 150, top: 20, right: 150, bottom: 20))),
                 onPressed: () {
@@ -142,7 +144,9 @@ class _DaftarKarirState extends State<DaftarKarir> {
                   Future.delayed(Duration.zero, () {
                     if (cv == null || motivletter == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please select CV and Motivation Letter')),
+                        const SnackBar(
+                            content:
+                                Text('Please select CV and Motivation Letter')),
                       );
                       return;
                     }
@@ -162,20 +166,23 @@ class _DaftarKarirState extends State<DaftarKarir> {
                       karirID: widget.karirID,
                       userID: FirebaseAuth.instance.currentUser!.uid,
                     );
-                    KarirSubmissionService.addToFirestore(context, karirSubmission);
+                    KarirSubmissionService.addToFirestore(
+                        context, karirSubmission);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Data pendaftaran berhasil dikirim!')),
+                      const SnackBar(
+                          content: Text('Data pendaftaran berhasil dikirim!')),
                     );
                     Future.delayed(const Duration(seconds: 1), () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()),
                       );
                     });
                   });
                 },
                 child:
-                const Text('Daftar', style: TextStyle(color: Colors.white)),
+                    const Text('Daftar', style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 10),
             ],

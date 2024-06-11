@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unishare/app/controller/todo_controller.dart';
 import 'package:unishare/app/models/todo.dart';
+import 'package:intl/intl.dart';
 
 class AddToDoPage extends StatefulWidget {
   @override
@@ -50,7 +51,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
               ListTile(
                 title: Text(_selectedDate == null
                     ? 'Pilih Tanggal'
-                    : 'Tanggal: ${_selectedDate!.toLocal()}'.split(' ')[0]),
+                    : 'Tanggal: ${DateFormat.yMd().format(_selectedDate!)}'),
                 trailing: Icon(Icons.calendar_today),
                 onTap: _pickDate,
               ),

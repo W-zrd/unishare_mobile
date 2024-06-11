@@ -49,12 +49,47 @@ class _ProfilPageState extends State<ProfilPage> {
   }
 
   Future<void> _updateProfilePicture() async {
-    String? newImageUrl = await imageService.pickImageAndUpload();
-    if (newImageUrl != null) {
-      setState(() {
-        profileImageUrl = newImageUrl;
-      });
-    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pilih Sumber Gambar'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: const Text('Galeri'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    String? newImageUrl =
+                        await imageService.pickImageFromGallery();
+                    if (newImageUrl != null) {
+                      setState(() {
+                        profileImageUrl = newImageUrl;
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  child: const Text('Kamera'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    String? newImageUrl =
+                        await imageService.pickImageFromCamera();
+                    if (newImageUrl != null) {
+                      setState(() {
+                        profileImageUrl = newImageUrl;
+                      });
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _updateUserData() async {
@@ -66,6 +101,8 @@ class _ProfilPageState extends State<ProfilPage> {
         'alamat': alamatController.text,
       };
       await profileService.updateUserData(userData);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Profile data updated!')));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -120,21 +157,37 @@ class _ProfilPageState extends State<ProfilPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: _updateProfilePicture,
-              child: CircleAvatar(
-                radius: 80,
-                backgroundImage: profileImageUrl.isNotEmpty
-                    ? NetworkImage(profileImageUrl)
-                    : const AssetImage('assets/profile_picture.png')
-                        as ImageProvider,
-                child: profileImageUrl.isEmpty
-                    ? const Icon(
-                        Icons.account_circle,
-                        size: 150,
-                      )
-                    : null,
-              ),
+            Stack(
+              children: [
+                CircleAvatar(
+                  radius: 80,
+                  backgroundImage: profileImageUrl.isNotEmpty
+                      ? NetworkImage(profileImageUrl)
+                      : const AssetImage('assets/profile_picture.png')
+                          as ImageProvider,
+                  child: profileImageUrl.isEmpty
+                      ? const Icon(
+                          Icons.account_circle,
+                          size: 150,
+                        )
+                      : null,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: _updateProfilePicture,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.grey[200],
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             TextFormField(
@@ -159,12 +212,15 @@ class _ProfilPageState extends State<ProfilPage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _updateUserData,
-              child: const Text('Update'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
+              style: const ButtonStyle(
+                backgroundColor:
+                    MaterialStatePropertyAll(Color.fromRGBO(247, 86, 0, 1)),
+                padding: MaterialStatePropertyAll(EdgeInsets.only(
+                    left: 150, top: 20, right: 150, bottom: 20)),
               ),
+              onPressed: _updateUserData,
+              child:
+                  const Text('Update', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

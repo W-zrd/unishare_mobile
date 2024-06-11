@@ -344,7 +344,7 @@ class _MakeAcaraPostState extends State<MakeAcaraPost> {
                     lokasi: _lokasiController.text,
                     guidebook: _guidebook,
                     deskripsi: _deskripsiController.text,
-                    startDate: Timestamp.fromDate(_startDate!),
+                    startDate: Timestamp.now(),
                     endDate: Timestamp.fromDate(_endDate!),
                     announcementDate: Timestamp.fromDate(_announcementDate!),
                   );

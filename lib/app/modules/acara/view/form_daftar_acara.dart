@@ -29,6 +29,8 @@ class _DaftarAcaraState extends State<DaftarAcara> {
 
   @override
   Widget build(BuildContext context) {
+    namaController.text = FirebaseAuth.instance.currentUser!.displayName!;
+    emailController.text = FirebaseAuth.instance.currentUser!.email!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -107,14 +109,17 @@ class _DaftarAcaraState extends State<DaftarAcara> {
                       acaraID: widget.acaraID,
                       userID: FirebaseAuth.instance.currentUser!.uid,
                     );
-                    AcaraSubmissionService.addToFirestore(context, acaraSubmission);
+                    AcaraSubmissionService.addToFirestore(
+                        context, acaraSubmission);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Data pendaftaran berhasil dikirim!')),
+                      const SnackBar(
+                          content: Text('Data pendaftaran berhasil dikirim!')),
                     );
                     Future.delayed(const Duration(seconds: 1), () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()),
                       );
                     });
                   });

@@ -22,9 +22,13 @@ class BeasiswaService {
   }
 
   //read
-  Stream<QuerySnapshot> getBeasiswas() {
+  Stream<QuerySnapshot> getBeasiswas({bool includeMetadataChanges = false}) {
     try {
-      return _firestore.collection('beasiswa').snapshots();
+      return _firestore
+          .collection('beasiswa')
+          .orderBy('startDate',
+              descending: true) // Urutkan berdasarkan startDate
+          .snapshots(includeMetadataChanges: includeMetadataChanges);
     } catch (e) {
       // Handle any errors that occur while fetching the data
       print('Error fetching beasiswa data: $e');

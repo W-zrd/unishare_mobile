@@ -33,8 +33,11 @@ class AcaraService {
     return acaraPost;
   }
 
-  Stream<QuerySnapshot> getAcaras() {
-    return _firestore.collection('acara').snapshots();
+  Stream<QuerySnapshot> getAcaras({bool includeMetadataChanges = false}) {
+    return _firestore
+        .collection('acara')
+        .orderBy('startDate', descending: true) // Urutkan berdasarkan startDate
+        .snapshots(includeMetadataChanges: includeMetadataChanges);
   }
 
   Stream<QuerySnapshot> getDocumentsByKategori(String kategori) {

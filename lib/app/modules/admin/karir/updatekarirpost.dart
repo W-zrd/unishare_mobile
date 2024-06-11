@@ -18,6 +18,7 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
   TextEditingController _urlController = TextEditingController();
   TextEditingController _deskripsiController = TextEditingController();
   TextEditingController _penyelenggaraController = TextEditingController();
+  DateTime? _announcementDate;
 
   String temaValue = 'Teknologi';
   String kategoriValue = 'Lowongan Kerja';
@@ -155,6 +156,34 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
                 });
               },
             ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    key: Key("date-picker"),
+                    onPressed: () async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _announcementDate = pickedDate;
+                        });
+                      }
+                    },
+                    icon: Icon(Icons.calendar_today),
+                    label: Text(
+                      _announcementDate != null
+                          ? '${_announcementDate!.day}/${_announcementDate!.month}/${_announcementDate!.year}'
+                          : 'Pilih Tanggal',
+                    ),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             const Text(
               'Deskripsi Karir',
@@ -190,7 +219,7 @@ class _UpdateKarirPostState extends State<UpdateKarirPost> {
                       startDate:
                           widget.karirPost['startDate'] ?? Timestamp.now(),
                       endDate: widget.karirPost['endDate'] ?? Timestamp.now(),
-                      AnnouncementDate: Timestamp.now(),
+                      AnnouncementDate: Timestamp.fromDate(_announcementDate!),
                     );
                     KarirService.updateKarir(
                         context, updatedKarirPost, widget.karirPost.id);

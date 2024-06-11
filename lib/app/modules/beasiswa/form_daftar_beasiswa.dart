@@ -30,6 +30,8 @@ class _DaftarbeasiswaState extends State<DaftarBeasiswa> {
 
   @override
   Widget build(BuildContext context) {
+    namaController.text = FirebaseAuth.instance.currentUser!.displayName!;
+    emailController.text = FirebaseAuth.instance.currentUser!.email!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
