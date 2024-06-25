@@ -54,8 +54,9 @@ class _DetailBeasiswaState extends State<DetailBeasiswa> {
               period:
                   'Registrasi: ${widget.beasiswaPost?.startDate?.toDate().day}/${widget.beasiswaPost?.startDate?.toDate().month} - ${widget.beasiswaPost?.endDate?.toDate().day}/${widget.beasiswaPost?.endDate?.toDate().month}/${widget.beasiswaPost?.endDate?.toDate().year}',
               thumbnailAsset: 'assets/img/unishare_splash.png',
-              salary: '', // Replace with relevant info or remove
-              minimumWorkExperience: '', // Replace with relevant info or remove
+              salary: '800.000', // Replace with relevant info or remove
+              minimumWorkExperience:
+                  'ipk > 3.5', // Replace with relevant info or remove
             ),
             Expanded(
               child: DefaultTabController(

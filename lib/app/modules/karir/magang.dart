@@ -10,55 +10,12 @@ class MagangPage extends StatelessWidget {
   final KarirService _magangService = KarirService();
   MagangPage({super.key});
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: ListView(
-  //       children: const [
-  //         PostCard(
-  //           type: 'Network Security Engineer',
-  //           title: 'DKatalis Indonesia',
-  //           period: 'Registrasi: 21 Feb - 30 Apr 2023',
-  //           location: 'Lokasi: DKI Yogyakarta',
-  //           thumbnailAsset: 'assets/img/unishare_splash.png',
-  //         ),
-  //         PostCard(
-  //           type: 'Software Engineer',
-  //           title: 'Intrego.ai',
-  //           period: 'Registrasi: 12 Des - 30 Jan 2024',
-  //           location: 'Lokasi: Lembang, Bandung',
-  //           thumbnailAsset: 'assets/img/unishare_splash.png',
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
       children: [Expanded(child: _buildMagangList(context))],
-    )
-        // ListView(
-        //   children: const [
-        //     PostCard(
-        //       type: 'Computer Forensic Analyst',
-        //       title: 'Virtual Talent Inc.',
-        //       period: 'Registrasi: 12 Agust - 28 Sept 2023',
-        //       location: 'Lokasi: Remote from Home',
-        //       thumbnailAsset: 'assets/img/unishare_splash.png',
-        //     ),
-        //     PostCard(
-        //       type: 'Full Stack Developer',
-        //       title: 'PT. Unity Dev Indonesia',
-        //       period: 'Registrasi: 12 Des - 30 Jan 2024',
-        //       location: 'Lembang, Bandung',
-        //       thumbnailAsset: 'assets/img/unishare_splash.png',
-        //     ),
-        //   ],
-        // ),
-        );
+    ));
   }
 
   Widget _buildMagangList(BuildContext context) {
@@ -111,7 +68,7 @@ class MagangPage extends StatelessWidget {
             builder: (context) => DetailKarirRil(
               karirID: doc.id,
               karir: karirPost,
-            ), // Replace with your actual detail page
+            ),
           ),
         );
       },
